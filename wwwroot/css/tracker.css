@@ -1,0 +1,48 @@
+.small-task {
+    height: 46.3vh;
+    border: 1px solid;
+}
+
+.medium-task {
+    height: 23vh;
+    border: 1px solid;
+
+}
+
+.large-task {
+    height: 46.6vh;
+    border: 1px solid;
+
+}
+
+.task_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.left, .centre, .right {
+    display: inline-block;
+}
+
+.centre {
+    text-align: center;
+    padding-top: 10px;
+}
+
+/* .edit-button {
+    text-align: end;
+    padding-top: 10px;
+    padding-right: 0px ;
+}
+
+.delete-button {
+    text-align: start;
+    padding-top: 10px;
+    padding-left: 0px ;
+} */
+
+

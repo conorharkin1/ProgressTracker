@@ -1,0 +1,19 @@
+@model SmallTaskModel;
+
+<div class="container task_header">
+        <div class="left">
+            <button class="btn"><i class="bi bi-trash"></i></button>
+        </div>
+        <div class="centre">
+            @{
+                if(Model != null && @Model.Name != null){
+                    <h4>@Model.Name</h4>
+                }else{
+                    <h4>No task set</h4>
+                }
+            }
+        </div>
+        <div class="right">
+            <button class="btn"><i class="bi bi-pencil"></i></button>
+        </div>
+</div>

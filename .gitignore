@@ -1,0 +1,32 @@
+
+# Build folders
+bin/
+obj/
+
+# User-specific files
+.vs/
+*.user
+*.suo
+
+# Logs
+*.log
+Logs/
+
+# Dependency cache
+*.nuget/
+project.lock.json
+node_modules/
+
+# Sensitive files
+appsettings.Development.json
+
+# Build output
+*.dll
+*.exe
+*.pdb
+*.obj
+*.tmp
+*.bak
+
+# Frontend build files
+dist/
