@@ -1,4 +1,4 @@
-namespace ProgressTracker.Models;
+namespace ProgressTracker.Models.ViewModels;
 
 public class ErrorViewModel
 {
