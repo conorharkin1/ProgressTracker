@@ -10,7 +10,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
+        @* <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Tracker">ProgressTracker</a>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -24,6 +24,13 @@
                     </ul>
                 </div>
             </div>
+        </nav> *@
+        <nav>
+            <ul>
+                <li><a asp-controller="Home" asp-action="Tracker">ProgressTracker</a></li>
+                <li><a asp-controller="Home" asp-action="Tracker">Home</a></li>
+                <li><a asp-controller="Home" asp-action="Focus">Focus</a></li>
+            </ul>
         </nav>
     </header>
     <div class="container-fluid">

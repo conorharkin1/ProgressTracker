@@ -14,17 +14,17 @@
     <div class="row">
         <div class="col-md-3">
             <div class="task-container-fluid">
-                    <div class="small-task">
-                        @await Html.PartialAsync("_smallTaskPartial")
-                    </div>
                 <div class="small-task">
-                    @await Html.PartialAsync("_smallTaskPartial")
+                    @await Html.PartialAsync("_SmallTaskPartial")
+                </div>
+                <div class="small-task">
+                    @await Html.PartialAsync("_SmallTaskPartial")
                 </div>
             </div>
         </div>
 
         <div class="col-md-6">
-            <div class="container-fluid">
+            <div class="task-container-fluid">
                 <div class="medium-task">
                     @await Html.PartialAsync("_MediumTaskPartial")
                 </div>
@@ -38,15 +38,14 @@
         </div>
 
         <div class="col-md-3">
-            <div class="container-fluid">
+            <div class="task-container-fluid">
                 <div class="small-task">
-                    @await Html.PartialAsync("_smallTaskPartial")
+                    @await Html.PartialAsync("_SmallTaskPartial")
                 </div>
                 <div class="small-task">
-                    @await Html.PartialAsync("_smallTaskPartial")
+                    @await Html.PartialAsync("_SmallTaskPartial")
                 </div>
             </div>
         </div>       
     </div>
 </body>
-

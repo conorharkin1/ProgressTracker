@@ -1,32 +1,60 @@
-:root {
-    --navbar-height: 60px;
-    --adjusted-vh: calc(100vh - var(--navbar-height));
+nav {
+    height: 60px;
+    background-color: beige;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+    margin: 0;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .col-md-6, .col-md-3 {
-    background-color: beige;
-    padding: 0px;
+    padding: 10px;
+    min-height: 850px;
+}
+
+.col-md-3 {
+    flex: 1 1 20%; /* Take up 20% of the width */
+}
+
+.col-md-6 {
+    flex: 1 1 60%; /* Take up 60% of the width */
+}
+
+.task-container-fluid, .container-fluid {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.small-task, .medium-task, .large-task {
+    border-radius: 20px;
+    margin: 10px 0;
+    padding: 10px;
 }
 
 .small-task {
-    height: 46.3vh;
     background-color: aquamarine;
-    border-radius: 20px;
-    margin: 10px;
+    flex: 0 1 50%;
 }
 
 .medium-task {
-    height: 23vh;
     background-color: rebeccapurple;
-    border-radius: 20px;
-    margin: 10px;
+    flex: 1 1 30%;
 }
 
 .large-task {
-    height: 46.6vh;
     background-color: lawngreen;
-    border-radius: 20px;
-    margin: 10px;
+    flex: 1 1 50%;
 }
 
 .task_header {
