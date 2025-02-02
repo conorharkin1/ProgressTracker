@@ -10,25 +10,9 @@
 </head>
 <body>
     <header>
-        @* <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Tracker">ProgressTracker</a>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Tracker">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Focus">Focus</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav> *@
-
         <nav>
             <div class="navbar-section left">
-                <a asp-controller="Home" asp-action="Tracker"><h2>Home Icon</h2></a>
+                <a asp-controller="Home" asp-action="Tracker"><img class="logo" src="~/Images/logo.png" alt="Home"></a>
             </div>
             <div class="navbar-section center">
                 <h2>Progress Tracker</h2>
@@ -43,8 +27,6 @@
             @RenderBody()
         </main>
     </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
