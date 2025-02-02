@@ -1,15 +1,39 @@
-nav {
-    height: 60px;
-    background-color: beige;
+:root {
+    --navbar-height: 60px;
+    --fullview-navbar: calc(100vh - var(--navbar-height));
 }
 
-nav ul {
-    list-style: none;
+nav {
     display: flex;
-    justify-content: space-around;
+    height: var(--navbar-height);
+    background-color: #66A5AD;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-section {
+    display: flex;
     align-items: center;
     height: 100%;
-    margin: 0;
+}
+
+.navbar-section.right, .navbar-section.left, .navbar-section.center {
+    flex: 1 1 20%;
+    justify-content: center;
+}
+
+.navbar-section.center {
+    flex: 1 1 60%;
+    justify-content: center;
+}
+
+nav a {
+    color: black; 
+    text-decoration: none; 
+}
+
+nav a:hover {
+    
 }
 
 .row {
@@ -19,7 +43,8 @@ nav ul {
 
 .col-md-6, .col-md-3 {
     padding: 10px;
-    min-height: 850px;
+    min-height: var(--fullview-navbar);
+    background-color: #C4DFE6;
 }
 
 .col-md-3 {
@@ -43,21 +68,21 @@ nav ul {
 }
 
 .small-task {
-    background-color: aquamarine;
+    background-color: #66A5AD;
     flex: 0 1 50%;
 }
 
 .medium-task {
-    background-color: rebeccapurple;
+    background-color: #66A5AD;
     flex: 1 1 30%;
 }
 
 .large-task {
-    background-color: lawngreen;
+    background-color: #66A5AD;
     flex: 1 1 50%;
 }
 
-.task_header {
+.task-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -66,13 +91,11 @@ nav ul {
     padding-right: 10px;
 }
 
-.left, .centre, .right {
+.task-header-left, .task-header-centre, .task-header-right {
     display: inline-block;
 }
 
-.centre {
+.task-header-centre {
     text-align: center;
     padding-top: 10px;
 }
-
-

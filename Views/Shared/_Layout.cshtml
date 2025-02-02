@@ -25,12 +25,17 @@
                 </div>
             </div>
         </nav> *@
+
         <nav>
-            <ul>
-                <li><a asp-controller="Home" asp-action="Tracker">ProgressTracker</a></li>
-                <li><a asp-controller="Home" asp-action="Tracker">Home</a></li>
-                <li><a asp-controller="Home" asp-action="Focus">Focus</a></li>
-            </ul>
+            <div class="navbar-section left">
+                <a asp-controller="Home" asp-action="Tracker"><h2>Home Icon</h2></a>
+            </div>
+            <div class="navbar-section center">
+                <h2>Progress Tracker</h2>
+            </div>
+            <div class="navbar-section right">
+                <a asp-controller="Home" asp-action="Focus"><h2>Focus</h2></a>
+            </div>
         </nav>
     </header>
     <div class="container-fluid">
