@@ -11,44 +11,42 @@
 
 </head>
 <body>
-   <div class="container-fluid p-0">
-        <div class="row">
-            <div class="col-md-3 p-0">
-                <div class="container-fluid p-0">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="task-container-fluid">
                     <div class="small-task">
                         @await Html.PartialAsync("_smallTaskPartial")
                     </div>
-                    <div class="small-task">
-                        @await Html.PartialAsync("_smallTaskPartial")
-                    </div>
+                <div class="small-task">
+                    @await Html.PartialAsync("_smallTaskPartial")
                 </div>
             </div>
-
-            <div class="col-md-6 p-0">
-                <div class="container-fluid p-0">
-                    <div class="medium-task">
-                        @await Html.PartialAsync("_MediumTaskPartial")
-                    </div>
-                    <div class="large-task">
-                        @await Html.PartialAsync("_LargeTaskPartial")
-                    </div>
-                    <div class="medium-task">
-                        @await Html.PartialAsync("_MediumTaskPartial")
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 p-0">
-                <div class="container-fluid p-0">
-                    <div class="small-task">
-                        @await Html.PartialAsync("_smallTaskPartial")
-                    </div>
-                    <div class="small-task">
-                        @await Html.PartialAsync("_smallTaskPartial")
-                    </div>
-                </div>
-            </div>       
         </div>
-   </div>
+
+        <div class="col-md-6">
+            <div class="container-fluid">
+                <div class="medium-task">
+                    @await Html.PartialAsync("_MediumTaskPartial")
+                </div>
+                <div class="large-task">
+                    @await Html.PartialAsync("_LargeTaskPartial")
+                </div>
+                <div class="medium-task">
+                    @await Html.PartialAsync("_MediumTaskPartial")
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="container-fluid">
+                <div class="small-task">
+                    @await Html.PartialAsync("_smallTaskPartial")
+                </div>
+                <div class="small-task">
+                    @await Html.PartialAsync("_smallTaskPartial")
+                </div>
+            </div>
+        </div>       
+    </div>
 </body>
 

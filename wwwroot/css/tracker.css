@@ -1,18 +1,32 @@
+:root {
+    --navbar-height: 60px;
+    --adjusted-vh: calc(100vh - var(--navbar-height));
+}
+
+.col-md-6, .col-md-3 {
+    background-color: beige;
+    padding: 0px;
+}
+
 .small-task {
     height: 46.3vh;
-    border: 1px solid;
+    background-color: aquamarine;
+    border-radius: 20px;
+    margin: 10px;
 }
 
 .medium-task {
     height: 23vh;
-    border: 1px solid;
-
+    background-color: rebeccapurple;
+    border-radius: 20px;
+    margin: 10px;
 }
 
 .large-task {
     height: 46.6vh;
-    border: 1px solid;
-
+    background-color: lawngreen;
+    border-radius: 20px;
+    margin: 10px;
 }
 
 .task_header {
@@ -32,17 +46,5 @@
     text-align: center;
     padding-top: 10px;
 }
-
-/* .edit-button {
-    text-align: end;
-    padding-top: 10px;
-    padding-right: 0px ;
-}
-
-.delete-button {
-    text-align: start;
-    padding-top: 10px;
-    padding-left: 0px ;
-} */
 
 
