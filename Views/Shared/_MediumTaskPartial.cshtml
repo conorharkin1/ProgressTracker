@@ -1,19 +1,22 @@
-@model TaskViewModel;
+@model ProgressTracker.Models.MediumTask;
 
-<div class="container task-header">
-        <div class="task-header-left">
-            <button class="btn"><i class="bi bi-trash"></i></button>
+@{
+    if (Model != null)
+    {
+        <div class="container task-header">
+            <div class="task-header-left">
+                <button class="btn"><i class="bi bi-trash icon-colour" ></i></button>
+            </div>
+            <div class="task-header-centre">
+                <h4>@Model.Name</h4>
+            </div>
+            <div class="task-header-right">
+                <button class="btn"><i class="bi bi-pencil icon-colour"></i></button>
+            </div>
         </div>
-        <div class="task-header-centre">
-            @{
-                if(Model != null && @Model.Name != null){
-                    <h4>@Model.Name</h4>
-                }else{
-                    <h4>No task set</h4>
-                }
-            }
-        </div>
-        <div class="task-header-right">
-            <button class="btn"><i class="bi bi-pencil"></i></button>
-        </div>
-</div>
+    }
+    else 
+    {
+        @await Html.PartialAsync("_NoTaskPartial")
+    }
+}

@@ -1,6 +1,6 @@
 namespace ProgressTracker.Models;
 
-public class SmallTask : Task {
+public class SmallTask : Task {    
 
     // Room to add unique attributes in future.
     

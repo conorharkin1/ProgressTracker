@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ProgressTracker.Models.ViewModels.TasksViewModel;
+@{
     ViewData["Title"] = "ProgressTracker";
 }
 
@@ -14,10 +15,10 @@
         <div class="col-md-3">
             <div class="task-container-fluid">
                 <div class="small-task">
-                    @await Html.PartialAsync("_SmallTaskPartial")
+                    @await Html.PartialAsync("_SmallTaskPartial", Model.SmallTasks[0])
                 </div>
                 <div class="small-task">
-                    @await Html.PartialAsync("_SmallTaskPartial")
+                    @await Html.PartialAsync("_SmallTaskPartial", Model.SmallTasks[1])
                 </div>
             </div>
         </div>
@@ -25,13 +26,13 @@
         <div class="col-md-6">
             <div class="task-container-fluid">
                 <div class="medium-task">
-                    @await Html.PartialAsync("_MediumTaskPartial")
+                    @await Html.PartialAsync("_MediumTaskPartial", Model.MediumTasks[0])
                 </div>
                 <div class="large-task">
-                    @await Html.PartialAsync("_LargeTaskPartial")
+                    @await Html.PartialAsync("_LargeTaskPartial", Model.LargeTask)
                 </div>
                 <div class="medium-task">
-                    @await Html.PartialAsync("_MediumTaskPartial")
+                    @await Html.PartialAsync("_MediumTaskPartial", Model.MediumTasks[1])
                 </div>
             </div>
         </div>
@@ -39,10 +40,10 @@
         <div class="col-md-3">
             <div class="task-container-fluid">
                 <div class="small-task">
-                    @await Html.PartialAsync("_SmallTaskPartial")
+                    @await Html.PartialAsync("_SmallTaskPartial", Model.SmallTasks[2])
                 </div>
                 <div class="small-task">
-                    @await Html.PartialAsync("_SmallTaskPartial")
+                    @await Html.PartialAsync("_SmallTaskPartial", Model.SmallTasks[3])
                 </div>
             </div>
         </div>       
