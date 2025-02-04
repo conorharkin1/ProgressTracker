@@ -1,22 +1,15 @@
 @model ProgressTracker.Models.LargeTask;
 
 @{
-    if (Model != null)
-    {
-        <div class="container task-header">
-            <div class="task-header-left">
-                <button class="btn"><i class="bi bi-trash icon-colour" ></i></button>
-            </div>
-            <div class="task-header-centre">
-                <h4>@Model.Name</h4>
-            </div>
-            <div class="task-header-right">
-                <button class="btn"><i class="bi bi-pencil icon-colour"></i></button>
-            </div>
+    <div class="container task-header">
+        <div class="task-header-left">
+            <button class="btn"><i class="bi bi-trash icon-colour" ></i></button>
         </div>
-    }
-    else 
-    {
-        @await Html.PartialAsync("_NoTaskPartial")
-    }
+        <div class="task-header-centre">
+            <h4>@Model.Name</h4>
+        </div>
+        <div class="task-header-right">
+            <button class="btn"><i class="bi bi-pencil icon-colour"></i></button>
+        </div>
+    </div>
 }

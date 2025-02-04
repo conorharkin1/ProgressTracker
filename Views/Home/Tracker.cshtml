@@ -16,8 +16,8 @@
             <div class="task-container-fluid">
                 @if (!(Model.SmallTasks.Count >= 2))
                 {
-                    <div class="small-task empty-task">
-                        <p>No small tasks available.</p>
+                    <div class="small-task">
+                        @await Html.PartialAsync("_NoTaskPartial")
                     </div>
                 }
                 else
@@ -36,8 +36,8 @@
             <div class="task-container-fluid">
                 @if (!(Model.MediumTasks.Count >= 1))
                 {
-                    <div class="medium-task empty-task">
-                        <p>No medium tasks available.</p>
+                    <div class="medium-task">
+                        @await Html.PartialAsync("_NoTaskPartial")
                     </div>
                 }
                 else
@@ -51,8 +51,8 @@
                 }
                 @if (Model.LargeTask == null)
                 {
-                    <div class="large-task empty-large-task">
-                        <p>No large tasks available.</p>
+                    <div class="large-task">
+                        @await Html.PartialAsync("_NoTaskPartial")
                     </div>
                 }
                 else
@@ -63,8 +63,8 @@
                 }
                 @if (!(Model.MediumTasks.Count >= 2))
                 {
-                    <div class="medium-task empty-medium-task">
-                        <p>No medium tasks available.</p>
+                    <div class="medium-task">
+                        @await Html.PartialAsync("_NoTaskPartial")
                     </div>
                 }
                 else
@@ -99,17 +99,17 @@
                         </div>
                     }
 
-                    <div class="small-task empty-task">
-                        <p>No small tasks available.</p>
+                    <div class="small-task">
+                        @await Html.PartialAsync("_NoTaskPartial")
                     </div>
                 }
                 else
                 {
-                    <div class="small-task empty-task">
-                        <p>No small tasks available.</p>
+                    <div class="small-task">
+                        @await Html.PartialAsync("_NoTaskPartial")
                     </div>
-                    <div class="small-task empty-task">
-                        <p>No small tasks available.</p>
+                    <div class="small-task">
+                        @await Html.PartialAsync("_NoTaskPartial")
                     </div>
                 }
             </div>
