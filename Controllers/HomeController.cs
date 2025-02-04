@@ -24,23 +24,21 @@ public class HomeController : Controller
 
         var model = new TasksViewModel
         {
-            SmallTasks = new SmallTask[]
+            SmallTasks = new List<SmallTask>
             {
                 new SmallTask(1, "Small Task 1", 30),
                 new SmallTask(2, "Small Task 2", 45),
-                new SmallTask(3, "Small Task 3", 60),
-                new SmallTask(4, "Small Task 4", 120)
             },
-            MediumTasks = new MediumTask[]
+            MediumTasks = new List<MediumTask>
             {
-                new MediumTask(1, "test1", 200),
-                new MediumTask(2, "Test2", 200)
+                new MediumTask(1, "Medium Task 1", 300)
             },
-            LargeTask = new LargeTask(1, "temp", 600)
+            
+
         };
+
         return View(model);
     }
-
     public IActionResult Focus()
     {
         return View();

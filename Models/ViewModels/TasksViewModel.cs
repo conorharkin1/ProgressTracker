@@ -1,8 +1,8 @@
 namespace ProgressTracker.Models.ViewModels
 {
     public class TasksViewModel {
-        public SmallTask[] SmallTasks { get; set; }
-        public MediumTask[] MediumTasks { get; set; }
+        public List<SmallTask> SmallTasks { get; set; } = new List<SmallTask>();
+        public List<MediumTask> MediumTasks { get; set; } = new List<MediumTask>();
         public LargeTask LargeTask { get; set; }
     }
 }

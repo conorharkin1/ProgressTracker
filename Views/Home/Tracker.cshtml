@@ -14,37 +14,104 @@
     <div class="row">
         <div class="col-md-3">
             <div class="task-container-fluid">
-                <div class="small-task">
-                    @await Html.PartialAsync("_SmallTaskPartial", Model.SmallTasks[0])
-                </div>
-                <div class="small-task">
-                    @await Html.PartialAsync("_SmallTaskPartial", Model.SmallTasks[1])
-                </div>
+                @if (!(Model.SmallTasks.Count >= 2))
+                {
+                    <div class="small-task empty-task">
+                        <p>No small tasks available.</p>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var task in Model.SmallTasks.Take(2))
+                    {
+                        <div class="small-task">
+                            @await Html.PartialAsync("_SmallTaskPartial", task)
+                        </div>
+                    }
+                }
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="task-container-fluid">
-                <div class="medium-task">
-                    @await Html.PartialAsync("_MediumTaskPartial", Model.MediumTasks[0])
-                </div>
-                <div class="large-task">
-                    @await Html.PartialAsync("_LargeTaskPartial", Model.LargeTask)
-                </div>
-                <div class="medium-task">
-                    @await Html.PartialAsync("_MediumTaskPartial", Model.MediumTasks[1])
-                </div>
+                @if (!(Model.MediumTasks.Count >= 1))
+                {
+                    <div class="medium-task empty-task">
+                        <p>No medium tasks available.</p>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var task in Model.MediumTasks.Take(1))
+                    {
+                        <div class="medium-task">
+                            @await Html.PartialAsync("_MediumTaskPartial", task)
+                        </div>
+                    }
+                }
+                @if (Model.LargeTask == null)
+                {
+                    <div class="large-task empty-large-task">
+                        <p>No large tasks available.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="large-task">
+                        @await Html.PartialAsync("_LargeTaskPartial", Model.LargeTask)
+                    </div>
+                }
+                @if (!(Model.MediumTasks.Count >= 2))
+                {
+                    <div class="medium-task empty-medium-task">
+                        <p>No medium tasks available.</p>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var task in Model.MediumTasks.Skip(1))
+                    {
+                        <div class="medium-task">
+                            @await Html.PartialAsync("_MediumTaskPartial", task)
+                        </div>
+                    }
+                }
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="task-container-fluid">
-                <div class="small-task">
-                    @await Html.PartialAsync("_SmallTaskPartial", Model.SmallTasks[2])
-                </div>
-                <div class="small-task">
-                    @await Html.PartialAsync("_SmallTaskPartial", Model.SmallTasks[3])
-                </div>
+                @if (Model.SmallTasks.Count == 4) 
+                {
+                    @foreach (var task in Model.SmallTasks.Skip(2))
+                    {
+                        <div class="small-task">
+                            @await Html.PartialAsync("_SmallTaskPartial", task)
+                        </div>
+                    }
+                }
+                @if (Model.SmallTasks.Count == 3)
+                {
+                    @foreach (var task in Model.SmallTasks.Skip(2))
+                    {
+                        <div class="small-task">
+                            @await Html.PartialAsync("_SmallTaskPartial", task)
+                        </div>
+                    }
+
+                    <div class="small-task empty-task">
+                        <p>No small tasks available.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="small-task empty-task">
+                        <p>No small tasks available.</p>
+                    </div>
+                    <div class="small-task empty-task">
+                        <p>No small tasks available.</p>
+                    </div>
+                }
             </div>
         </div>       
     </div>
