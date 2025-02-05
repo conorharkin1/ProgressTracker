@@ -17,7 +17,7 @@
                 @if (!(Model.SmallTasks.Count >= 2))
                 {
                     <div class="small-task">
-                        @await Html.PartialAsync("_NoTaskPartial")
+                        @await Html.PartialAsync("_NoTaskPartial", "small")
                     </div>
                 }
                 else
@@ -37,7 +37,7 @@
                 @if (!(Model.MediumTasks.Count >= 1))
                 {
                     <div class="medium-task">
-                        @await Html.PartialAsync("_NoTaskPartial")
+                        @await Html.PartialAsync("_NoTaskPartial", "medium")
                     </div>
                 }
                 else
@@ -52,7 +52,7 @@
                 @if (Model.LargeTask == null)
                 {
                     <div class="large-task">
-                        @await Html.PartialAsync("_NoTaskPartial")
+                        @await Html.PartialAsync("_NoTaskPartial", "large")
                     </div>
                 }
                 else
@@ -64,7 +64,7 @@
                 @if (!(Model.MediumTasks.Count >= 2))
                 {
                     <div class="medium-task">
-                        @await Html.PartialAsync("_NoTaskPartial")
+                        @await Html.PartialAsync("_NoTaskPartial", "medium")
                     </div>
                 }
                 else
@@ -100,16 +100,16 @@
                     }
 
                     <div class="small-task">
-                        @await Html.PartialAsync("_NoTaskPartial")
+                        @await Html.PartialAsync("_NoTaskPartial", "small")
                     </div>
                 }
                 else
                 {
                     <div class="small-task">
-                        @await Html.PartialAsync("_NoTaskPartial")
+                        @await Html.PartialAsync("_NoTaskPartial", "small")
                     </div>
                     <div class="small-task">
-                        @await Html.PartialAsync("_NoTaskPartial")
+                        @await Html.PartialAsync("_NoTaskPartial", "small")
                     </div>
                 }
             </div>
