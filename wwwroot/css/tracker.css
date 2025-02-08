@@ -131,6 +131,7 @@ nav a:hover {
 
 .form-check-input {
     vertical-align: middle;
+    transform: translateY(40%);
 }
 
 #name-label {
