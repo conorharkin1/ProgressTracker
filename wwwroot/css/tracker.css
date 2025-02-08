@@ -70,6 +70,7 @@ nav a:hover {
 .small-task {
     background-color: #66A5AD;
     flex: 0 1 50%;
+    overflow: auto;
 }
 
 .medium-task {
@@ -107,8 +108,35 @@ nav a:hover {
     align-items: center;
     transform: translateY(-10%);
     flex-grow: 1;
-    height: 100%;
 }
+
+.sm-task-stats {
+    display: flex;
+    flex: 0 1 50%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.sm-task-body {
+    display: flex;
+    flex-grow: 1;
+    font-size: 15px;
+    overflow: auto;
+}
+
+.sm-form-check {
+    margin-bottom: .5rem;
+}
+
+.form-check-input {
+    vertical-align: middle;
+}
+
+#name-label {
+    font-size: 20px;
+}
+
 .btn-add-task {
     font-size: 50px;
 }

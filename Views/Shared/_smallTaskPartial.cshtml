@@ -1,15 +1,36 @@
 @model ProgressTracker.Models.SmallTask;
 
-@{
-    <div class="container task-header">
-        <div class="task-header-left">
-            <button class="btn"><i class="bi bi-trash icon-colour" ></i></button>
-        </div>
-        <div class="task-header-centre">
-            <h4>@Model.Name</h4>
-        </div>
-        <div class="task-header-right">
-            <button class="btn"><i class="bi bi-pencil icon-colour"></i></button>
-        </div>
+<div class="container task-header">
+    <div class="task-header-left">
+        <button class="btn"><i class="bi bi-trash icon-colour" ></i></button>
     </div>
-}
+    <div class="task-header-centre">
+        <h4>@Model.Name</h4>
+    </div>
+    <div class="task-header-right">
+        <button class="btn"><i class="bi bi-pencil icon-colour"></i></button>
+    </div>
+</div>
+<div class="sm-task-stats">
+        <i class="bi bi-plus-circle"></i>
+        You have completed 0/3 objectives
+</div>
+<div class="sm-task-body">
+    <div class="form-check">
+        @foreach (var objective in Model?.Objectives)
+        {
+            @if ( objective != null && objective.Name != string.Empty)
+            {
+                <div class="sm-form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="@objective.Name">
+                    <label class="form-check-label" for="@objective.Name" id="name-label">
+                        Volcanoes
+                    </label>
+                    <label class="form-check-label" for="@objective.Name">
+                        Study chapter 1,2,3 of Geography (Pages 70-115). blah blah blah blah blah
+                    </label>
+                </div>
+            }
+        }
+    </div>
+</div>

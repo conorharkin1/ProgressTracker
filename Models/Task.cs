@@ -1,18 +1,16 @@
 namespace ProgressTracker.Models;
 
 public class Task {
-    public int Id { get; set; }
     public string? Name { get; set; }
-    public int? TotalTime { get; set; }
-    protected Objective[]? Objectives { get; set; }
+    public DateTime? DueDate { get; set; }
+    public Objective[]? Objectives { get; set; }
 
     public Task() {}
 
-    public Task(int id, string name, int totalTime)
+    public Task(string name, DateTime duedate)
     {
-        Id = id;
         Name = name;
-        TotalTime = totalTime;
+        DueDate = duedate;
         Objectives = [];
     }
 }

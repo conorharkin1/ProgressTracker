@@ -6,7 +6,7 @@ public class LargeTask : Task {
     
     public LargeTask() {}
     
-    public LargeTask(int id ,string name, int totalTime) :base(id, name, totalTime)
+    public LargeTask(string name, DateTime dueDate) :base(name, dueDate)
     {
         Objectives = new Objective[10];
     }

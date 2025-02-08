@@ -6,7 +6,7 @@ public class SmallTask : Task {
     
     public SmallTask() {}
     
-    public SmallTask(int id ,string name, int totalTime) :base(id, name, totalTime)
+    public SmallTask(string name, DateTime dueDate) :base(name, dueDate)
     {
         Objectives = new Objective[3];
     }

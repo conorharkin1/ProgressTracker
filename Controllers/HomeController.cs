@@ -26,12 +26,20 @@ public class HomeController : Controller
         {
             SmallTasks = new List<SmallTask>
             {
-                new SmallTask(1, "Small Task 1", 30),
-                new SmallTask(2, "Small Task 2", 45),
+                new SmallTask("Small Task", DateTime.MaxValue)
+                {
+                    Objectives =
+                    [
+                        new Objective("", 5, false),
+                        new Objective("Objective 2", 3, true),
+                        new Objective("Objective 3", 2, false)
+                    ]
+                },
+                new SmallTask("Small Task", DateTime.MaxValue),
             },
             MediumTasks = new List<MediumTask>
             {
-                new MediumTask(1, "Medium Task 1", 300)
+                new MediumTask("Medium Task", DateTime.MaxValue)
             },
             
 
