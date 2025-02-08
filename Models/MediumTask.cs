@@ -8,6 +8,6 @@ public class MediumTask : Task {
     
     public MediumTask(int id ,string name, int totalTime) :base(id, name, totalTime)
     {
-        Objectives = new Objective[4];
+        Objectives = new Objective[6];
     }
 }

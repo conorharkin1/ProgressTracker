@@ -8,6 +8,6 @@ public class LargeTask : Task {
     
     public LargeTask(int id ,string name, int totalTime) :base(id, name, totalTime)
     {
-        Objectives = new Objective[6];
+        Objectives = new Objective[10];
     }
 }

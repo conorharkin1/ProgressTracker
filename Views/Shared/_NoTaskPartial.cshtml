@@ -16,49 +16,46 @@
         @* Placeholder *@
     </div>
     <div class="task-header-centre">
-        <h4>No Task yet @objectiveCount</h4>
+        <h4>No Task yet</h4>
     </div>
     <div class="task-header-right">
         @* Placeholder *@
     </div>
 </div>
-
 <div class="add-task-body">
-    <button class="btn btn-add-task" id="add-btn" data-bs-toggle="modal" data-bs-target="#addTaskModal"><i class="bi bi-plus-circle"></i></button>
+    <button class="btn btn-add-task add-btn" data-bs-toggle="modal" data-bs-target="#addTaskModal" data-objective-count="@objectiveCount">
+        <i class="bi bi-plus-circle"></i>
+    </button>
 </div>
-
 <div class="modal fade" id="addTaskModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addTaskModalTitle">Add New Task</h5>
-                <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addTaskForm">
-                    <div class="mb-3">
-                        <label for="task-id" class="form-label">Task ID</label>
-                        <input type="text" class="form-control" id="task-id" name="Id" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="taskName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="taskName" name="Name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="dueDate" class="form-label">Due Date</label>
-                        <input type="date" class="form-control" id="dueDate" name="DueDate">
-                    </div>
-
-                    @for (int i = 0; i < objectiveCount; i++) 
-                    {
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTaskModalTitle">Add New Task</h5>
+                    <button type="button" class="close-btn" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addTaskForm">
                         <div class="mb-3">
-                            <label for="objective@(i)" class="form-label">Objective @(i) @objectiveCount</label>
-                            <input type="text" class="form-control" id="objective@(i)" name="objective@(i+1)">
+                            <label for="task-id" class="form-label">Task ID</label>
+                            <input type="text" class="form-control" id="task-id" name="Id" required>
                         </div>
-                    }
-                    <button type="submit" class="btn btn-primary save-btn">Save Task</button>
-                </form>
+                        <div class="mb-3">
+                            <label for="taskName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="taskName" name="Name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="dueDate" class="form-label">Due Date</label>
+                            <input type="date" class="form-control" id="dueDate" name="DueDate">
+                        </div>
+
+                        <div id="objectives-container">
+                            <!-- Objectives will be dynamically inserted here -->
+                        </div>
+
+                        <button type="submit" class="btn btn-primary save-btn">Save Task</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
