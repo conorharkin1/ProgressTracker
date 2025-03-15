@@ -1,6 +1,6 @@
 :root {
     --navbar-height: 60px;
-    --fullview-navbar: calc(100vh - var(--navbar-height));
+    --fullview-minus-navbar: calc(100vh - var(--navbar-height));
 }
 
 nav {
@@ -41,7 +41,8 @@ nav a:hover {
 
 .col-md-6, .col-md-3 {
     padding: 10px;
-    min-height: var(--fullview-navbar);
+    min-height: var(--fullview-minus-navbar);
+    max-height: var(--fullview-minus-navbar);
     background-color: #C4DFE6;
 }
 
@@ -76,6 +77,7 @@ nav a:hover {
 .medium-task {
     background-color: #66A5AD;
     flex: 1 1 30%;
+    overflow: auto;
 }
 
 .large-task {

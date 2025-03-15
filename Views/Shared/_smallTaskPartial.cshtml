@@ -12,24 +12,30 @@
     </div>
 </div>
 <div class="sm-task-stats">
+    @if (Model.Objectives != null && Model.Objectives.Any())
+    {
         <i class="bi bi-plus-circle"></i>
-        You have completed 0/3 objectives
+        <label>You have completed 0/@Model.Objectives.Count() objectives</label>
+    }
 </div>
 <div class="sm-task-body">
     <div class="form-check">
-        @foreach (var objective in Model?.Objectives)
+        @if (Model.Objectives != null && Model.Objectives.Any())
         {
-            @if ( objective != null && objective.Name != string.Empty)
+            @foreach (var objective in Model.Objectives)
             {
-                <div class="sm-form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="@objective.Name">
-                    <label class="form-check-label" for="@objective.Name" id="name-label">
-                        Volcanoes
-                    </label>
-                    <label class="form-check-label" for="@objective.Name">
-                        Study chapter 1,2,3 of Geography (Pages 70-115). blah blah blah blah blah
-                    </label>
-                </div>
+                @if ( objective != null && objective.Name != string.Empty)
+                {
+                    <div class="sm-form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="@objective.Name">
+                        <label class="form-check-label" for="@objective.Name" id="name-label">
+                            Volcanoes
+                        </label>
+                        <label class="form-check-label" for="@objective.Name">
+                            Study chapter 1,2,3 of Geography (Pages 70-115). blah blah blah blah blah
+                        </label>
+                    </div>
+                }
             }
         }
     </div>

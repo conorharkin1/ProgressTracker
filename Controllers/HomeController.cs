@@ -28,8 +28,10 @@ public class HomeController : Controller
         {
             SmallTasks = new List<SmallTask>
             {
-                new SmallTask("Small Task", DateTime.MaxValue)
+                new SmallTask()
                 {
+                    Name = "SmallTask1",
+                    DueDate = DateTime.MaxValue,
                     Objectives =
                     [
                         new Objective("Objective 1", 5, false),
@@ -47,7 +49,38 @@ public class HomeController : Controller
             },
             MediumTasks = new List<MediumTask>
             {
-                new MediumTask("Medium Task", DateTime.MaxValue)
+                new MediumTask()
+                {
+                    Name = "MediumTask1",
+                    DueDate = DateTime.MaxValue,
+                    Objectives =
+                    [
+                        new Objective()
+                        {
+                            Name = "Objective1",
+                            Hours = 1,
+                            IsComplete = false
+                        },
+                        new Objective()
+                        {
+                            Name = "Objective2",
+                            Hours = 1,
+                            IsComplete = false
+                        },
+                        new Objective()
+                        {
+                            Name = "Objective3",
+                            Hours = 1,
+                            IsComplete = false
+                        },
+                        new Objective()
+                        {
+                            Name = "Objective4",
+                            Hours = 1,
+                            IsComplete = false
+                        },
+                    ]
+                },
             },
             
 
