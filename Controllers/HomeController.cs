@@ -2,14 +2,16 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ProgressTracker.Models.ViewModels;
 using ProgressTracker.Models;
+using ProgressTracker.Repositories;
 
 namespace ProgressTracker.Controllers;
 
 public class HomeController : Controller
 {
-    public HomeController()
+    private readonly ITaskRepository _taskrepository;
+    public HomeController(ITaskRepository taskRepository)
     {
-
+        _taskrepository = taskRepository;
     }
 
     public IActionResult Tracker()
@@ -30,12 +32,18 @@ public class HomeController : Controller
                 {
                     Objectives =
                     [
-                        new Objective("", 5, false),
+                        new Objective("Objective 1", 5, false),
                         new Objective("Objective 2", 3, true),
                         new Objective("Objective 3", 2, false)
                     ]
                 },
-                new SmallTask("Small Task", DateTime.MaxValue),
+                new SmallTask("Small Task", DateTime.MaxValue)
+                {
+                    Objectives =
+                    [
+                        new Objective("OBJ1")
+                    ]   
+                }
             },
             MediumTasks = new List<MediumTask>
             {

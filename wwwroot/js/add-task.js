@@ -1,6 +1,10 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
-    const addTaskButtons = document.querySelectorAll('.add-btn');
+    const addTaskButtons = document.querySelectorAll('.btn-add-task');
     const objectivesContainer = document.getElementById('objectives-container');
+    const addTaskModal = document.getElementById('addTaskModal');
+    const nameInput  = document.getElementById('taskName');
+    const dateInput  = document.getElementById('dueDate');
+    const savebtn = this.getElementsByClassName('save-btn');
 
     addTaskButtons.forEach(button => {
         button.addEventListener('click', function () {
@@ -21,7 +25,7 @@
 
                 const input = document.createElement('input');
                 input.type = 'text';
-                input.className = 'form-control';
+                input.className = 'form-control objective-input';
                 input.id = `objective${i}`;
                 input.name = `objective${i + 1}`;
 
@@ -32,9 +36,23 @@
         });
     });
 
-    const addTaskModal = document.getElementById('addTaskModal');
     addTaskModal.addEventListener('hidden.bs.modal', function () {
-        // Clear the objectives when the modal is closed
+        // Clear inputs when modal closes
         objectivesContainer.innerHTML = '';
+        nameInput.value = '';
+        dateInput.value = '';
     });
+
+    savebtn.addEventListener('click', async function (e) {
+        e.preventDefault();
+        const nameValue = nameInput.value();
+        const dateValue = dateInput.value();
+        const objectiveValues = [...document.querySelectorAll('.objective-input')].map(input => input.value);
+
+        const taskData = {
+            name: nameValue,
+            date: dateValue,
+            objectives: objectiveValues
+        };
+    })
 });
