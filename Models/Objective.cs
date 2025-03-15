@@ -5,6 +5,9 @@ public class Objective {
     public string? Name { get; set; }
     public int Hours { get; set; }
     public bool IsComplete { get; set; }
+    //FK
+    public int TaskId { get; set; }
+    public Task? Task { get; set; }
 
     public Objective(string name, int hours = 0, bool isComplete = false)
     {

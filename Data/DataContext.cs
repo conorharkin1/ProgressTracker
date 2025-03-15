@@ -19,6 +19,12 @@ namespace ProgressTracker.Data;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // 1 Task has many Objectives
+            modelBuilder.Entity<Task>()
+                .HasMany(t => t.Objectives)
+                .WithOne(o => o.Task)
+                .HasForeignKey(o => o.TaskId);
+
             modelBuilder.Entity<Task>()
             .HasDiscriminator<string>("TaskType")
             .HasValue<SmallTask>("SmallTask")

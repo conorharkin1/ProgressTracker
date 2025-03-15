@@ -50,9 +50,9 @@
         const objectiveValues = [...document.querySelectorAll('.objective-input')].map(input => input.value);
 
         const taskData = {
-            name: nameValue,
-            date: dateValue,
-            objectives: objectiveValues
+            Name: nameValue,
+            DueDate: dateValue,
+            Objectives: objectiveValues
         };
     })
 });

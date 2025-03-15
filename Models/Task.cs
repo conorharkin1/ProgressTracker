@@ -4,7 +4,7 @@ public class Task {
     public int Id { get; set; }
     public string? Name { get; set; }
     public DateTime? DueDate { get; set; }
-    public Objective[]? Objectives { get; set; }
+    public ICollection<Objective>? Objectives { get; set; }
 
     public Task() {}
 
@@ -12,6 +12,6 @@ public class Task {
     {
         Name = name;
         DueDate = duedate;
-        Objectives = [];
+        Objectives = new List<Objective>();
     }
 }
