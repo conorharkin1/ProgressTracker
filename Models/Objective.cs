@@ -2,7 +2,7 @@ namespace ProgressTracker.Models;
 
 public class Objective {
     public int Id { get; set; }
-    public string? Name { get; set; }
+    public string Name { get; set; }
     public int Hours { get; set; }
     public bool IsComplete { get; set; }
     //FK
@@ -18,7 +18,7 @@ public class Objective {
     
     public Objective()
     {
-        
+        Name = "";
     }
 
 }

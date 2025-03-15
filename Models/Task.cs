@@ -5,8 +5,11 @@ public class Task {
     public string? Name { get; set; }
     public DateTime? DueDate { get; set; }
     public ICollection<Objective>? Objectives { get; set; }
+    public string? TaskType { get; set; }
 
-    public Task() {}
+    public Task() 
+    {
+    }
 
     public Task(string name, DateTime duedate)
     {

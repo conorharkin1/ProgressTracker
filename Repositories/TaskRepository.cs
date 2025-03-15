@@ -1,4 +1,6 @@
 using ProgressTracker.Data;
+using ProgressTracker.Models;
+using DbTask = ProgressTracker.Models.Task;
 
 namespace ProgressTracker.Repositories
 {
@@ -6,32 +8,48 @@ namespace ProgressTracker.Repositories
     {
         private readonly DataContext _dbContext;
 
-        public TaskRepository(DataContext dbcontext)
+        public TaskRepository(DataContext dbContext)
         {
-            _dbContext = dbcontext;
+            _dbContext = dbContext;
         }
 
-        public Task<Models.Task> AddTask(Models.Task task)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeleteTask(int id)
+        public async Task<bool> AddTask(DbTask task)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Models.Task>> GetAllTasks()
+        public async Task<bool> DeleteTask(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Models.Task> GetTaskById(int id)
+        public async Task<IEnumerable<DbTask>> GetAllTasks()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Models.Task> UpdateTask(Models.Task task)
+        public Task<IEnumerable<DbTask>> GetLargeTasks()
+        {
+            // _
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<DbTask>> GetMediumTasks()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<DbTask>> GetSmallTasks()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<DbTask> GetTaskById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> UpdateTask(DbTask task)
         {
             throw new NotImplementedException();
         }
