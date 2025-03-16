@@ -11,11 +11,11 @@ namespace ProgressTracker.Data;
             
         }
 
-        public DbSet<Objective>? Objectives { get; set; }
-        public DbSet<Task>? Tasks { get; set; }
-        public DbSet<SmallTask>? SmallTasks { get; set; }
-        public DbSet<MediumTask>? MediumTasks { get; set; }
-        public DbSet<LargeTask>? LargeTasks { get; set; }
+        public DbSet<Objective> Objectives { get; set; }
+        public DbSet<Task> Tasks { get; set; }
+        public DbSet<SmallTask> SmallTasks { get; set; }
+        public DbSet<MediumTask> MediumTasks { get; set; }
+        public DbSet<LargeTask> LargeTasks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

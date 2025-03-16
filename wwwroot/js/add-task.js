@@ -4,7 +4,7 @@
     const addTaskModal = document.getElementById('addTaskModal');
     const nameInput  = document.getElementById('taskName');
     const dateInput  = document.getElementById('dueDate');
-    const savebtn = this.getElementsByClassName('save-btn');
+    const savebtn = this.getElementById('savebtn');
 
     addTaskButtons.forEach(button => {
         button.addEventListener('click', function () {
@@ -43,16 +43,41 @@
         dateInput.value = '';
     });
 
-    savebtn.addEventListener('click', async function (e) {
+    savebtn.addEventListener('click', function (e) {
         e.preventDefault();
-        const nameValue = nameInput.value();
-        const dateValue = dateInput.value();
+        const nameValue = nameInput.value;
+        const dateValue = dateInput.value;
         const objectiveValues = [...document.querySelectorAll('.objective-input')].map(input => input.value);
 
-        const taskData = {
+        const rawTaskData = {
             Name: nameValue,
             DueDate: dateValue,
-            Objectives: objectiveValues
+            Objectives: []
         };
+
+        // Wrap the task data in a "task" object
+        // const payloadTaskData = {
+        //     task: rawTaskData
+        // };
+        console.log(rawTaskData);
+        try {
+            // Send POST request to the backend
+            const response = fetch('/api/tasks', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(rawTaskData)
+            });
+    
+            // Handle the response
+            if (response.ok) {
+                console.log('success');
+            } else {
+                console.log('failure');
+            }
+        } catch (error) {
+            console.log(error);
+        }
     })
 });

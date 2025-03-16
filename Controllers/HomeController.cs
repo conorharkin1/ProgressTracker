@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProgressTracker.Models.ViewModels;
 using ProgressTracker.Models;
 using ProgressTracker.Repositories;
+using DbTask = ProgressTracker.Models.Task;
 
 namespace ProgressTracker.Controllers;
 
