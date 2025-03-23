@@ -16,9 +16,23 @@ namespace ProgressTracker.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<bool> AddTask(DbTask task)
+        public async Task<DbTask> AddTask(DbTask task)
         {
-            throw new NotImplementedException();
+            if (task == null)
+            {
+                throw new ArgumentNullException(nameof(task), "Task cannot be null.");
+            }
+
+            try 
+            {
+                _dbContext.Tasks.Add(task);
+                await _dbContext.SaveChangesAsync();
+                return task;
+            } 
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while saving the task.", ex);
+            }
         }
 
         public async Task<bool> DeleteTask(int id)

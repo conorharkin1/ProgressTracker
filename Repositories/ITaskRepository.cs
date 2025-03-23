@@ -3,7 +3,7 @@ namespace ProgressTracker.Repositories
 {
     public interface ITaskRepository
     {
-        Task<bool> AddTask(DbTask task);
+        Task<DbTask> AddTask(DbTask task);
         Task<DbTask> GetTaskById(int id);
         Task<IEnumerable<DbTask>> GetAllTasks();
         Task<bool> UpdateTask(DbTask task);

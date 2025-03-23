@@ -44,12 +44,15 @@
                             <label for="dueDate" class="form-label">Due Date</label>
                             <input type="date" class="form-control" id="dueDate" name="DueDate" required>
                         </div>
+                        <div class="mb-3">
+                            <button id="addObjectiveButton">Add Objective</button>
+                        </div>
 
                         <div id="objectives-container">
                             <!-- Objectives will be dynamically inserted here -->
                         </div>
 
-                        <button type="submit" id="savebtn" class="btn btn-primary save-btn">Save Task</button>
+                        <button type="submit" id="savebtn" class="btn btn-primary save-btn" data-bs-dismiss="modal">Save Task</button>
                     </form>
                 </div>
             </div>

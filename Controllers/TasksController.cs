@@ -19,7 +19,7 @@ public class TasksController : ControllerBase
         try
         {
             await _taskRepository.AddTask(task);
-            return Ok();
+            return Ok(new { message = "Task saved successfully" });
         }
         catch (Exception)
         {
