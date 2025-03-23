@@ -1,3 +1,4 @@
+using ProgressTracker.Models;
 using DbTask = ProgressTracker.Models.Task;
 namespace ProgressTracker.Repositories
 {
@@ -10,6 +11,6 @@ namespace ProgressTracker.Repositories
         Task<bool> DeleteTask(int id);
         Task<IEnumerable<DbTask>> GetSmallTasks();
         Task<IEnumerable<DbTask>> GetMediumTasks();
-        Task<IEnumerable<DbTask>> GetLargeTasks();
+        Task<DbTask> GetLargeTask();
     }
 }

@@ -4,90 +4,27 @@ using ProgressTracker.Models.ViewModels;
 using ProgressTracker.Models;
 using ProgressTracker.Repositories;
 using DbTask = ProgressTracker.Models.Task;
+using System.Threading.Tasks;
 
 namespace ProgressTracker.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ITaskRepository _taskrepository;
+    private readonly ITaskRepository _taskRepository;
     public HomeController(ITaskRepository taskRepository)
     {
-        _taskrepository = taskRepository;
+        _taskRepository = taskRepository;
     }
 
-    public IActionResult Tracker()
+    public async Task<IActionResult> Tracker()
     {
-        // var model = new TasksViewModel 
-        // {
-        //     SmallTasks = _taskRepository.GetSmallTasks(),
-        //     MediumTasks = _taskRepository.GetMediumTasks(),
-        //     LargeTask = _taskRepository.GetLargeTasks(),
-        // };
-        // return View(model);
-
-        var model = new TasksViewModel
+        var model = new TasksViewModel 
         {
-            SmallTasks = new List<SmallTask>
-            {
-                new SmallTask()
-                {
-                    Name = "SmallTask1",
-                    DueDate = DateTime.MaxValue,
-                    Objectives =
-                    [
-                        new Objective("Objective 1", 5, false),
-                        new Objective("Objective 2", 3, true),
-                        new Objective("Objective 3", 2, false)
-                    ]
-                },
-                new SmallTask("Small Task", DateTime.MaxValue)
-                {
-                    Objectives =
-                    [
-                        new Objective("OBJ1")
-                    ]   
-                }
-            },
-            MediumTasks = new List<MediumTask>
-            {
-                new MediumTask()
-                {
-                    Name = "MediumTask1",
-                    DueDate = DateTime.MaxValue,
-                    Objectives =
-                    [
-                        new Objective()
-                        {
-                            Name = "Objective1",
-                            Hours = 1,
-                            IsComplete = false
-                        },
-                        new Objective()
-                        {
-                            Name = "Objective2",
-                            Hours = 1,
-                            IsComplete = false
-                        },
-                        new Objective()
-                        {
-                            Name = "Objective3",
-                            Hours = 1,
-                            IsComplete = false
-                        },
-                        new Objective()
-                        {
-                            Name = "Objective4",
-                            Hours = 1,
-                            IsComplete = false
-                        },
-                    ]
-                },
-            },
-            
-
+            SmallTasks = await _taskRepository.GetSmallTasks(),
+            MediumTasks = await _taskRepository.GetMediumTasks(),
+            LargeTask = await _taskRepository.GetLargeTask(),
         };
-
-        return View(model);
+        return View(model);        
     }
     public IActionResult Focus()
     {

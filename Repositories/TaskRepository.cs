@@ -45,20 +45,26 @@ namespace ProgressTracker.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<DbTask>> GetLargeTasks()
+        public async Task<DbTask> GetLargeTask()
         {
-            var largeTasks = await _dbContext.Tasks.Where(t => t.TaskType == "Large").ToListAsync();
-            return largeTasks;
+            var largeTask = await _dbContext.Tasks.Where(t => t.TaskType == "LARGE").FirstOrDefaultAsync();
+            if (largeTask == null )
+            {
+                return new LargeTask();
+            }
+            return largeTask;
         }
 
-        public Task<IEnumerable<DbTask>> GetMediumTasks()
+        public async Task<IEnumerable<DbTask>> GetMediumTasks()
         {
-            throw new NotImplementedException();
+            var mediumTasks = await _dbContext.Tasks.Where(t => t.TaskType == "MEDIUM").ToListAsync();
+            return mediumTasks;
         }
 
-        public Task<IEnumerable<DbTask>> GetSmallTasks()
+        public async Task<IEnumerable<DbTask>> GetSmallTasks()
         {
-            throw new NotImplementedException();
+            var smallTasks = await _dbContext.Tasks.Where(t => t.TaskType == "SMALL").ToListAsync();
+            return smallTasks;
         }
 
         public async Task<DbTask> GetTaskById(int id)

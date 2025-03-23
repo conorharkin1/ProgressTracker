@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-md-3">
             <div class="task-container-fluid">
-                @if (!(Model.SmallTasks.Count >= 2))
+                @if (!(Model.SmallTasks.Count() >= 2))
                 {
                     <div class="small-task">
                         @await Html.PartialAsync("_NoTaskPartial", "small")
@@ -34,7 +34,7 @@
 
         <div class="col-md-6">
             <div class="task-container-fluid">
-                @if (!(Model.MediumTasks.Count >= 1))
+                @if (!(Model.MediumTasks.Count() >= 1))
                 {
                     <div class="medium-task">
                         @await Html.PartialAsync("_NoTaskPartial", "medium")
@@ -61,7 +61,7 @@
                         @await Html.PartialAsync("_LargeTaskPartial", Model.LargeTask)
                     </div>
                 }
-                @if (!(Model.MediumTasks.Count >= 2))
+                @if (!(Model.MediumTasks.Count() >= 2))
                 {
                     <div class="medium-task">
                         @await Html.PartialAsync("_NoTaskPartial", "medium")
@@ -81,7 +81,7 @@
 
         <div class="col-md-3">
             <div class="task-container-fluid">
-                @if (Model.SmallTasks.Count == 4) 
+                @if (Model.SmallTasks.Count() == 4) 
                 {
                     @foreach (var task in Model.SmallTasks.Skip(2))
                     {
@@ -90,7 +90,7 @@
                         </div>
                     }
                 }
-                @if (Model.SmallTasks.Count == 3)
+                @if (Model.SmallTasks.Count() == 3)
                 {
                     @foreach (var task in Model.SmallTasks.Skip(2))
                     {

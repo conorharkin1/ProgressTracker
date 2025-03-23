@@ -27,8 +27,8 @@ namespace ProgressTracker.Data;
 
             modelBuilder.Entity<Task>()
             .HasDiscriminator<string>("TaskType")
-            .HasValue<SmallTask>("SmallTask")
-            .HasValue<MediumTask>("MediumTask")
-            .HasValue<LargeTask>("LargeTask");
+            .HasValue<SmallTask>("SMALL")
+            .HasValue<MediumTask>("MEDIUM")
+            .HasValue<LargeTask>("LARGE");
         }
     }
