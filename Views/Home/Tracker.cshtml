@@ -103,7 +103,7 @@
                         @await Html.PartialAsync("_NoTaskPartial", "small")
                     </div>
                 }
-                else
+                else if (Model.SmallTasks.Count() == 2)
                 {
                     <div class="small-task">
                         @await Html.PartialAsync("_NoTaskPartial", "small")
