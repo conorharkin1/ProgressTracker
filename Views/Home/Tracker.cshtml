@@ -49,7 +49,7 @@
                         </div>
                     }
                 }
-                @if (Model.LargeTask == null)
+                @if (Model.LargeTask == null || Model.LargeTask.Name == null)
                 {
                     <div class="large-task">
                         @await Html.PartialAsync("_NoTaskPartial", "large")

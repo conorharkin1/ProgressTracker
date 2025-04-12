@@ -46,5 +46,14 @@ public class TasksController : ControllerBase
     }
 
     //[HttpPut("{id}")]  for update
-    //[HttpDelete("{id}")]  for delete
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteTask(int id)
+    {
+        bool deleted = await _taskRepository.DeleteTask(id);
+        if (!deleted)
+        {
+            return NotFound();
+        }
+        return Ok(new { message = "Task deleted successfully" });
+    }
 }

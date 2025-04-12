@@ -37,7 +37,15 @@ namespace ProgressTracker.Repositories
 
         public async Task<bool> DeleteTask(int id)
         {
-            throw new NotImplementedException();
+            var task = await _dbContext.Tasks.FindAsync(id);
+            if (task == null)
+            {
+                return false;
+            }
+
+            _dbContext.Tasks.Remove(task);
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
 
         public async Task<IEnumerable<DbTask>> GetAllTasks()
