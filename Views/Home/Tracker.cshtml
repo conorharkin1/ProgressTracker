@@ -14,19 +14,36 @@
     <div class="row">
         <div class="col-md-3">
             <div class="task-container-fluid">
-                @if (!(Model.SmallTasks.Count() >= 2))
-                {
-                    <div class="small-task">
-                        @await Html.PartialAsync("_NoTaskPartial", "small")
-                    </div>
-                }
-                else
-                {
-                    @foreach (var task in Model.SmallTasks.Take(2))
+                @{
+                    if (Model.SmallTasks.Count() == 0)
                     {
                         <div class="small-task">
-                            @await Html.PartialAsync("_SmallTaskPartial", task)
+                        @await Html.PartialAsync("_NoTaskPartial", "small")
                         </div>
+                        <div class="small-task">
+                            @await Html.PartialAsync("_NoTaskPartial", "small")
+                        </div>
+                    }
+                    else if (Model.SmallTasks.Count() == 1)
+                    {
+                        foreach (var task in Model.SmallTasks.Take(1))
+                        {
+                            <div class="small-task">
+                                @await Html.PartialAsync("_SmallTaskPartial", task)
+                            </div>
+                        }
+                        <div class="small-task">
+                            @await Html.PartialAsync("_NoTaskPartial", "small")
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (var task in Model.SmallTasks.Take(2))
+                        {
+                            <div class="small-task">
+                                @await Html.PartialAsync("_SmallTaskPartial", task)
+                            </div>
+                        }
                     }
                 }
             </div>
@@ -81,36 +98,38 @@
 
         <div class="col-md-3">
             <div class="task-container-fluid">
-                @if (Model.SmallTasks.Count() == 4) 
-                {
-                    @foreach (var task in Model.SmallTasks.Skip(2))
+                @{
+                    if (Model.SmallTasks.Count() == 4) 
                     {
-                        <div class="small-task">
-                            @await Html.PartialAsync("_SmallTaskPartial", task)
-                        </div>
+                        foreach (var task in Model.SmallTasks.Skip(2))
+                        {
+                            <div class="small-task">
+                                @await Html.PartialAsync("_SmallTaskPartial", task)
+                            </div>
+                        }
                     }
-                }
-                @if (Model.SmallTasks.Count() == 3)
-                {
-                    @foreach (var task in Model.SmallTasks.Skip(2))
+                    else if (Model.SmallTasks.Count() == 3)
                     {
-                        <div class="small-task">
-                            @await Html.PartialAsync("_SmallTaskPartial", task)
-                        </div>
-                    }
+                        foreach (var task in Model.SmallTasks.Skip(2))
+                        {
+                            <div class="small-task">
+                                @await Html.PartialAsync("_SmallTaskPartial", task)
+                            </div>
+                        }
 
-                    <div class="small-task">
-                        @await Html.PartialAsync("_NoTaskPartial", "small")
-                    </div>
-                }
-                else if (Model.SmallTasks.Count() == 2)
-                {
-                    <div class="small-task">
-                        @await Html.PartialAsync("_NoTaskPartial", "small")
-                    </div>
-                    <div class="small-task">
-                        @await Html.PartialAsync("_NoTaskPartial", "small")
-                    </div>
+                        <div class="small-task">
+                            @await Html.PartialAsync("_NoTaskPartial", "small")
+                        </div>
+                    }
+                    else if (!(Model.SmallTasks.Count() >= 2))
+                    {
+                        <div class="small-task">
+                            @await Html.PartialAsync("_NoTaskPartial", "small")
+                        </div>
+                        <div class="small-task">
+                            @await Html.PartialAsync("_NoTaskPartial", "small")
+                        </div>
+                    }
                 }
             </div>
         </div>       
