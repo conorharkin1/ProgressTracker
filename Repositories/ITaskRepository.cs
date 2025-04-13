@@ -9,8 +9,8 @@ namespace ProgressTracker.Repositories
         Task<IEnumerable<DbTask>> GetAllTasks();
         Task<bool> UpdateTask(DbTask task);
         Task<bool> DeleteTask(int id);
-        Task<IEnumerable<DbTask>> GetSmallTasks();
-        Task<IEnumerable<DbTask>> GetMediumTasks();
+        Task<List<DbTask>> GetSmallTasks();
+        Task<List<DbTask>> GetMediumTasks();
         Task<DbTask> GetLargeTask();
     }
 }

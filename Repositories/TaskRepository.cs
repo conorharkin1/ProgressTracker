@@ -55,7 +55,7 @@ namespace ProgressTracker.Repositories
 
         public async Task<DbTask> GetLargeTask()
         {
-            var largeTask = await _dbContext.Tasks.Where(t => t.TaskType == "LARGE").FirstOrDefaultAsync();
+            var largeTask = await _dbContext.Tasks.Where(t => t.TaskType == "LARGE").Include(t => t.Objectives).FirstOrDefaultAsync();
             if (largeTask == null )
             {
                 return new LargeTask();
@@ -63,15 +63,15 @@ namespace ProgressTracker.Repositories
             return largeTask;
         }
 
-        public async Task<IEnumerable<DbTask>> GetMediumTasks()
+        public async Task<List<DbTask>> GetMediumTasks()
         {
-            var mediumTasks = await _dbContext.Tasks.Where(t => t.TaskType == "MEDIUM").ToListAsync();
+            var mediumTasks = await _dbContext.Tasks.Where(t => t.TaskType == "MEDIUM").Include(mt => mt.Objectives).ToListAsync();
             return mediumTasks;
         }
 
-        public async Task<IEnumerable<DbTask>> GetSmallTasks()
+        public async Task<List<DbTask>> GetSmallTasks()
         {
-            var smallTasks = await _dbContext.Tasks.Where(t => t.TaskType == "SMALL").ToListAsync();
+            var smallTasks = await _dbContext.Tasks.Where(t => t.TaskType == "SMALL").Include(st => st.Objectives).ToListAsync();
             return smallTasks;
         }
 
