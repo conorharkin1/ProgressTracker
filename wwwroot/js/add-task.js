@@ -1,4 +1,4 @@
-﻿class TaskManager {
+class AddTaskManager {
     constructor() {
         this.maxObjectives = 0;
         this.currentObjectiveIndex = 0;
@@ -21,7 +21,6 @@
         this.addTaskButtons.forEach(button => {
             button.addEventListener('click', () => this.handleAddTaskClick(button));
         });
-
         this.addObjectiveButton.addEventListener('click', () => this.addObjective());
         this.addTaskModal.addEventListener('hidden.bs.modal', () => this.resetForm());
         this.saveBtn.addEventListener('click', (e) => this.saveTask(e));
@@ -131,7 +130,6 @@
     }
 }
 
-// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new TaskManager();
+    new AddTaskManager();
 });
