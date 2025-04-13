@@ -45,7 +45,16 @@ public class TasksController : ControllerBase
         }
     }
 
-    //[HttpPut("{id}")]  for update
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateTask([FromBody] DbTask task)
+    {
+        bool updated = await _taskRepository.UpdateTask(task);
+        if(!updated)
+        {
+            return NotFound();
+        }
+        return Ok(new { message = "Task updated successfully" });
+    }
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTask(int id)
     {

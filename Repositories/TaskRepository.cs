@@ -88,7 +88,20 @@ namespace ProgressTracker.Repositories
 
         public async Task<bool> UpdateTask(DbTask task)
         {
-            throw new NotImplementedException();
+            var taskToUpdate = await _dbContext.Tasks.FindAsync(task.Id);
+            if (taskToUpdate == null)
+            {
+                return false;
+            }
+
+            taskToUpdate.Id = task.Id;
+            taskToUpdate.Name = task.Name;
+            taskToUpdate.DueDate = task.DueDate;
+            taskToUpdate.Objectives = task.Objectives;
+            taskToUpdate.TaskType = task.TaskType;
+
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
     }
 
