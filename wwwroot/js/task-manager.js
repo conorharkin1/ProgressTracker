@@ -36,12 +36,12 @@ class TaskManager {
 
         // Open Edit Task Modal
         this.editButtons.forEach(button => {
-            button.addEventListener('click', (e) => this.openEditTaskModal(e.currentTarget));
+            button.addEventListener('click', () => this.openEditTaskModal(button));
         });
 
         // Delete Task
         this.deleteButtons.forEach(button => {
-            button.addEventListener('click', (e) => this.deleteTask(e));
+            button.addEventListener('click', () => this.deleteTask(button));
         });
 
         // Add Objective
@@ -62,12 +62,7 @@ class TaskManager {
 
     openAddTaskModal(button) {
         this.taskModalTitle.textContent = 'Add a new Task';
-        this.isEditMode = false;
-        this.taskIdInput.value = '';
         this.maxObjectives = parseInt(button.getAttribute('data-objective-count'));
-        this.currentObjectiveIndex = 0;
-        this.objectivesContainer.innerHTML = '';
-        this.addObjectiveButton.disabled = false;
 
         this.modal.show();
     }
@@ -82,7 +77,6 @@ class TaskManager {
             if (!response.ok) throw new Error('Failed to load task');
 
             const task = await response.json();
-            console.log(task);
 
             this.taskIdInput.value = task.id;
             this.taskNameInput.value = task.name;
@@ -104,7 +98,6 @@ class TaskManager {
                 `;
                 this.objectivesContainer.appendChild(div);
             });
-
             this.modal.show();
 
         } catch (error) {
@@ -122,9 +115,9 @@ class TaskManager {
         const div = document.createElement('div');
         div.className = 'mb-3 objective-input-group';
         div.innerHTML = `
-            <label>Objective ${this.currentObjectiveIndex + 1} Name</label>
+            <label class="form-label">Name</label>
             <input type="text" class="form-control" name="objectiveName${this.currentObjectiveIndex}" required>
-            <label>Objective ${this.currentObjectiveIndex + 1} Hours</label>
+            <label class="form-label">Hours to complete</label>
             <input type="number" class="form-control" name="objectiveHours${this.currentObjectiveIndex}" required>
         `;
         this.objectivesContainer.appendChild(div);
@@ -204,8 +197,8 @@ class TaskManager {
         }
     }
 
-    async deleteTask(e) {
-        const taskId = e.currentTarget.getAttribute('task-id');
+    async deleteTask(button) {
+        const taskId = button.getAttribute('task-id');
         try {
             const result = await Swal.fire({
                 title: 'Are you sure?',
@@ -227,8 +220,9 @@ class TaskManager {
                         title: 'Deleted!',
                         text: 'Your task has been successfully deleted.',
                         icon: 'success',
-                        timer: 1500
+                        timer: 1000
                     });
+                    this.resetForm();
                     window.location.reload();
                 } else {
                     throw new Error('Delete failed');
