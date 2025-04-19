@@ -78,27 +78,35 @@ namespace ProgressTracker.Repositories
         public async Task<DbTask> GetTaskById(int id)
         {
             var task = await _dbContext.Tasks.FindAsync(id);
+
             if (task == null)
             {
                 throw new TaskNotFoundException(id);
             }
+
+            task.Objectives = await _dbContext.Objectives.Where(o => o.TaskId == id).ToListAsync();
 
             return task;
         }
 
         public async Task<bool> UpdateTask(DbTask task)
         {
-            var taskToUpdate = await _dbContext.Tasks.FindAsync(task.Id);
+            var taskToUpdate = await _dbContext.Tasks.Include(t => t.Objectives).Where(t => t.Id == task.Id).FirstOrDefaultAsync();
             if (taskToUpdate == null)
             {
                 return false;
+            }
+
+            if (taskToUpdate.Objectives != null)
+            {
+                _dbContext.RemoveRange(taskToUpdate.Objectives);
+                await _dbContext.SaveChangesAsync();
             }
 
             taskToUpdate.Id = task.Id;
             taskToUpdate.Name = task.Name;
             taskToUpdate.DueDate = task.DueDate;
             taskToUpdate.Objectives = task.Objectives;
-            taskToUpdate.TaskType = task.TaskType;
 
             await _dbContext.SaveChangesAsync();
             return true;

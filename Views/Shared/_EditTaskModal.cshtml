@@ -1,0 +1,30 @@
+<div class="modal fade" id="taskModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="taskModalTitle">Add a new Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="taskForm">
+                    <input type="hidden" name="Id" id="taskId" />
+                    <div class="mb-3">
+                        <label for="taskName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="taskName" name="Name" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="dueDate" class="form-label">Due Date</label>
+                        <input type="date" class="form-control" id="dueDate" name="DueDate" required />
+                    </div>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-outline-secondary" id="addObjectiveBtn">Add Objective</button>
+                    </div>
+                    <div id="objectivesContainer">
+                        <!-- Objectives inserted dynamically -->
+                    </div>
+                    <button type="submit" class="btn btn-primary save-btn">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

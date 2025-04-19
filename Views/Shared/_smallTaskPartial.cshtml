@@ -8,7 +8,13 @@
         <h4>@Model.Name</h4>
     </div>
     <div class="task-header-right">
-        <button class="btn"><i class="bi bi-pencil icon-colour"></i></button>
+        <button class="btn" id="update-task-btn"
+            data-bs-toggle="modal"
+            data-bs-target="#taskModal"
+            data-task-id="@Model.Id"
+            data-objective-count= 3>
+            <i class="bi bi-pencil icon-colour"></i>
+        </button>
     </div>
 </div>
 <div class="sm-task-stats">
@@ -27,12 +33,12 @@
                 @if ( objective != null && objective.Name != string.Empty)
                 {
                     <div class="sm-form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="@objective.Name">
+                        <input class="form-check-input" type="checkbox" value="@objective.IsComplete" id="@objective.Name">
                         <label class="form-check-label" for="@objective.Name" id="name-label">
-                            Volcanoes
+                            @objective.Name
                         </label>
                         <label class="form-check-label" for="@objective.Name">
-                            Study chapter 1,2,3 of Geography (Pages 70-115). blah blah blah blah blah
+                            Requires @objective.Hours hours to complete
                         </label>
                     </div>
                 }
