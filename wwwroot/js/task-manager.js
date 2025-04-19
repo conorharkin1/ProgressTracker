@@ -226,6 +226,7 @@ class TaskManager {
                         title: 'Deleted!',
                         text: 'Your task has been successfully deleted.',
                         icon: 'success',
+                        showConfirmButton: false,
                         timer: 1000
                     });
                     this.resetForm();
