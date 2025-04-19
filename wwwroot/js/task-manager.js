@@ -88,13 +88,16 @@ class TaskManager {
             this.addObjectiveButton.disabled = false;
 
             task.objectives.forEach((obj, index) => {
+                console.log(obj);
                 const div = document.createElement('div');
                 div.className = 'mb-3 objective-input-group';
                 div.innerHTML = `
-                    <label>Objective ${index + 1} Name</label>
+                    <label class="form-label">Name</label>
                     <input type="text" class="form-control" name="objectiveName${index}" value="${obj.name}" required>
-                    <label>Objective ${index + 1} Hours</label>
+                    <label class="form-label">Hours to complete</label>
                     <input type="number" class="form-control" name="objectiveHours${index}" value="${obj.hours}" required>
+                    <label class="form-label"> Is Complete</label>
+                    <input type="checkbox" class="form-check-input" name="objectiveIsComplete${index}" ${(obj.isComplete ? 'checked' : '')}>
                 `;
                 this.objectivesContainer.appendChild(div);
             });
@@ -119,6 +122,8 @@ class TaskManager {
             <input type="text" class="form-control" name="objectiveName${this.currentObjectiveIndex}" required>
             <label class="form-label">Hours to complete</label>
             <input type="number" class="form-control" name="objectiveHours${this.currentObjectiveIndex}" required>
+            <label class="form-label"> Is Complete</label>
+            <input type="checkbox" class="form-check-input" name="objectiveIsComplete${this.currentObjectiveIndex}">
         `;
         this.objectivesContainer.appendChild(div);
         this.currentObjectiveIndex++;
@@ -144,7 +149,8 @@ class TaskManager {
         objectiveInputs.forEach((group, index) => {
             const name = group.querySelector(`input[name="objectiveName${index}"]`).value;
             const hours = parseInt(group.querySelector(`input[name="objectiveHours${index}"]`).value);
-            objectives.push({ Name: name, Hours: hours });
+            const iscomplete = group.querySelector(`input[name="objectiveIsComplete${index}"]`).checked;
+            objectives.push({ Name: name, Hours: hours, IsComplete: iscomplete});
         });
 
         this.taskType = this.maxObjectives === 3 ? 'SMALL' :

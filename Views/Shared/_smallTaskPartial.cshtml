@@ -1,4 +1,7 @@
 @model ProgressTracker.Models.SmallTask;
+@{
+    int numCompleteObjectives=0;
+}
 
 <div class="container task-header">
     <div class="task-header-left">
@@ -20,8 +23,15 @@
 <div class="sm-task-stats">
     @if (Model.Objectives != null && Model.Objectives.Any())
     {
+        @foreach (var objective in Model.Objectives)
+        {
+            if (objective.IsComplete)
+            {
+                numCompleteObjectives++;
+            }
+        }
         <i class="bi bi-plus-circle"></i>
-        <label>You have completed 0/@Model.Objectives.Count() objectives</label>
+        <label>You have completed @numCompleteObjectives/@Model.Objectives.Count() objectives</label>
     }
 </div>
 <div class="sm-task-body">
@@ -30,16 +40,12 @@
         {
             @foreach (var objective in Model.Objectives)
             {
-                @if ( objective != null && objective.Name != string.Empty)
+                @if (objective != null && !string.IsNullOrWhiteSpace(objective.Name))
                 {
                     <div class="sm-form-check">
-                        <input class="form-check-input" type="checkbox" value="@objective.IsComplete" id="@objective.Name">
-                        <label class="form-check-label" for="@objective.Name" id="name-label">
-                            @objective.Name
-                        </label>
-                        <label class="form-check-label" for="@objective.Name">
-                            Requires @objective.Hours hours to complete
-                        </label>
+                        <p>Complete: @objective.IsComplete</p>
+                        <p>@objective.Name</p>
+                        <p>Requires @objective.Hours hours to complete</p>
                     </div>
                 }
             }
