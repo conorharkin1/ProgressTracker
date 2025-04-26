@@ -8,6 +8,6 @@ public class SmallTask : Task {
     
     public SmallTask(string name, DateTime dueDate) :base(name, dueDate)
     {
-        Objectives = new Objective[3];
+        Objectives = new Objective[2];
     }
 }

@@ -1,6 +1,14 @@
 @model ProgressTracker.Models.MediumTask;
 @{
-    int numCompleteObjectives=0;
+    int numCompleteObjectives = 0;
+    int totalObjectives = Model.Objectives?.Count() ?? 0;
+    if (totalObjectives > 0)
+    {
+        if (Model.Objectives != null)
+            numCompleteObjectives = Model.Objectives.Count(o => o.IsComplete);
+    }
+    int completionPercentage = totalObjectives > 0 ? (int)((double)numCompleteObjectives / totalObjectives * 100) : 0;
+    var objectives = Model.Objectives?.ToList();
 }
 
 <div class="container task-header">
@@ -15,40 +23,82 @@
             data-bs-toggle="modal"
             data-bs-target="#taskModal"
             data-task-id="@Model.Id"
-            data-objective-count= 6>
+            data-objective-count= 4>
             <i class="bi bi-pencil icon-colour"></i>
         </button>
     </div>
 </div>
-<div class="sm-task-stats">
-    @if (Model.Objectives != null && Model.Objectives.Any())
-    {
-        @foreach (var objective in Model.Objectives)
+<div class="medium-task-layout">
+    <div class="medium-objectives-list">
+        @if (objectives != null)
         {
-            if (objective.IsComplete)
-            {
-                numCompleteObjectives++;
-            }
-        }
-        <i class="bi bi-plus-circle"></i>
-        <label>You have completed @numCompleteObjectives/@Model.Objectives.Count() objectives</label>
-    }
-</div>
-<div class="sm-task-body">
-    <div class="form-check">
-        @if (Model.Objectives != null && Model.Objectives.Any())
-        {
-            @foreach (var objective in Model.Objectives)
-            {
-                @if (objective != null && !string.IsNullOrWhiteSpace(objective.Name))
-                {
-                    <div class="sm-form-check">
-                        <p>Complete: @objective.IsComplete</p>
-                        <p>@objective.Name</p>
-                        <p>Requires @objective.Hours hours to complete</p>
-                    </div>
+            <div class="objective-left">
+                @{
+                    var leftObjectives = objectives.Take(2).ToList();
+                    int leftPlaceholders = 2 - leftObjectives.Count;
                 }
-            }
+                @foreach (var objective in leftObjectives)
+                {
+                    @if (objective != null && !string.IsNullOrWhiteSpace(objective.Name))
+                    {
+                        <div class="objective-item">
+                            <div class="objective-header">
+                                <input type="checkbox" @(objective.IsComplete ? "checked" : "") disabled />
+                                <h4 class="objective-name">@objective.Name</h4>
+                            </div>
+                            @* <div class="objective-details">
+                                <span class="objective-hours">⏳ @objective.Hours hours needed</span>
+                            </div> *@
+                        </div>
+                    }
+                }
+                @for (int i = 0; i < leftPlaceholders; i++)
+                    {
+                        <div class="objective-item-placeholder">
+                            @*Placeholder*@
+                        </div>
+                    }
+            </div>
+
+            <div class="medium-plus-progress-circle">
+                <div class="outer">
+                    <div class="inner">
+                        <div class="percentage" data-percentage="@completionPercentage">@completionPercentage</div>
+                    </div>
+                </div>
+
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">
+                    <circle cx="80" cy="80" r="70" stroke-linecap="round" stroke="#006d77" />
+                </svg>
+            </div>
+
+            <div class="objective-right">
+                @{
+                    var rightObjectives = objectives.Skip(2).ToList();
+                    int rightPlaceholders = 2 - rightObjectives.Count;
+                }
+                @foreach (var objective in rightObjectives)
+                {
+                    @if (objective != null && !string.IsNullOrWhiteSpace(objective.Name))
+                    {
+                        <div class="objective-item">
+                            <div class="objective-header">
+                                <input type="checkbox" @(objective.IsComplete ? "checked" : "") disabled />
+                                <h4 class="objective-name">@objective.Name</h4>
+                            </div>
+                            @* <div class="objective-details">
+                                <span class="objective-hours">⏳ @objective.Hours hours needed</span>
+                            </div> *@
+                        </div>
+                    }
+                }
+                @for (int i = 0; i < rightPlaceholders; i++)
+                    {
+                        <div class="objective-item-placeholder">
+                            @* placeholder *@
+                        </div>
+                    }
+            </div>
         }
     </div>
 </div>

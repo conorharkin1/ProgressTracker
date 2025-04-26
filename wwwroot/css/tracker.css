@@ -6,7 +6,7 @@
 nav {
     display: flex;
     height: var(--navbar-height);
-    background-color: #66A5AD;
+    background-color: #83c5be;
     justify-content: center;
     align-items: center;
 }
@@ -17,71 +17,76 @@ nav {
     height: 100%;
 }
 
-.navbar-section.right, .navbar-section.left, .navbar-section.center {
+.navbar-section.right,
+.navbar-section.left,
+.navbar-section.center {
     flex: 1 1 20%;
     justify-content: center;
 }
+
 .navbar-section.center {
     flex: 1 1 60%;
 }
 
 nav a {
-    color: black; 
-    text-decoration: none; 
+    color: black;
+    text-decoration: none;
 }
 
-nav a:hover {
-    
-}
+nav a:hover {}
 
 .row {
     display: flex;
     flex-wrap: wrap;
 }
 
-.col-md-6, .col-md-3 {
+.col-md-6,
+.col-md-3 {
     padding: 10px;
     min-height: var(--fullview-minus-navbar);
     max-height: var(--fullview-minus-navbar);
-    background-color: #C4DFE6;
+    background-color: #83c5be;
 }
 
 .col-md-3 {
-    flex: 1 1 20%; /* Take up 20% of the width */
+    flex: 1 1 20%;
+    /* Take up 20% of the width */
 }
 
 .col-md-6 {
-    flex: 1 1 60%; /* Take up 60% of the width */
+    flex: 1 1 60%;
+    /* Take up 60% of the width */
 }
 
-.task-container-fluid, .container-fluid {
+.task-container-fluid,
+.container-fluid {
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
-.small-task, .medium-task, .large-task {
+.small-task,
+.medium-task,
+.large-task {
     display: flex;
     flex-direction: column;
     border-radius: 20px;
     margin: 10px 0;
     padding: 10px;
+    background-color: #dce0d9;
 }
 
 .small-task {
-    background-color: #66A5AD;
     flex: 0 1 50%;
     overflow: auto;
 }
 
 .medium-task {
-    background-color: #66A5AD;
     flex: 1 1 30%;
     overflow: auto;
 }
 
 .large-task {
-    background-color: #66A5AD;
     flex: 1 1 50%;
 }
 
@@ -95,7 +100,9 @@ nav a:hover {
     flex: 0 1 10%;
 }
 
-.task-header-left, .task-header-centre, .task-header-right {
+.task-header-left,
+.task-header-centre,
+.task-header-right {
     display: inline-block;
 }
 
@@ -147,4 +154,134 @@ nav a:hover {
 .logo {
     width: 80px;
     height: auto;
+}
+
+.objectives-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    width: 100%;
+}
+
+.objective-item {
+    background: #83c5be;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+}
+
+.objective-item-placeholder {
+    background: #dce0d9;
+    flex: 1;
+    display: flex;
+    padding: 1rem;
+}
+
+.objective-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.objective-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.objective-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #374151;
+    margin: 0;
+}
+
+.medium-task-layout {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.medium-objectives-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.objective-right,
+.objective-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1; /* <-- This makes them GROW to use space equally */
+    gap: 0.5rem;
+}
+
+.progress-circle {
+    height: 100%;
+    width: 50%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.medium-plus-progress-circle {
+    height: 100%;
+    width: 30%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.outer {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.inner {
+    height: 80%;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.percentage {
+    font-weight: 600;
+    color: green;
+    font-size: 1.2rem;
+}
+
+svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(90deg);
+}
+
+
+circle {
+    fill: none;
+    stroke-width: 20px;
+    stroke-dasharray: 440;
+    stroke-dashoffset: 440;
+    transition: stroke-dashoffset 1s ease;
 }

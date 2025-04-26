@@ -8,6 +8,6 @@ public class MediumTask : Task {
     
     public MediumTask(string name, DateTime dueDate) :base(name, dueDate)
     {
-        Objectives = new Objective[6];
+        Objectives = new Objective[4];
     }
 }

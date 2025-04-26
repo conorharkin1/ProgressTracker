@@ -8,6 +8,7 @@ class TaskManager {
 
         this.initElements();
         this.bindEvents();
+        this.initProgressCircles();
     }
 
     initElements() {
@@ -80,7 +81,7 @@ class TaskManager {
 
             this.taskIdInput.value = task.id;
             this.taskNameInput.value = task.name;
-            this.taskDateInput.value = task.dueDate.split('T')[0];
+            this.taskDateInput.value = task.dueDate;
             this.objectivesContainer.innerHTML = '';
 
             this.currentObjectiveIndex = task.objectives.length;
@@ -93,7 +94,7 @@ class TaskManager {
                 div.className = 'mb-3 objective-input-group';
                 div.innerHTML = `
                     <label class="form-label">Name</label>
-                    <input type="text" class="form-control" name="objectiveName${index}" value="${obj.name}" required>
+                    <input type="text" maxlength="32" class="form-control" name="objectiveName${index}" value="${obj.name}" required>
                     <label class="form-label">Hours to complete</label>
                     <input type="number" class="form-control" name="objectiveHours${index}" value="${obj.hours}" required>
                     <label class="form-label"> Is Complete</label>
@@ -119,7 +120,7 @@ class TaskManager {
         div.className = 'mb-3 objective-input-group';
         div.innerHTML = `
             <label class="form-label">Name</label>
-            <input type="text" class="form-control" name="objectiveName${this.currentObjectiveIndex}" required>
+            <input type="text" maxlength="32" class="form-control" name="objectiveName${this.currentObjectiveIndex}" required>
             <label class="form-label">Hours to complete</label>
             <input type="number" class="form-control" name="objectiveHours${this.currentObjectiveIndex}" required>
             <label class="form-label"> Is Complete</label>
@@ -153,8 +154,8 @@ class TaskManager {
             objectives.push({ Name: name, Hours: hours, IsComplete: iscomplete});
         });
 
-        this.taskType = this.maxObjectives === 3 ? 'SMALL' :
-                        this.maxObjectives === 6 ? 'MEDIUM' : 'LARGE';
+        this.taskType = this.maxObjectives === 2 ? 'SMALL' :
+                        this.maxObjectives === 4 ? 'MEDIUM' : 'LARGE';
 
         return {
             Id: this.taskIdInput.value ? this.taskIdInput.value : 0,
@@ -171,6 +172,7 @@ class TaskManager {
 
         try {
             const taskData = this.collectTaskData();
+            console.log(taskData);
             const method = this.isEditMode ? 'PUT' : 'POST';
             const endpoint = this.isEditMode ? `/api/tasks/${taskData.Id}` : '/api/tasks';
 
@@ -239,6 +241,44 @@ class TaskManager {
             Swal.fire('Error!', 'There was a problem deleting the task.', 'error');
             console.error(error);
         }
+    }
+
+    initProgressCircles() {
+        document.querySelectorAll('.progress-circle').forEach(circleContainer => {
+            const percentageElement = circleContainer.querySelector('.percentage');
+            const circle = circleContainer.querySelector('circle');
+        
+            if (!percentageElement || !circle) return; // Just in case
+        
+            const percentage = parseInt(percentageElement.dataset.percentage, 10);
+            const radius = circle.r.baseVal.value;
+            const circumference = 2 * Math.PI * radius;
+        
+            circle.style.strokeDasharray = `${circumference}`;
+            circle.style.strokeDashoffset = `${circumference}`;
+        
+            const offset = circumference - (percentage / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+        });
+
+        document.querySelectorAll('.medium-plus-progress-circle').forEach(circleContainer => {
+            console.log('here');
+            const percentageElement = circleContainer.querySelector('.percentage');
+            const circle = circleContainer.querySelector('circle');
+        
+            if (!percentageElement || !circle) return; // Just in case
+        
+            const percentage = parseInt(percentageElement.dataset.percentage, 10);
+            const radius = circle.r.baseVal.value;
+            const circumference = 2 * Math.PI * radius;
+        
+            circle.style.strokeDasharray = `${circumference}`;
+            circle.style.strokeDashoffset = `${circumference}`;
+        
+            const offset = circumference - (percentage / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+        });
+        
     }
 }
 
