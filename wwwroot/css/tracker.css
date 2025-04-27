@@ -37,7 +37,7 @@ nav a:hover {}
 
 .row {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 
 .col-md-6,
@@ -46,16 +46,15 @@ nav a:hover {}
     min-height: var(--fullview-minus-navbar);
     max-height: var(--fullview-minus-navbar);
     background-color: #83c5be;
+    flex-shrink: 0;
 }
 
 .col-md-3 {
-    flex: 1 1 20%;
-    /* Take up 20% of the width */
+    width: 20%;
 }
 
 .col-md-6 {
-    flex: 1 1 60%;
-    /* Take up 60% of the width */
+    width: 60%;
 }
 
 .task-container-fluid,
@@ -108,7 +107,18 @@ nav a:hover {}
 
 .task-header-centre {
     text-align: center;
-    padding-top: 10px;
+    padding-top: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.task-header-centre h4 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .add-task-body {
@@ -171,6 +181,7 @@ nav a:hover {}
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     display: flex;
+    max-width: 100%;
 }
 
 .objective-item-placeholder {
@@ -178,6 +189,7 @@ nav a:hover {}
     flex: 1;
     display: flex;
     padding: 1rem;
+    max-width: 100%;
 }
 
 .objective-item:hover {
@@ -190,6 +202,9 @@ nav a:hover {}
     align-items: center;
     gap: 0.75rem;
     margin-bottom: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .objective-name {
@@ -197,6 +212,9 @@ nav a:hover {}
     font-weight: 600;
     color: #374151;
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .medium-task-layout {
@@ -219,8 +237,9 @@ nav a:hover {}
     display: flex;
     flex-direction: column;
     justify-content: center;
-    flex: 1; /* <-- This makes them GROW to use space equally */
+    flex: 1;
     gap: 0.5rem;
+    width: 40%;
 }
 
 .progress-circle {
@@ -240,6 +259,7 @@ nav a:hover {}
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    width: 20%;
 }
 
 .outer {

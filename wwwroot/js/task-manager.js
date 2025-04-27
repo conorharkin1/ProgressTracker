@@ -94,7 +94,7 @@ class TaskManager {
                 div.className = 'mb-3 objective-input-group';
                 div.innerHTML = `
                     <label class="form-label">Name</label>
-                    <input type="text" maxlength="32" class="form-control" name="objectiveName${index}" value="${obj.name}" required>
+                    <input type="text" class="form-control" name="objectiveName${index}" value="${obj.name}" required>
                     <label class="form-label">Hours to complete</label>
                     <input type="number" class="form-control" name="objectiveHours${index}" value="${obj.hours}" required>
                     <label class="form-label"> Is Complete</label>
@@ -120,7 +120,7 @@ class TaskManager {
         div.className = 'mb-3 objective-input-group';
         div.innerHTML = `
             <label class="form-label">Name</label>
-            <input type="text" maxlength="32" class="form-control" name="objectiveName${this.currentObjectiveIndex}" required>
+            <input type="text" class="form-control" name="objectiveName${this.currentObjectiveIndex}" required>
             <label class="form-label">Hours to complete</label>
             <input type="number" class="form-control" name="objectiveHours${this.currentObjectiveIndex}" required>
             <label class="form-label"> Is Complete</label>
