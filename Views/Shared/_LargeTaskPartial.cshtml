@@ -23,7 +23,7 @@
             data-bs-toggle="modal"
             data-bs-target="#taskModal"
             data-task-id="@Model.Id"
-            data-objective-count= 4>
+            data-objective-count= 8>
             <i class="bi bi-pencil icon-colour"></i>
         </button>
     </div>
@@ -34,8 +34,8 @@
         {
             <div class="objective-left">
                 @{
-                    var leftObjectives = objectives.Take(3).ToList();
-                    int leftPlaceholders = 3 - leftObjectives.Count;
+                    var leftObjectives = objectives.Take(4).ToList();
+                    int leftPlaceholders = 4 - leftObjectives.Count;
                 }
                 @foreach (var objective in leftObjectives)
                 {
@@ -74,8 +74,8 @@
 
             <div class="objective-right">
                 @{
-                    var rightObjectives = objectives.Skip(3).ToList();
-                    int rightPlaceholders = 3 - rightObjectives.Count;
+                    var rightObjectives = objectives.Skip(4).ToList();
+                    int rightPlaceholders = 4 - rightObjectives.Count;
                 }
                 @foreach (var objective in rightObjectives)
                 {
