@@ -21,7 +21,7 @@ class TaskManager {
         this.taskDateInput = document.getElementById('dueDate');
         this.addObjectiveButton = document.getElementById('addObjectiveBtn');
         this.objectivesContainer = document.getElementById('objectivesContainer');
-        this.saveBtn = this.taskForm.querySelector('.save-btn');
+        this.saveBtn = document.getElementById('saveBtn');
 
         // Buttons
         this.addTaskButtons = document.querySelectorAll('#add-task-btn');
@@ -50,9 +50,8 @@ class TaskManager {
             this.addObjectiveButton.addEventListener('click', () => this.addObjective());
         }
 
-        // Form submission
-        if (this.taskForm) {
-            this.taskForm.addEventListener('submit', (e) => this.handleFormSubmit(e));
+        if (this.saveBtn) {
+            this.saveBtn.addEventListener('click', (e) => this.handleFormSubmit(e));
         }
 
         // Reset form on modal close
@@ -89,7 +88,6 @@ class TaskManager {
             this.addObjectiveButton.disabled = false;
 
             task.objectives.forEach((obj, index) => {
-                console.log(obj);
                 const div = document.createElement('div');
                 div.className = 'mb-3 objective-input-group';
                 div.innerHTML = `
@@ -106,7 +104,6 @@ class TaskManager {
 
         } catch (error) {
             Swal.fire('Error!', 'Issue fetching Task please try again... ', 'error');
-            console.error(error);
         }
     }
 
@@ -172,7 +169,6 @@ class TaskManager {
 
         try {
             const taskData = this.collectTaskData();
-            console.log(taskData);
             const method = this.isEditMode ? 'PUT' : 'POST';
             const endpoint = this.isEditMode ? `/api/tasks/${taskData.Id}` : '/api/tasks';
 
@@ -199,7 +195,6 @@ class TaskManager {
                 title: 'Error',
                 text: error.message || 'An error occurred while saving the task.'
             });
-            console.error(error);
         } finally {
             this.saveBtn.disabled = false;
         }
@@ -239,7 +234,6 @@ class TaskManager {
             }
         } catch (error) {
             Swal.fire('Error!', 'There was a problem deleting the task.', 'error');
-            console.error(error);
         }
     }
 
@@ -262,7 +256,6 @@ class TaskManager {
         });
 
         document.querySelectorAll('.medium-plus-progress-circle').forEach(circleContainer => {
-            console.log('here');
             const percentageElement = circleContainer.querySelector('.percentage');
             const circle = circleContainer.querySelector('circle');
         

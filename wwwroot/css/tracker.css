@@ -307,3 +307,8 @@ circle {
     stroke-dashoffset: 440;
     transition: stroke-dashoffset 1s ease;
 }
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+}
