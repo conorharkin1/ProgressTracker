@@ -312,3 +312,32 @@ circle {
     display: flex;
     justify-content: space-between;
 }
+
+.objective-input-group {
+    background: #83c5be;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    max-width: 50%;
+    flex: 1 1 calc(50% - 1rem);
+    box-sizing: border-box;
+}
+
+.objective-table {
+    width: 100%;
+}
+
+.objective-table td {
+    padding: 0.3rem 0.5rem;
+    vertical-align: middle;
+}
+
+.objective-table input[type="text"], .objective-table input[type="number"] {
+    width: 100%;
+}
+
+.objective-table input[type="checkbox"] {
+    transform: scale(1.2);
+}

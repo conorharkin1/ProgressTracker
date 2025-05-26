@@ -89,15 +89,35 @@ class TaskManager {
 
             task.objectives.forEach((obj, index) => {
                 const div = document.createElement('div');
-                div.className = 'mb-3 objective-input-group';
+                div.className = 'mb-2 objective-input-group';
                 div.innerHTML = `
-                    <label class="form-label">Name</label>
-                    <input type="text" class="form-control" name="objectiveName${index}" value="${obj.name}" required>
-                    <label class="form-label">Hours to complete</label>
-                    <input type="number" class="form-control" name="objectiveHours${index}" value="${obj.hours}" required>
-                    <label class="form-label"> Is Complete</label>
-                    <input type="checkbox" class="form-check-input" name="objectiveIsComplete${index}" ${(obj.isComplete ? 'checked' : '')}>
+                    <table class="objective-table">
+                        <tr>
+                            <td><label class="form-label">Name</label></td>
+                            <td><input type="text" class="form-control" name="objectiveName${index}" value="${obj.name}" required></td>
+                        </tr>
+                        <tr>
+                            <td><label class="form-label">Hours to complete</label></td>
+                            <td><input type="number" class="form-control" name="objectiveHours${index}" value="${obj.hours}" required></td>
+                        </tr>
+                        <tr>
+                            <td><label class="form-label">Is Objective Complete?</label></td>
+                            <td>
+                                <input type="checkbox" class="form-check-input" name="objectiveIsComplete${index}" ${obj.isComplete ? 'checked' : ''}>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: right;">
+                                <button type="button" class="btn btn-sm btn-danger delete-objective">Delete</button>
+                            </td>
+                        </tr>
+                    </table>
                 `;
+
+                div.querySelector('.delete-objective').addEventListener('click', () => {
+                    div.remove();
+                });
+
                 this.objectivesContainer.appendChild(div);
             });
             this.modal.show();
@@ -114,15 +134,35 @@ class TaskManager {
         }
 
         const div = document.createElement('div');
-        div.className = 'mb-3 objective-input-group';
+        div.className = 'mb-2 objective-input-group';
         div.innerHTML = `
-            <label class="form-label">Name</label>
-            <input type="text" class="form-control" name="objectiveName${this.currentObjectiveIndex}" required>
-            <label class="form-label">Hours to complete</label>
-            <input type="number" class="form-control" name="objectiveHours${this.currentObjectiveIndex}" required>
-            <label class="form-label"> Is Complete</label>
-            <input type="checkbox" class="form-check-input" name="objectiveIsComplete${this.currentObjectiveIndex}">
+            <table class="objective-table">
+                <tr>
+                    <td><label class="form-label">Name</label></td>
+                    <td><input type="text" class="form-control" name="objectiveName${this.currentObjectiveIndex}" required></td>
+                </tr>
+                <tr>
+                    <td><label class="form-label">Hours to complete</label></td>
+                    <td><input type="number" class="form-control" name="objectiveHours${this.currentObjectiveIndex}" required></td>
+                </tr>
+                <tr>
+                    <td><label class="form-label">Is Objective Complete?</label></td>
+                    <td>
+                        <input type="checkbox" class="form-check-input" name="objectiveIsComplete${this.currentObjectiveIndex}">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: right;">
+                        <button type="button" class="btn btn-sm btn-danger delete-objective">Delete</button>
+                    </td>
+                </tr>
+            </table>
         `;
+
+        div.querySelector('.delete-objective').addEventListener('click', () => {
+            div.remove();
+        });
+
         this.objectivesContainer.appendChild(div);
         this.currentObjectiveIndex++;
 
