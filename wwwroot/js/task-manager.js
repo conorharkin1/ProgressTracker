@@ -93,15 +93,15 @@ class TaskManager {
                 div.innerHTML = `
                     <table class="objective-table">
                         <tr>
-                            <td><label class="form-label">Name</label></td>
-                            <td><input type="text" class="form-control" name="objectiveName${index}" value="${obj.name}" required></td>
+                            <td><label>Name</label></td>
+                            <td><input type="text" name="objectiveName${index}" value="${obj.name}" required></td>
                         </tr>
                         <tr>
-                            <td><label class="form-label">Hours to complete</label></td>
-                            <td><input type="number" class="form-control" name="objectiveHours${index}" value="${obj.hours}" required></td>
+                            <td><label>Hours to complete</label></td>
+                            <td><input type="number" name="objectiveHours${index}" value="${obj.hours}" required></td>
                         </tr>
                         <tr>
-                            <td><label class="form-label">Is Objective Complete?</label></td>
+                            <td><label>Is Objective Complete?</label></td>
                             <td>
                                 <input type="checkbox" class="form-check-input" name="objectiveIsComplete${index}" ${obj.isComplete ? 'checked' : ''}>
                             </td>
@@ -138,15 +138,15 @@ class TaskManager {
         div.innerHTML = `
             <table class="objective-table">
                 <tr>
-                    <td><label class="form-label">Name</label></td>
-                    <td><input type="text" class="form-control" name="objectiveName${this.currentObjectiveIndex}" required></td>
+                    <td><label>Name</label></td>
+                    <td><input type="text" name="objectiveName${this.currentObjectiveIndex}" required></td>
                 </tr>
                 <tr>
-                    <td><label class="form-label">Hours to complete</label></td>
-                    <td><input type="number" class="form-control" name="objectiveHours${this.currentObjectiveIndex}" required></td>
+                    <td><label>Hours to complete</label></td>
+                    <td><input type="number" name="objectiveHours${this.currentObjectiveIndex}" required></td>
                 </tr>
                 <tr>
-                    <td><label class="form-label">Is Objective Complete?</label></td>
+                    <td><label>Is Objective Complete?</label></td>
                     <td>
                         <input type="checkbox" class="form-check-input" name="objectiveIsComplete${this.currentObjectiveIndex}">
                     </td>
