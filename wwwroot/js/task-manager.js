@@ -51,7 +51,7 @@ class TaskManager {
         }
 
         if (this.saveBtn) {
-            this.saveBtn.addEventListener('click', (e) => this.handleFormSubmit(e));
+            this.saveBtn.addEventListener('click', (e) => this.save(e));
         }
 
         // Reset form on modal close
@@ -203,7 +203,7 @@ class TaskManager {
         };
     }
 
-    async handleFormSubmit(e) {
+    async save(e) {
         e.preventDefault();
         this.saveBtn.disabled = true;
 
