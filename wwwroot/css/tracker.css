@@ -386,3 +386,8 @@ circle {
 .objective-table input[type="checkbox"] {
     transform: scale(1.2);
 }
+
+#add-task-btn {
+    font-size: 3rem;
+    color: var(--task-text-colour);
+}
