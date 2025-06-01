@@ -1,12 +1,17 @@
 :root {
-    --navbar-height: 60px;
+    --navbar-height: 50px;
     --fullview-minus-navbar: calc(100vh - var(--navbar-height));
+    --background-colour: #83c5be;
+    --task-colour: #dce0d9;
+    --task-text-colour: black;
+    --objective-text-colour: #374151;
+    
 }
 
 nav {
     display: flex;
     height: var(--navbar-height);
-    background-color: #83c5be;
+    background-color: var(--background-colour);
     justify-content: center;
     align-items: center;
 }
@@ -45,7 +50,7 @@ nav a:hover {}
     padding: 10px;
     min-height: var(--fullview-minus-navbar);
     max-height: var(--fullview-minus-navbar);
-    background-color: #83c5be;
+    background-color: var(--background-colour);
     flex-shrink: 0;
 }
 
@@ -73,7 +78,8 @@ nav a:hover {}
     margin: 10px 0;
     padding: 10px;
     padding-top: 0;
-    background-color: #dce0d9;
+    background-color: var(--task-colour);
+    color: var(--task-text-colour);
 }
 
 .small-task {
@@ -177,7 +183,7 @@ nav a:hover {}
 }
 
 .objective-item {
-    background: #83c5be;
+    background: var(--background-colour);
     border-radius: 0.75rem;
     padding: 1rem;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
@@ -187,7 +193,7 @@ nav a:hover {}
 }
 
 .objective-item-placeholder {
-    background: #dce0d9;
+    background: var(--task-colour);
     flex: 1;
     display: flex;
     padding: 1rem;
@@ -212,7 +218,7 @@ nav a:hover {}
 .objective-name {
     font-size: 1.125rem;
     font-weight: 600;
-    color: #374151;
+    color: var(--objective-text-colour);
     margin: 0;
     white-space: nowrap;
     overflow: hidden;
@@ -314,7 +320,7 @@ circle {
 }
 
 .objective-input-group {
-    background: #83c5be;
+    background: var(--background-colour);
     border-radius: 0.75rem;
     padding: 1rem;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
