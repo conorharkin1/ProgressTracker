@@ -63,12 +63,15 @@
             <div class="medium-plus-progress-circle">
                 <div class="outer">
                     <div class="inner">
-                        <div class="percentage" data-percentage="@completionPercentage">@completionPercentage</div>
+                        <div class="percentage percentage-large" data-percentage="@completionPercentage">
+                            <h5>Due:</h5>
+                            <h5>@Model.DueDate.ToString("dd MMM HH:mm")</h5>
+                        </div>
                     </div>
                 </div>
 
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">
-                    <circle cx="80" cy="80" r="70" stroke-linecap="round" stroke="#006d77" />
+                    <circle cx="80" cy="80" r="70" stroke-linecap="round" stroke="#DDA853" />
                 </svg>
             </div>
 
