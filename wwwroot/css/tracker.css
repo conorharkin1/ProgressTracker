@@ -1,10 +1,11 @@
 :root {
     --navbar-height: 50px;
     --fullview-minus-navbar: calc(100vh - var(--navbar-height));
-    --background-colour: #83c5be;
-    --task-colour: #dce0d9;
-    --task-text-colour: black;
-    --objective-text-colour: #374151;
+    --background-colour: #27548A;
+    --task-colour: #183B4E;
+    --task-text-colour: #F3F3E0;
+    --objective-text-colour: #F3F3E0;
+    --task-border-colour: #DDA853;
     
 }
 
@@ -14,6 +15,7 @@ nav {
     background-color: var(--background-colour);
     justify-content: center;
     align-items: center;
+    color: var(--task-text-colour);
 }
 
 .navbar-section {
@@ -80,6 +82,7 @@ nav a:hover {}
     padding-top: 0;
     background-color: var(--task-colour);
     color: var(--task-text-colour);
+    border: 1px solid var(--task-border-colour);
 }
 
 .small-task {
@@ -127,6 +130,10 @@ nav a:hover {}
     text-overflow: ellipsis;
     max-width: 100%;
     padding-bottom: 0.1rem;
+}
+
+.task-header i {
+    color: var(--objective-text-colour);
 }
 
 .add-task-body {
@@ -292,8 +299,23 @@ nav a:hover {}
 
 .percentage {
     font-weight: 600;
-    color: green;
+    color: var(--task-text-colour);
     font-size: 1.2rem;
+}
+
+.percentage h5 {
+    font-size: 1rem;
+    text-align: center;
+}
+
+.percentage-large h5 {
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.percentage-medium h5 {
+    font-size: 0.9rem;
+    text-align: center;
 }
 
 svg {
@@ -314,13 +336,29 @@ circle {
     transition: stroke-dashoffset 1s ease;
 }
 
+.modal-content {
+    background-color: var(--background-colour);
+    border: solid 2px var(--task-border-colour);
+    color: var(--objective-text-colour);
+}
+
 .modal-footer {
     display: flex;
     justify-content: space-between;
 }
 
+#addObjectiveBtn {
+    background-color: var(--task-colour);
+    border: 1px solid var(--task-border-colour);
+}
+
+#saveBtn {
+    background-color: var(--task-colour);
+    border: 1px solid var(--task-border-colour);
+}
+
 .objective-input-group {
-    background: var(--background-colour);
+    background: var(--task-colour);
     border-radius: 0.75rem;
     padding: 1rem;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
@@ -329,6 +367,7 @@ circle {
     max-width: 50%;
     flex: 1 1 calc(50% - 1rem);
     box-sizing: border-box;
+    border: 1px solid var(--task-border-colour);
 }
 
 .objective-table {
@@ -346,4 +385,9 @@ circle {
 
 .objective-table input[type="checkbox"] {
     transform: scale(1.2);
+}
+
+#add-task-btn {
+    font-size: 3rem;
+    color: var(--task-text-colour);
 }
