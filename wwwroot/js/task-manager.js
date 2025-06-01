@@ -12,6 +12,7 @@ class TaskManager {
     }
 
     initElements() {
+        this.syncBtn = document.getElementById('sync');
         // Common modal for Add/Edit
         this.modal = new bootstrap.Modal(this.taskModal);
         this.taskModalTitle = document.getElementById('taskModalTitle');
@@ -44,6 +45,8 @@ class TaskManager {
         this.deleteButtons.forEach(button => {
             button.addEventListener('click', () => this.deleteTask(button));
         });
+
+        this.syncBtn.addEventListener('click', () => this.sync());
 
         // Add Objective
         if (this.addObjectiveButton) {
@@ -311,7 +314,42 @@ class TaskManager {
             const offset = circumference - (percentage / 100) * circumference;
             circle.style.strokeDashoffset = offset;
         });
-        
+    }
+
+    async sync() {
+        try {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to populate the system with assignments fetched from Canvas',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, sync'
+            });
+
+            if (result.isConfirmed) {
+                const response = await fetch(`/api/canvas/sync`, {
+                    method: 'GET'
+                });
+
+                if (response.ok) {
+                    await Swal.fire({
+                        title: 'Success',
+                        text: 'You have successfully synced your Canvas assignments',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
+                    this.resetForm();
+                    window.location.reload();
+                } else {
+                    throw new Error('Sync failed');
+                }
+            }
+        } catch (error) {
+            Swal.fire('Error!', 'There was a problem syncing with canvas please get in touch with your local developer', 'error');
+        }
     }
 }
 
