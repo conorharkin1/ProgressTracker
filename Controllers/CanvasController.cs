@@ -58,7 +58,8 @@ public class CanvasController : ControllerBase
                         objectives.Add(new Objective
                         {
                             Name = assignment.name,
-                            Hours = assignment.due_at.HasValue ? (int)(assignment.due_at - DateTime.Now).Value.TotalHours : 5
+                            Hours = assignment.due_at.HasValue ? (int)(assignment.due_at - DateTime.Now).Value.TotalHours : 5,
+                            IsComplete = assignment.has_submitted_submissions
                         });
                     }
 
