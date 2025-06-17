@@ -3,6 +3,8 @@ using ProgressTracker.Repositories;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using ProgressTracker.Models.CanvasModels;
+using DbTask = ProgressTracker.Models.Task;
+using ProgressTracker.Models;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -22,28 +24,24 @@ public class CanvasController : ControllerBase
     [HttpGet("sync")]
     public async Task<IActionResult> SyncCanvas()
     {
+        // If there is a large task in the system firstly delete it as I currently only have 1 enrolment which I am creating a Large Task for
+        var existingLargeTask = await _taskRepository.GetLargeTask();
+        if (existingLargeTask != null)
+        {
+            await _taskRepository.DeleteTask(existingLargeTask.Id);
+        }
+
         var httpClient = _httpClientFactory.CreateClient();
         httpClient.BaseAddress = new Uri("https://canvas.qub.ac.uk/");
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _configuration["canvas-api-access-token"]);
 
         //Gets all my previous courses
         var allCourses = await httpClient.GetFromJsonAsync<List<Course>>("/api/v1/users/self/courses");
-
         //Gets my current enrolments
         var enrolments = await httpClient.GetFromJsonAsync<List<Enrolment>>("/api/v1/users/self/enrollments");
 
         var currentCourses = new List<Course>();
-        foreach (var enrolment in enrolments)
-        {
-            var tempCourse = allCourses.FirstOrDefault(c => c.id == enrolment.course_id);
-            if (tempCourse != null)
-            {
-                currentCourses.Add(tempCourse);
-            }
-        }
-
-        List<Assignment> allAssignments = new List<Assignment>();
-        List<Module> allModules = new List<Module>();
+        currentCourses.AddRange(allCourses.Where(c => enrolments.Any(e => e.course_id == c.id)));
 
         if (currentCourses.Any())
         {
@@ -51,8 +49,27 @@ public class CanvasController : ControllerBase
             {
                 var assignments = await httpClient.GetFromJsonAsync<List<Assignment>>($"/api/v1/courses/{course.id}/assignments");
                 var modules = await httpClient.GetFromJsonAsync<List<Module>>($"/api/v1/courses/{course.id}/modules?include[]=items");
-                allAssignments.AddRange(assignments);
-                allModules.AddRange(modules);
+
+                var objectives = new List<Objective>();
+                if (assignments != null && assignments.Count > 0)
+                {
+                    foreach (var assignment in assignments)
+                    {
+                        objectives.Add(new Objective
+                        {
+                            Name = assignment.name,
+                            Hours = assignment.due_at.HasValue ? (int)(assignment.due_at - DateTime.Now).Value.TotalHours : 5
+                        });
+                    }
+
+                    await _taskRepository.AddTask(new DbTask
+                    {
+                        Name = course.name,
+                        DueDate = assignments.Where(a => a.due_at.HasValue).Min(a => a.due_at.Value),
+                        Objectives = objectives,
+                        TaskType = "LARGE"
+                    });
+                }
             }
         }
 
