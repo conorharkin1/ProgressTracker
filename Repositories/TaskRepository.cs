@@ -23,12 +23,12 @@ namespace ProgressTracker.Repositories
                 throw new ArgumentNullException(nameof(task), "Task cannot be null.");
             }
 
-            try 
+            try
             {
                 _dbContext.Tasks.Add(task);
                 await _dbContext.SaveChangesAsync();
                 return task;
-            } 
+            }
             catch (Exception ex)
             {
                 throw new Exception("An error occurred while saving the task.", ex);
@@ -56,7 +56,7 @@ namespace ProgressTracker.Repositories
         public async Task<DbTask> GetLargeTask()
         {
             var largeTask = await _dbContext.Tasks.Where(t => t.TaskType == "LARGE").Include(t => t.Objectives).FirstOrDefaultAsync();
-            if (largeTask == null )
+            if (largeTask == null)
             {
                 return new LargeTask();
             }
@@ -107,6 +107,20 @@ namespace ProgressTracker.Repositories
             taskToUpdate.Name = task.Name;
             taskToUpdate.DueDate = task.DueDate;
             taskToUpdate.Objectives = task.Objectives;
+
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdateObjective(Objective objective)
+        {
+            var dbObjective = await _dbContext.Objectives.Where(o => o.Id == objective.Id).FirstOrDefaultAsync();
+            if (dbObjective == null)
+            {
+                return false;
+            }
+
+            dbObjective.IsComplete = objective.IsComplete;
 
             await _dbContext.SaveChangesAsync();
             return true;
