@@ -28,6 +28,9 @@ class TaskManager {
         this.addTaskButtons = document.querySelectorAll('#add-task-btn');
         this.editButtons = document.querySelectorAll('#update-task-btn');
         this.deleteButtons = document.querySelectorAll('#delete-task-btn');
+
+        // Objectives
+        this.objectiveCheckboxes = document.querySelectorAll('.objective-item-checkbox');
     }
 
     bindEvents() {
@@ -61,6 +64,11 @@ class TaskManager {
         if (this.taskModal) {
             this.taskModal.addEventListener('hidden.bs.modal', () => this.resetForm());
         }
+
+        // Objective cards
+        this.objectiveCheckboxes.forEach(obj => {
+            obj.addEventListener('change', () => this.updateIsComplete(obj));
+        });
     }
 
     openAddTaskModal(button) {
@@ -277,6 +285,26 @@ class TaskManager {
             }
         } catch (error) {
             Swal.fire('Error!', 'There was a problem deleting the task.', 'error');
+        }
+    }
+
+    async updateIsComplete(obj) {
+        const objectiveId = obj.getAttribute('data-objective-id');
+        const isChecked = obj.checked;
+
+        try {
+            const response = await fetch(`/api/tasks/objective`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ Id: objectiveId, IsComplete: isChecked })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update completion status');
+            }
+            this.initProgressCircles();
+        } catch (error) {
+            console.error('Error saving:', error);
         }
     }
 

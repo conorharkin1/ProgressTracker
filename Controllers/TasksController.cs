@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using ProgressTracker.Models;
 using ProgressTracker.Repositories;
 using DbTask = ProgressTracker.Models.Task;
 
@@ -55,6 +56,19 @@ public class TasksController : ControllerBase
         }
         return Ok(new { message = "Task updated successfully" });
     }
+
+    [Route("objective")]
+    [HttpPut]
+    public async Task<IActionResult> UpdateObjective([FromBody] Objective objective)
+    {
+        bool updated = await _taskRepository.UpdateObjective(objective);
+        if(!updated)
+        {
+            return NotFound();
+        }
+        return Ok(new { message = "Objective updated successfully" });
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTask(int id)
     {
