@@ -1,0 +1,51 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Progress Tracker Login";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/login.css" />
+</head>
+
+<body>
+    <div class="wrapper">
+        <form id="account" method="post">
+            <h1>Login</h1>
+
+            <div class="input-box">
+                <input asp-for="Input.Email" autocomplete="username" aria-required="true" placeholder="Username" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class="input-box">
+                <input asp-for="Input.Password" autocomplete="current-password" aria-required="true" placeholder="Password" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <div class="remember-forgot">
+                <label asp-for="Input.RememberMe">
+                    <input asp-for="Input.RememberMe" />
+                    @Html.DisplayNameFor(m => m.Input.RememberMe)
+                </label>
+                <p>
+                    <a id="forgot-password" asp-page="./ForgotPassword">Forgot password?</a>
+                </p>
+            </div>
+
+            <button type="submit" class="btn"> Login </button>
+
+            <div class="register-link">
+                <p>
+                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Don't have an account? Register</a>
+                </p>
+            </div>
+
+        </form>
+    </div>
+</body>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using ProgressTracker.Models;
 using Task = ProgressTracker.Models.Task;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
 
 namespace ProgressTracker.Data;
 
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<ApplicationUser>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -19,6 +21,8 @@ namespace ProgressTracker.Data;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             // 1 Task has many Objectives
             modelBuilder.Entity<Task>()
                 .HasMany(t => t.Objectives)

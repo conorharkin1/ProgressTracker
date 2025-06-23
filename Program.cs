@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using ProgressTracker.Data;
 using ProgressTracker.Repositories;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +12,23 @@ builder.Services.AddHttpClient();
 builder.Services.AddDbContext<DataContext>( options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+        .AddEntityFrameworkStores<DataContext>()
+        .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+    options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    options.SlidingExpiration = true;
+});
+
+builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -27,7 +45,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapRazorPages();
 
 app.MapControllers();
 

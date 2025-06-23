@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using ProgressTracker.Data
+@inject SignInManager<ApplicationUser> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,22 +12,24 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="navbar-section left">
-                @* <a asp-controller="Home" asp-action="Tracker"><img class="logo" src="~/Images/logo.png" alt="Home"></a> *@
-                <H2>LOGO</H2>
-            </div>
-            <div class="navbar-section center">
-                <h2>Progress Tracker</h2>
-            </div>
-            <div class="navbar-section right">
-                <button class="btn" id="sync">Sync with Canvas</button>
-            </div>
-        </nav>
-    </header>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <header>
+            <nav>
+                <div class="navbar-section left">
+                    @await Html.PartialAsync("_LoginPartial")
+                </div>
+                <div class="navbar-section center">
+                    <h2>Progress Tracker</h2>
+                </div>
+                <div class="navbar-section right">
+                    <button class="btn" id="sync">Sync with Canvas</button>
+                </div>
+            </nav>
+        </header>
+    }
     <div class="container-fluid main">
-        <main role="main">
+        <main role="main" class="main">
             @RenderBody()
         </main>
     </div>

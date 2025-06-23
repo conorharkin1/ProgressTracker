@@ -5,9 +5,10 @@ using ProgressTracker.Models;
 using ProgressTracker.Repositories;
 using DbTask = ProgressTracker.Models.Task;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProgressTracker.Controllers;
-
+[Authorize]
 public class HomeController : Controller
 {
     private readonly ITaskRepository _taskRepository;
