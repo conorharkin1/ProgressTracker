@@ -16,15 +16,18 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: var(--background-colour);
+    background: url('/progress-tracker-login-background.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 .wrapper {
     width: 420px;
-    background: var(--task-colour);
+    background: transparent;
     color: #fff;
     border-radius: 10px;
     padding: 30px 40px;
+    border: solid 2px var(--task-border-colour);
 }
 
 .wrapper h1 {
