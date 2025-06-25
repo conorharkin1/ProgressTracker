@@ -21,6 +21,10 @@ body {
     background-position: center;
 }
 
+body h2 {
+    color: var(--task-border-colour);
+}
+
 .wrapper {
     width: 420px;
     background: transparent;
