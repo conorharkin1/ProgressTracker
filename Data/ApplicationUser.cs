@@ -5,5 +5,6 @@ namespace ProgressTracker.Data
 {
     public class ApplicationUser : IdentityUser
     {
+        public string? CanvasApiKey { get; set; }
     }
 }
