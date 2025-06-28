@@ -1,3 +1,6 @@
+using System.Text.Json.Serialization;
+using ProgressTracker.Data;
+
 namespace ProgressTracker.Models;
 
 public class Task {
@@ -6,8 +9,10 @@ public class Task {
     public DateTime DueDate { get; set; }
     public ICollection<Objective>? Objectives { get; set; }
     public string? TaskType { get; set; }
+    public string UserId { get; set; }
+    public ApplicationUser User { get; set; }
 
-    public Task() 
+    public Task()
     {
     }
 
