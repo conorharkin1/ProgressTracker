@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ProgressTracker.Data;
 using ProgressTracker.Models;
+using ProgressTracker.Models.Dtos;
 using ProgressTracker.Repositories;
 using DbTask = ProgressTracker.Models.Task;
 
@@ -8,18 +11,36 @@ using DbTask = ProgressTracker.Models.Task;
 public class TasksController : ControllerBase
 {
     private readonly ITaskRepository _taskRepository;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public TasksController(ITaskRepository taskRepository)
+    public TasksController(ITaskRepository taskRepository, UserManager<ApplicationUser> userManager)
     {
         _taskRepository = taskRepository;
+        _userManager = userManager;
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddTask([FromBody] DbTask task)
+    public async Task<IActionResult> AddTask([FromBody] TaskDto taskDto)
     {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+        var userId = user.Id;
+
+        var task = new DbTask
+        {
+            Name = taskDto.Name,
+            DueDate = taskDto.DueDate,
+            Objectives = taskDto.Objectives,
+            TaskType = taskDto.TaskType,
+            UserId = userId
+        };
+
         try
         {
-            await _taskRepository.AddTask(task);
+            await _taskRepository.AddTask(task, userId);
             return Ok(new { message = "Task saved successfully" });
         }
         catch (Exception)
@@ -47,8 +68,25 @@ public class TasksController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateTask([FromBody] DbTask task)
+    public async Task<IActionResult> UpdateTask([FromBody] TaskDto taskDto)
     {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+        var userId = user.Id;
+
+        var task = new DbTask
+        {
+            Id = taskDto.Id,
+            Name = taskDto.Name,
+            DueDate = taskDto.DueDate,
+            Objectives = taskDto.Objectives,
+            TaskType = taskDto.TaskType,
+            UserId = userId
+        };
+
         bool updated = await _taskRepository.UpdateTask(task);
         if(!updated)
         {

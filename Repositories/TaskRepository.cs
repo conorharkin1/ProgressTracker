@@ -1,5 +1,4 @@
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ProgressTracker.Data;
 using ProgressTracker.Models;
@@ -16,7 +15,7 @@ namespace ProgressTracker.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<DbTask> AddTask(DbTask task)
+        public async Task<DbTask> AddTask(DbTask task, string userId)
         {
             if (task == null)
             {
@@ -25,6 +24,7 @@ namespace ProgressTracker.Repositories
 
             try
             {
+                task.UserId = userId;
                 _dbContext.Tasks.Add(task);
                 await _dbContext.SaveChangesAsync();
                 return task;
@@ -53,9 +53,9 @@ namespace ProgressTracker.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<DbTask> GetLargeTask()
+        public async Task<DbTask> GetLargeTask(string userId)
         {
-            var largeTask = await _dbContext.Tasks.Where(t => t.TaskType == "LARGE").Include(t => t.Objectives).FirstOrDefaultAsync();
+            var largeTask = await _dbContext.Tasks.Where(t => t.TaskType == "LARGE" && t.UserId == userId).Include(t => t.Objectives).FirstOrDefaultAsync();
             if (largeTask == null)
             {
                 return new LargeTask();
@@ -63,15 +63,15 @@ namespace ProgressTracker.Repositories
             return largeTask;
         }
 
-        public async Task<List<DbTask>> GetMediumTasks()
+        public async Task<List<DbTask>> GetMediumTasks(string userId)
         {
-            var mediumTasks = await _dbContext.Tasks.Where(t => t.TaskType == "MEDIUM").Include(mt => mt.Objectives).ToListAsync();
+            var mediumTasks = await _dbContext.Tasks.Where(t => t.TaskType == "MEDIUM" && t.UserId == userId).Include(mt => mt.Objectives).ToListAsync();
             return mediumTasks;
         }
 
-        public async Task<List<DbTask>> GetSmallTasks()
+        public async Task<List<DbTask>> GetSmallTasks(string userId)
         {
-            var smallTasks = await _dbContext.Tasks.Where(t => t.TaskType == "SMALL").Include(st => st.Objectives).ToListAsync();
+            var smallTasks = await _dbContext.Tasks.Where(t => t.TaskType == "SMALL" && t.UserId == userId).Include(st => st.Objectives).ToListAsync();
             return smallTasks;
         }
 

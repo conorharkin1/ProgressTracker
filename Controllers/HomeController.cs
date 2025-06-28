@@ -1,29 +1,37 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ProgressTracker.Models.ViewModels;
-using ProgressTracker.Models;
 using ProgressTracker.Repositories;
-using DbTask = ProgressTracker.Models.Task;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using ProgressTracker.Data;
 
 namespace ProgressTracker.Controllers;
 [Authorize]
 public class HomeController : Controller
 {
     private readonly ITaskRepository _taskRepository;
-    public HomeController(ITaskRepository taskRepository)
+    private readonly UserManager<ApplicationUser> _userManager;
+    public HomeController(ITaskRepository taskRepository, UserManager<ApplicationUser> userManager)
     {
         _taskRepository = taskRepository;
+        _userManager = userManager;
     }
 
     public async Task<IActionResult> Tracker()
     {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+        var userId = user.Id;
+
         var model = new TasksViewModel 
         {
-            SmallTasks = await _taskRepository.GetSmallTasks(),
-            MediumTasks = await _taskRepository.GetMediumTasks(),
-            LargeTask = await _taskRepository.GetLargeTask(),
+            SmallTasks = await _taskRepository.GetSmallTasks(userId),
+            MediumTasks = await _taskRepository.GetMediumTasks(userId),
+            LargeTask = await _taskRepository.GetLargeTask(userId),
         };
         return View(model);        
     }

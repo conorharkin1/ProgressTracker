@@ -7,6 +7,7 @@ using ProgressTracker.Models;
 using Microsoft.AspNetCore.Identity;
 using ProgressTracker.Data;
 using System.Net;
+using ProgressTracker.Models.Dtos;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -41,8 +42,15 @@ public class CanvasController : ControllerBase
     [HttpGet("sync")]
     public async Task<IActionResult> SyncCanvas()
     {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+        var userId = user.Id;
+
         // If there is a large task in the system firstly delete it as I currently only have 1 enrolment which I am creating a Large Task for
-        var existingLargeTask = await _taskRepository.GetLargeTask();
+        var existingLargeTask = await _taskRepository.GetLargeTask(userId);
         if (existingLargeTask != null)
         {
             await _taskRepository.DeleteTask(existingLargeTask.Id);
@@ -107,8 +115,9 @@ public class CanvasController : ControllerBase
                             Name = course.name,
                             DueDate = assignments.Where(a => a.due_at.HasValue).Min(a => a.due_at.Value),
                             Objectives = objectives,
-                            TaskType = "LARGE"
-                        });
+                            TaskType = "LARGE",
+                            UserId = userId
+                        }, userId);
                     }
                 }
             }
@@ -126,9 +135,4 @@ public class CanvasController : ControllerBase
             return StatusCode(500, $"Unexpected error: {ex.Message}");
         }
     }
-}
-
-public class CanvasApiKeyDto
-{
-    public string CanvasApiKey { get; set; }
 }
