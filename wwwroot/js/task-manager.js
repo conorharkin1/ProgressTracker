@@ -12,7 +12,6 @@ class TaskManager {
     }
 
     initElements() {
-        this.syncBtn = document.getElementById('sync');
         // Common modal for Add/Edit
         this.modal = new bootstrap.Modal(this.taskModal);
         this.taskModalTitle = document.getElementById('taskModalTitle');
@@ -28,6 +27,8 @@ class TaskManager {
         this.addTaskButtons = document.querySelectorAll('#add-task-btn');
         this.editButtons = document.querySelectorAll('#update-task-btn');
         this.deleteButtons = document.querySelectorAll('#delete-task-btn');
+        this.syncBtn = document.getElementById('sync');
+        this.canvasApiKeyForm = document.getElementById('CanvasApiKeyForm');
 
         // Objectives
         this.objectiveCheckboxes = document.querySelectorAll('.objective-item-checkbox');
@@ -49,7 +50,17 @@ class TaskManager {
             button.addEventListener('click', () => this.deleteTask(button));
         });
 
-        this.syncBtn.addEventListener('click', () => this.sync());
+        // Sync with Canvas
+        if (this.syncBtn) {
+            this.syncBtn.addEventListener('click', () => this.sync());
+        }
+
+        if (this.canvasApiKeyForm) {
+            this.canvasApiKeyForm.addEventListener('submit', (e) => { 
+            e.preventDefault();
+            this.setCanvasAPIKey();
+        });
+        }
 
         // Add Objective
         if (this.addObjectiveButton) {
@@ -377,6 +388,35 @@ class TaskManager {
             }
         } catch (error) {
             Swal.fire('Error!', 'There was a problem syncing with canvas please get in touch with your local developer', 'error');
+        }
+    }
+
+    async setCanvasAPIKey() {
+        const key = document.getElementById('canvasApiKey').value;
+        try {
+            const response = await fetch('/api/canvas/setKey', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ canvasApiKey: key })
+            });
+            if (response.ok) {
+                    await Swal.fire({
+                        title: 'Success',
+                        text: 'API Key succesfully saved. You may now sync with canvas',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    
+                } else {
+                    console.log('here');
+                    throw new Error('Setting key failed');
+                }
+        } catch (error) {
+            console.log('here2');
+            Swal.fire('Error!', 'There was a problem setting your Canvas API key please get in touch with your local developer', 'error');
         }
     }
 }

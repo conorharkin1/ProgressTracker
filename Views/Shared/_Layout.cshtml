@@ -1,5 +1,6 @@
 ﻿@using ProgressTracker.Data
 @inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 <!DOCTYPE html>
 <html lang="en">
@@ -17,13 +18,37 @@
         <header>
             <nav>
                 <div class="navbar-section left">
-                    @await Html.PartialAsync("_LoginPartial")
+                    <h5>Welcome @UserManager.GetUserName(User)</h5>
                 </div>
                 <div class="navbar-section center">
                     <h2>Progress Tracker</h2>
                 </div>
                 <div class="navbar-section right">
-                    <button class="btn" id="sync">Sync with Canvas</button>
+                    <button class="profile-dropdown" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            @{var user = await UserManager.GetUserAsync(User);}
+                            @if (user != null && string.IsNullOrEmpty(user.CanvasApiKey))
+                            {
+                                <form id="CanvasApiKeyForm">
+                                    <input type="text" name="CanvasApiKey" id="canvasApiKey" placeholder="Canvas API Key" />
+                                    <button type="submit" class="nav-btn">Save API key</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <button class="nav-btn" id="sync">Sync with Canvas</button>
+                            }
+                        </li>
+                        <li>
+                            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Account/Login", new { area = "Identity" })">
+                                @Html.AntiForgeryToken()
+                                <button class="nav-btn" id="logout" type="submit">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
                 </div>
             </nav>
         </header>

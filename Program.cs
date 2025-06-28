@@ -27,8 +27,12 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<IUserEncryptionService, UserEncryptionService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddRazorPages();
+
+builder.Services.AddDataProtection();
 
 var app = builder.Build();
 
