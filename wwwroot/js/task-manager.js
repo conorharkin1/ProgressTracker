@@ -56,10 +56,7 @@ class TaskManager {
         }
 
         if (this.canvasApiKeyForm) {
-            this.canvasApiKeyForm.addEventListener('submit', (e) => { 
-            e.preventDefault();
-            this.setCanvasAPIKey();
-        });
+            this.canvasApiKeyForm.addEventListener('submit', (e) => this.setCanvasAPIKey(e)); 
         }
 
         // Add Objective
@@ -68,7 +65,7 @@ class TaskManager {
         }
 
         if (this.saveBtn) {
-            this.saveBtn.addEventListener('click', (e) => this.save(e));
+            this.saveBtn.addEventListener('click', (e) => this.saveTasks(e));
         }
 
         // Reset form on modal close
@@ -225,7 +222,86 @@ class TaskManager {
         };
     }
 
-    async save(e) {
+    updateTaskDom(updatedTaskData) {
+        console.log(updatedTaskData);
+        // Update the Task Name
+        const taskHeader = Array.from(document.querySelectorAll('.task-header-centre')).find(th => th.dataset.taskId == updatedTaskData.Id);
+        const taskNameElement = taskHeader.querySelector('h4');
+        taskNameElement.textContent = updatedTaskData.Name;
+
+        // Update the DueDate
+        var dueDiv = Array.from(document.querySelectorAll('.percentage')).find(th => th.dataset.taskId == updatedTaskData.Id);
+        console.log(dueDiv);
+        const dueElement = dueDiv.querySelectorAll('h5');
+        const h5ToUpdate = dueElement[1];
+        console.log(h5ToUpdate);
+        const rawDate = new Date(updatedTaskData.DueDate);
+        const formattedDate = rawDate.toLocaleString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        }).replace(',', '');
+        h5ToUpdate.innerText = formattedDate;
+        console.log(h5ToUpdate);
+
+        //Objectives
+        if (updatedTaskData.TaskType === 'SMALL') {
+            // const smallObjectivesWrapper = Array.from(document.querySelectorAll('.objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.Id);
+
+            // const newWrapper = document.createElement('div');
+            // newWrapper.className = 'objectives-list';
+            // newWrapper.dataset.taskId = updatedTaskData.Id;
+
+            // if (updatedTaskData.objectives) {
+            //     updatedTaskData.objectives.forEach(obj => {
+            //         const isChecked = obj.IsComplete ? 'checked' : '';
+            //         newWrapper.insertAdjacentHTML('beforeend', `
+            //             <div class="objective-item">
+            //                 <div class="objective-header">
+            //                     <input class="objective-item-checkbox" 
+            //                         data-objective-id="${obj.Id}" 
+            //                         type="checkbox" ${isChecked}>
+            //                     <h4 class="objective-name">${obj.Name}</h4>
+            //                 </div>
+            //             </div>
+            //         `);
+            //     });
+            // }
+
+            // smallObjectivesWrapper.replaceWith(newWrapper);
+
+        } else if (updatedTaskData.TaskType === 'MEDIUM' || updatedTaskData.TaskType === 'LARGE') {
+            // const mediumObjectivesWrapper = Array.from(document.querySelectorAll('.medium-objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.Id);
+
+            // const newWrapper = document.createElement('div');
+            // newWrapper.className = 'objectives-list';
+            // newWrapper.dataset.taskId = updatedTaskData.Id;
+
+            // if (updatedTaskData.objectives) {
+            //     updatedTaskData.objectives.forEach(obj => {
+            //         const isChecked = obj.IsComplete ? 'checked' : '';
+            //         newWrapper.insertAdjacentHTML('beforeend', `
+            //             <div class="objective-item">
+            //                 <div class="objective-header">
+            //                     <input class="objective-item-checkbox" 
+            //                         data-objective-id="${obj.Id}" 
+            //                         type="checkbox" ${isChecked}>
+            //                     <h4 class="objective-name">${obj.Name}</h4>
+            //                 </div>
+            //             </div>
+            //         `);
+            //     });
+            // }
+
+            // mediumObjectivesWrapper.replaceWith(newWrapper)
+        }
+
+        this.modal.hide();
+    }
+
+    async saveTasks(e) {
         e.preventDefault();
         this.saveBtn.disabled = true;
 
@@ -250,7 +326,8 @@ class TaskManager {
                 timer: 1500
             });
 
-            window.location.reload();
+            this.updateTaskDom(taskData);
+
         } catch (error) {
             Swal.fire({
                 icon: 'error',
@@ -300,7 +377,7 @@ class TaskManager {
     }
 
     async updateIsComplete(changedCheckbox) {
-        const objectiveId = changedCheckbox.getAttribute('data-objective-id');
+        const objectiveId = changedCheckbox.dataset.objectiveId;
         const isChecked = changedCheckbox.checked;
 
         try {
@@ -424,7 +501,8 @@ class TaskManager {
         }
     }
 
-    async setCanvasAPIKey() {
+    async setCanvasAPIKey(e) {
+        e.preventDefault();
         const key = document.getElementById('canvasApiKey').value;
         try {
             const response = await fetch('/api/canvas/setKey', {
@@ -444,11 +522,9 @@ class TaskManager {
                     });
                     
                 } else {
-                    console.log('here');
                     throw new Error('Setting key failed');
                 }
         } catch (error) {
-            console.log('here2');
             Swal.fire('Error!', 'There was a problem setting your Canvas API key please get in touch with your local developer', 'error');
         }
     }
