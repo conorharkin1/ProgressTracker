@@ -79,6 +79,14 @@ class TaskManager {
         });
     }
 
+    rebindObjectiveCheckboxes() {
+        this.objectiveCheckboxes = document.querySelectorAll('.objective-item-checkbox');
+
+        this.objectiveCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => this.updateIsComplete(checkbox));
+        });
+    }
+
     openAddTaskModal(button) {
         this.taskModalTitle.textContent = 'Add a new Task';
         this.maxObjectives = parseInt(button.getAttribute('data-objective-count'));
@@ -225,17 +233,15 @@ class TaskManager {
     updateTaskDom(updatedTaskData) {
         console.log(updatedTaskData);
         // Update the Task Name
-        const taskHeader = Array.from(document.querySelectorAll('.task-header-centre')).find(th => th.dataset.taskId == updatedTaskData.Id);
+        const taskHeader = Array.from(document.querySelectorAll('.task-header-centre')).find(th => th.dataset.taskId == updatedTaskData.id);
         const taskNameElement = taskHeader.querySelector('h4');
-        taskNameElement.textContent = updatedTaskData.Name;
+        taskNameElement.textContent = updatedTaskData.name;
 
         // Update the DueDate
-        var dueDiv = Array.from(document.querySelectorAll('.percentage')).find(th => th.dataset.taskId == updatedTaskData.Id);
-        console.log(dueDiv);
+        var dueDiv = Array.from(document.querySelectorAll('.percentage')).find(th => th.dataset.taskId == updatedTaskData.id);
         const dueElement = dueDiv.querySelectorAll('h5');
         const h5ToUpdate = dueElement[1];
-        console.log(h5ToUpdate);
-        const rawDate = new Date(updatedTaskData.DueDate);
+        const rawDate = new Date(updatedTaskData.dueDate);
         const formattedDate = rawDate.toLocaleString('en-GB', {
             day: '2-digit',
             month: 'short',
@@ -244,58 +250,52 @@ class TaskManager {
             hour12: false
         }).replace(',', '');
         h5ToUpdate.innerText = formattedDate;
-        console.log(h5ToUpdate);
 
         //Objectives
-        if (updatedTaskData.TaskType === 'SMALL') {
-            // const smallObjectivesWrapper = Array.from(document.querySelectorAll('.objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.Id);
+        if (updatedTaskData.taskType === 'SMALL') {
+            const smallObjectivesWrapper = Array.from(document.querySelectorAll('.objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.id);
+            smallObjectivesWrapper.innerHTML = '';
 
-            // const newWrapper = document.createElement('div');
-            // newWrapper.className = 'objectives-list';
-            // newWrapper.dataset.taskId = updatedTaskData.Id;
-
-            // if (updatedTaskData.objectives) {
-            //     updatedTaskData.objectives.forEach(obj => {
-            //         const isChecked = obj.IsComplete ? 'checked' : '';
-            //         newWrapper.insertAdjacentHTML('beforeend', `
-            //             <div class="objective-item">
-            //                 <div class="objective-header">
-            //                     <input class="objective-item-checkbox" 
-            //                         data-objective-id="${obj.Id}" 
-            //                         type="checkbox" ${isChecked}>
-            //                     <h4 class="objective-name">${obj.Name}</h4>
-            //                 </div>
-            //             </div>
-            //         `);
-            //     });
-            // }
-
-            // smallObjectivesWrapper.replaceWith(newWrapper);
+            // Re-populate the objectives list
+            if (updatedTaskData.objectives && updatedTaskData.objectives.length > 0) {
+                console.log('here');
+                updatedTaskData.objectives.forEach(obj => {
+                    const isChecked = obj.isComplete ? 'checked' : '';
+                    smallObjectivesWrapper.insertAdjacentHTML('beforeend', `
+                        <div class="objective-item">
+                            <div class="objective-header">
+                                <input class="objective-item-checkbox" 
+                                    data-objective-id="${obj.id}" 
+                                    type="checkbox" ${isChecked}>
+                                <h4 class="objective-name">${obj.name}</h4>
+                            </div>
+                        </div>
+                    `);
+                });
+            }
+            this.rebindObjectiveCheckboxes();
 
         } else if (updatedTaskData.TaskType === 'MEDIUM' || updatedTaskData.TaskType === 'LARGE') {
-            // const mediumObjectivesWrapper = Array.from(document.querySelectorAll('.medium-objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.Id);
+            const mediumObjectivesWrapper = Array.from(document.querySelectorAll('.medium-objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.Id);
+            mediumObjectivesWrapper.innerHTML = '';
 
-            // const newWrapper = document.createElement('div');
-            // newWrapper.className = 'objectives-list';
-            // newWrapper.dataset.taskId = updatedTaskData.Id;
-
-            // if (updatedTaskData.objectives) {
-            //     updatedTaskData.objectives.forEach(obj => {
-            //         const isChecked = obj.IsComplete ? 'checked' : '';
-            //         newWrapper.insertAdjacentHTML('beforeend', `
-            //             <div class="objective-item">
-            //                 <div class="objective-header">
-            //                     <input class="objective-item-checkbox" 
-            //                         data-objective-id="${obj.Id}" 
-            //                         type="checkbox" ${isChecked}>
-            //                     <h4 class="objective-name">${obj.Name}</h4>
-            //                 </div>
-            //             </div>
-            //         `);
-            //     });
-            // }
-
-            // mediumObjectivesWrapper.replaceWith(newWrapper)
+            // Re-populate the objectives list
+            if (updatedTaskData.objectives && updatedTaskData.objectives.length > 0) {
+                updatedTaskData.objectives.forEach(obj => {
+                    const isChecked = obj.isComplete ? 'checked' : '';
+                    mediumObjectivesWrapper.insertAdjacentHTML('beforeend', `
+                        <div class="objective-item">
+                            <div class="objective-header">
+                                <input class="objective-item-checkbox" 
+                                    data-objective-id="${obj.id}" 
+                                    type="checkbox" ${isChecked}>
+                                <h4 class="objective-name">${obj.name}</h4>
+                            </div>
+                        </div>
+                    `);
+                });
+            }
+            this.rebindObjectiveCheckboxes();
         }
 
         this.modal.hide();
@@ -326,7 +326,12 @@ class TaskManager {
                 timer: 1500
             });
 
-            this.updateTaskDom(taskData);
+            const updatedTask = await fetch(`/api/tasks/${taskData.Id}`);
+            if (!response.ok) throw new Error('Failed to load task');
+
+            const task = await updatedTask.json();
+
+            this.updateTaskDom(task);
 
         } catch (error) {
             Swal.fire({
