@@ -275,15 +275,24 @@ class TaskManager {
             }
             this.rebindObjectiveCheckboxes();
 
-        } else if (updatedTaskData.TaskType === 'MEDIUM' || updatedTaskData.TaskType === 'LARGE') {
-            const mediumObjectivesWrapper = Array.from(document.querySelectorAll('.medium-objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.Id);
-            mediumObjectivesWrapper.innerHTML = '';
+        } else if (updatedTaskData.taskType === 'MEDIUM' || updatedTaskData.taskType === 'LARGE') {
+            const mediumObjectivesWrapper = Array.from(document.querySelectorAll('.medium-objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.id);
 
-            // Re-populate the objectives list
-            if (updatedTaskData.objectives && updatedTaskData.objectives.length > 0) {
-                updatedTaskData.objectives.forEach(obj => {
+            const leftContainer = mediumObjectivesWrapper.querySelector('.objective-left');
+            const rightContainer = mediumObjectivesWrapper.querySelector('.objective-right');
+
+            leftContainer.innerHTML = '';
+            rightContainer.innerHTML = '';
+
+            const objectives = updatedTaskData.objectives || [];
+            const leftObjectives = objectives.slice(0, 2);
+            const rightObjectives = objectives.slice(2, 4);
+
+            // Helper to render one column
+            const renderObjectives = (container, list) => {
+                list.forEach(obj => {
                     const isChecked = obj.isComplete ? 'checked' : '';
-                    mediumObjectivesWrapper.insertAdjacentHTML('beforeend', `
+                    container.insertAdjacentHTML('beforeend', `
                         <div class="objective-item">
                             <div class="objective-header">
                                 <input class="objective-item-checkbox" 
@@ -294,7 +303,21 @@ class TaskManager {
                         </div>
                     `);
                 });
-            }
+
+                // Add placeholders if needed
+                const placeholdersNeeded = 2 - list.length;
+                for (let i = 0; i < placeholdersNeeded; i++) {
+                    container.insertAdjacentHTML('beforeend', `
+                        <div class="objective-item-placeholder">
+                            <!-- placeholder -->
+                        </div>
+                    `);
+                }
+            };
+
+            renderObjectives(leftContainer, leftObjectives);
+            renderObjectives(rightContainer, rightObjectives);
+
             this.rebindObjectiveCheckboxes();
         }
 
