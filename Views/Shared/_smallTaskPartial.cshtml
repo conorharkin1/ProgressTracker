@@ -28,7 +28,7 @@
         </button>
     </div>
 </div>
-<div class="sm-task-stats">
+<div class="sm-task-stats" data-task-id="@Model.Id">
     @if (totalObjectives > 0)
     {
         <div class="progress-circle">
@@ -46,7 +46,7 @@
         </div>
     }
 </div>
-<div class="sm-task-body">
+<div class="sm-task-body" data-task-id="@Model.Id">
     <div class="objectives-list">
         @if (Model.Objectives != null && Model.Objectives.Any())
         {

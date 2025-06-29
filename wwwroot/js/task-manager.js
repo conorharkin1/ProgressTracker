@@ -77,8 +77,8 @@ class TaskManager {
         }
 
         // Objective cards
-        this.objectiveCheckboxes.forEach(obj => {
-            obj.addEventListener('change', () => this.updateIsComplete(obj));
+        this.objectiveCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => this.updateIsComplete(checkbox));
         });
     }
 
@@ -299,9 +299,9 @@ class TaskManager {
         }
     }
 
-    async updateIsComplete(obj) {
-        const objectiveId = obj.getAttribute('data-objective-id');
-        const isChecked = obj.checked;
+    async updateIsComplete(changedCheckbox) {
+        const objectiveId = changedCheckbox.getAttribute('data-objective-id');
+        const isChecked = changedCheckbox.checked;
 
         try {
             const response = await fetch(`/api/tasks/objective`, {
@@ -313,10 +313,43 @@ class TaskManager {
             if (!response.ok) {
                 throw new Error('Failed to update completion status');
             }
-            this.initProgressCircles();
+            this.UpdateProgressCircle(changedCheckbox);
         } catch (error) {
             console.error('Error saving:', error);
         }
+    }
+
+    UpdateProgressCircle(updatedCheckbox) {
+        // Using the checkbox I get the objectives wrapper and the progress circle warpper of the task being updated
+        const smallObjectivesWrapper = updatedCheckbox.closest('.sm-task-body');
+        const mediumObjectivesWrapper = updatedCheckbox.closest('.medium-objectives-list');
+
+        if (smallObjectivesWrapper) {
+            var progressCircleWrapper = Array.from(document.querySelectorAll('.sm-task-stats')).find(sm => sm.dataset.taskId == smallObjectivesWrapper.dataset.taskId);
+            var checkboxes = smallObjectivesWrapper.querySelectorAll('[data-objective-id]');
+        } else {
+            var progressCircleWrapper = Array.from(document.querySelectorAll('.medium-plus-progress-circle')).find(mp => mp.dataset.taskId == mediumObjectivesWrapper.dataset.taskId);
+            var checkboxes = mediumObjectivesWrapper.querySelectorAll('[data-objective-id]');
+        }
+
+        // Get the other checkboxes related to the task and calculate the completeness 
+        const completed = Array.from(checkboxes).filter(cb => cb.checked).length;
+        const total = checkboxes.length;
+        const percentComplete = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+        // Get the actual percentage wrapper and circle
+        const percentageElement = progressCircleWrapper.querySelector('.percentage');
+        const circle = progressCircleWrapper.querySelector('circle');
+        // Update the percentage complete
+        percentageElement.dataset.percentage = percentComplete;
+
+        // Update the circle based on new percentageComplete
+        const radius = circle.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+        circle.style.strokeDasharray = `${circumference}`;
+        circle.style.strokeDashoffset = `${circumference}`;
+        const offset = circumference - (percentComplete / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
     }
 
     initProgressCircles() {

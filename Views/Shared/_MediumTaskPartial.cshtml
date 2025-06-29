@@ -28,7 +28,7 @@
         </button>
     </div>
 </div>
-<div class="medium-objectives-list">
+<div class="medium-objectives-list" data-task-id="@Model.Id">
     @if (objectives != null)
     {
         <div class="objective-left">
@@ -59,7 +59,7 @@
                 }
         </div>
 
-        <div class="medium-plus-progress-circle">
+        <div class="medium-plus-progress-circle" data-task-id="@Model.Id">
             <div class="outer">
                 <div class="inner">
                     <div class="percentage percentage-medium" data-percentage="@completionPercentage">

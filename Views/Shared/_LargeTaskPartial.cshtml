@@ -28,80 +28,78 @@
         </button>
     </div>
 </div>
-<div class="medium-task-layout">
-    <div class="medium-objectives-list">
-        @if (objectives != null)
-        {
-            <div class="objective-left">
-                @{
-                    var leftObjectives = objectives.Take(4).ToList();
-                    int leftPlaceholders = 4 - leftObjectives.Count;
-                }
-                @foreach (var objective in leftObjectives)
+<div class="medium-objectives-list" data-task-id="@Model.Id">
+    @if (objectives != null)
+    {
+        <div class="objective-left">
+            @{
+                var leftObjectives = objectives.Take(4).ToList();
+                int leftPlaceholders = 4 - leftObjectives.Count;
+            }
+            @foreach (var objective in leftObjectives)
+            {
+                @if (objective != null && !string.IsNullOrWhiteSpace(objective.Name))
                 {
-                    @if (objective != null && !string.IsNullOrWhiteSpace(objective.Name))
-                    {
-                        <div class="objective-item">
-                            <div class="objective-header">
-                                <input class="objective-item-checkbox" data-objective-id="@objective.Id" type="checkbox" @(objective.IsComplete ? "checked" : "") />
-                                <h4 class="objective-name">@objective.Name</h4>
-                            </div>
-                            @* <div class="objective-details">
-                                <span class="objective-hours">⏳ @objective.Hours hours needed</span>
-                            </div> *@
+                    <div class="objective-item">
+                        <div class="objective-header">
+                            <input class="objective-item-checkbox" data-objective-id="@objective.Id" type="checkbox" @(objective.IsComplete ? "checked" : "") />
+                            <h4 class="objective-name">@objective.Name</h4>
                         </div>
-                    }
+                        @* <div class="objective-details">
+                            <span class="objective-hours">⏳ @objective.Hours hours needed</span>
+                        </div> *@
+                    </div>
                 }
-                @for (int i = 0; i < leftPlaceholders; i++)
-                    {
-                        <div class="objective-item-placeholder">
-                            @*Placeholder*@
-                        </div>
-                    }
-            </div>
+            }
+            @for (int i = 0; i < leftPlaceholders; i++)
+                {
+                    <div class="objective-item-placeholder">
+                        @*Placeholder*@
+                    </div>
+                }
+        </div>
 
-            <div class="medium-plus-progress-circle">
-                <div class="outer">
-                    <div class="inner">
-                        <div class="percentage percentage-large" data-percentage="@completionPercentage">
-                            <h5>Due:</h5>
-                            <h5>@Model.DueDate.ToString("dd MMM HH:mm")</h5>
-                        </div>
+        <div class="medium-plus-progress-circle" data-task-id="@Model.Id">
+            <div class="outer">
+                <div class="inner">
+                    <div class="percentage percentage-large" data-percentage="@completionPercentage">
+                        <h5>Due:</h5>
+                        <h5>@Model.DueDate.ToString("dd MMM HH:mm")</h5>
                     </div>
                 </div>
-
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">
-                    <circle cx="80" cy="80" r="70" stroke-linecap="round" stroke="#DDA853" />
-                </svg>
             </div>
 
-            <div class="objective-right">
-                @{
-                    var rightObjectives = objectives.Skip(4).ToList();
-                    int rightPlaceholders = 4 - rightObjectives.Count;
-                }
-                @foreach (var objective in rightObjectives)
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">
+                <circle cx="80" cy="80" r="70" stroke-linecap="round" stroke="#DDA853" />
+            </svg>
+        </div>
+
+        <div class="objective-right">
+            @{
+                var rightObjectives = objectives.Skip(4).ToList();
+                int rightPlaceholders = 4 - rightObjectives.Count;
+            }
+            @foreach (var objective in rightObjectives)
+            {
+                @if (objective != null && !string.IsNullOrWhiteSpace(objective.Name))
                 {
-                    @if (objective != null && !string.IsNullOrWhiteSpace(objective.Name))
-                    {
-                        <div class="objective-item">
-                            <div class="objective-header">
-                                <input class="objective-item-checkbox" data-objective-id="@objective.Id" type="checkbox" @(objective.IsComplete ? "checked" : "") />
-                                <h4 class="objective-name">@objective.Name</h4>
-                            </div>
-                            @* <div class="objective-details">
-                                <span class="objective-hours">⏳ @objective.Hours hours needed</span>
-                            </div> *@
+                    <div class="objective-item">
+                        <div class="objective-header">
+                            <input class="objective-item-checkbox" data-objective-id="@objective.Id" type="checkbox" @(objective.IsComplete ? "checked" : "") />
+                            <h4 class="objective-name">@objective.Name</h4>
                         </div>
-                    }
+                        @* <div class="objective-details">
+                            <span class="objective-hours">⏳ @objective.Hours hours needed</span>
+                        </div> *@
+                    </div>
                 }
-                @for (int i = 0; i < rightPlaceholders; i++)
-                    {
-                        <div class="objective-item-placeholder">
-                            @* placeholder *@
-                        </div>
-                    }
-            </div>
-        }
-    </div>
+            }
+            @for (int i = 0; i < rightPlaceholders; i++)
+                {
+                    <div class="objective-item-placeholder">
+                        @* placeholder *@
+                    </div>
+                }
+        </div>
+    }
 </div>
