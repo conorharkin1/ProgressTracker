@@ -39,6 +39,12 @@ public class HomeController : Controller
     {
         return View();
     }
+    
+    [Route("noTaskPartial")]
+    public IActionResult NoTaskPartial(string taskType)
+    {
+        return PartialView("_NoTaskPartial", taskType);
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

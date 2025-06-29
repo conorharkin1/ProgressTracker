@@ -231,94 +231,121 @@ class TaskManager {
     }
 
     updateTaskDom(updatedTaskData) {
-        console.log(updatedTaskData);
-        // Update the Task Name
-        const taskHeader = Array.from(document.querySelectorAll('.task-header-centre')).find(th => th.dataset.taskId == updatedTaskData.id);
-        const taskNameElement = taskHeader.querySelector('h4');
-        taskNameElement.textContent = updatedTaskData.name;
+        const existingTask = document.querySelector(`[data-task-id="${updatedTaskData.id}"]`);
+        console.log(existingTask);
+        if (existingTask) {
+            // Update the Task Name
+            const taskHeader = Array.from(document.querySelectorAll('.task-header-centre')).find(th => th.dataset.taskId == updatedTaskData.id);
+            const taskNameElement = taskHeader.querySelector('h4');
+            taskNameElement.textContent = updatedTaskData.name;
 
-        // Update the DueDate
-        var dueDiv = Array.from(document.querySelectorAll('.percentage')).find(th => th.dataset.taskId == updatedTaskData.id);
-        const dueElement = dueDiv.querySelectorAll('h5');
-        const h5ToUpdate = dueElement[1];
-        const rawDate = new Date(updatedTaskData.dueDate);
-        const formattedDate = rawDate.toLocaleString('en-GB', {
-            day: '2-digit',
-            month: 'short',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-        }).replace(',', '');
-        h5ToUpdate.innerText = formattedDate;
+            // Update the DueDate
+            var dueDiv = Array.from(document.querySelectorAll('.percentage')).find(th => th.dataset.taskId == updatedTaskData.id);
+            const dueElement = dueDiv.querySelectorAll('h5');
+            const h5ToUpdate = dueElement[1];
+            const rawDate = new Date(updatedTaskData.dueDate);
+            const formattedDate = rawDate.toLocaleString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            }).replace(',', '');
+            h5ToUpdate.innerText = formattedDate;
 
-        //Objectives
-        if (updatedTaskData.taskType === 'SMALL') {
-            const smallObjectivesWrapper = Array.from(document.querySelectorAll('.objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.id);
-            smallObjectivesWrapper.innerHTML = '';
+            // Update Objectives
+            if (updatedTaskData.taskType === 'SMALL') {
+                const smallObjectivesWrapper = Array.from(document.querySelectorAll('.objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.id);
+                smallObjectivesWrapper.innerHTML = '';
 
-            // Re-populate the objectives list
-            if (updatedTaskData.objectives && updatedTaskData.objectives.length > 0) {
-                console.log('here');
-                updatedTaskData.objectives.forEach(obj => {
-                    const isChecked = obj.isComplete ? 'checked' : '';
-                    smallObjectivesWrapper.insertAdjacentHTML('beforeend', `
-                        <div class="objective-item">
-                            <div class="objective-header">
-                                <input class="objective-item-checkbox" 
-                                    data-objective-id="${obj.id}" 
-                                    type="checkbox" ${isChecked}>
-                                <h4 class="objective-name">${obj.name}</h4>
+                // Re-populate the objectives list
+                if (updatedTaskData.objectives && updatedTaskData.objectives.length > 0) {
+                    updatedTaskData.objectives.forEach(obj => {
+                        const isChecked = obj.isComplete ? 'checked' : '';
+                        smallObjectivesWrapper.insertAdjacentHTML('beforeend', `
+                            <div class="objective-item">
+                                <div class="objective-header">
+                                    <input class="objective-item-checkbox" 
+                                        data-objective-id="${obj.id}" 
+                                        type="checkbox" ${isChecked}>
+                                    <h4 class="objective-name">${obj.name}</h4>
+                                </div>
                             </div>
-                        </div>
-                    `);
-                });
-            }
-            this.rebindObjectiveCheckboxes();
-
-        } else if (updatedTaskData.taskType === 'MEDIUM' || updatedTaskData.taskType === 'LARGE') {
-            const mediumObjectivesWrapper = Array.from(document.querySelectorAll('.medium-objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.id);
-
-            const leftContainer = mediumObjectivesWrapper.querySelector('.objective-left');
-            const rightContainer = mediumObjectivesWrapper.querySelector('.objective-right');
-
-            leftContainer.innerHTML = '';
-            rightContainer.innerHTML = '';
-
-            const objectives = updatedTaskData.objectives || [];
-            const leftObjectives = objectives.slice(0, 2);
-            const rightObjectives = objectives.slice(2, 4);
-
-            // Helper to render one column
-            const renderObjectives = (container, list) => {
-                list.forEach(obj => {
-                    const isChecked = obj.isComplete ? 'checked' : '';
-                    container.insertAdjacentHTML('beforeend', `
-                        <div class="objective-item">
-                            <div class="objective-header">
-                                <input class="objective-item-checkbox" 
-                                    data-objective-id="${obj.id}" 
-                                    type="checkbox" ${isChecked}>
-                                <h4 class="objective-name">${obj.name}</h4>
-                            </div>
-                        </div>
-                    `);
-                });
-
-                // Add placeholders if needed
-                const placeholdersNeeded = 2 - list.length;
-                for (let i = 0; i < placeholdersNeeded; i++) {
-                    container.insertAdjacentHTML('beforeend', `
-                        <div class="objective-item-placeholder">
-                            <!-- placeholder -->
-                        </div>
-                    `);
+                        `);
+                    });
                 }
-            };
 
-            renderObjectives(leftContainer, leftObjectives);
-            renderObjectives(rightContainer, rightObjectives);
+                // Rebind the checkboxes' event listeners
+                this.rebindObjectiveCheckboxes();
 
-            this.rebindObjectiveCheckboxes();
+                // Update the progress circles
+                if (updatedTaskData.objectives && updatedTaskData.objectives.length > 0) {
+                    updatedTaskData.objectives.forEach(obj => {
+                        const checkbox = document.querySelector(`input.objective-item-checkbox[data-objective-id="${obj.id}"]`);
+                        if (checkbox) {
+                            this.UpdateProgressCircle(checkbox);
+                        }
+                    });
+                }
+
+            } else if (updatedTaskData.taskType === 'MEDIUM' || updatedTaskData.taskType === 'LARGE') {
+                const mediumObjectivesWrapper = Array.from(document.querySelectorAll('.medium-objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.id);
+
+                const leftContainer = mediumObjectivesWrapper.querySelector('.objective-left');
+                const rightContainer = mediumObjectivesWrapper.querySelector('.objective-right');
+
+                leftContainer.innerHTML = '';
+                rightContainer.innerHTML = '';
+
+                const objectives = updatedTaskData.objectives || [];
+                const leftObjectives = objectives.slice(0, 2);
+                const rightObjectives = objectives.slice(2, 4);
+
+                // Helper to render each column
+                const renderObjectives = (container, list) => {
+                    list.forEach(obj => {
+                        const isChecked = obj.isComplete ? 'checked' : '';
+                        container.insertAdjacentHTML('beforeend', `
+                            <div class="objective-item">
+                                <div class="objective-header">
+                                    <input class="objective-item-checkbox" 
+                                        data-objective-id="${obj.id}" 
+                                        type="checkbox" ${isChecked}>
+                                    <h4 class="objective-name">${obj.name}</h4>
+                                </div>
+                            </div>
+                        `);
+                    });
+
+                    // Add placeholders if needed
+                    const placeholdersNeeded = 2 - list.length;
+                    for (let i = 0; i < placeholdersNeeded; i++) {
+                        container.insertAdjacentHTML('beforeend', `
+                            <div class="objective-item-placeholder">
+                                <!-- placeholder -->
+                            </div>
+                        `);
+                    }
+                };
+
+                renderObjectives(leftContainer, leftObjectives);
+                renderObjectives(rightContainer, rightObjectives);
+
+                // Rebind the checkboxes' event listeners
+                this.rebindObjectiveCheckboxes();
+
+                // Update the progress circles
+                if (updatedTaskData.objectives && updatedTaskData.objectives.length > 0) {
+                    updatedTaskData.objectives.forEach(obj => {
+                        const checkbox = document.querySelector(`input.objective-item-checkbox[data-objective-id="${obj.id}"]`);
+                        if (checkbox) {
+                            this.UpdateProgressCircle(checkbox);
+                        }
+                    });
+                }
+            }
+        } else {
+            window.location.reload();
         }
 
         this.modal.hide();
@@ -349,12 +376,8 @@ class TaskManager {
                 timer: 1500
             });
 
-            const updatedTask = await fetch(`/api/tasks/${taskData.Id}`);
-            if (!response.ok) throw new Error('Failed to load task');
-
-            const task = await updatedTask.json();
-
-            this.updateTaskDom(task);
+            const createdTask = await response.json();
+            this.updateTaskDom(createdTask);
 
         } catch (error) {
             Swal.fire({
@@ -394,13 +417,33 @@ class TaskManager {
                         timer: 1000
                     });
                     this.resetForm();
-                    window.location.reload();
+                    this.setNoTaskPartial(taskId);
                 } else {
                     throw new Error('Delete failed');
                 }
             }
         } catch (error) {
             Swal.fire('Error!', 'There was a problem deleting the task.', 'error');
+        }
+    }
+
+    async setNoTaskPartial(taskId) {
+        const taskWrapperSmall = document.querySelector(`.small-task[data-task-id="${taskId}"]`);
+        const taskWrapperMedium = document.querySelector(`.medium-task[data-task-id="${taskId}"]`);
+        const taskWrapperLarge = document.querySelector(`.large-task[data-task-id="${taskId}"]`);
+        
+        if (taskWrapperSmall) {
+            var response = await fetch(`/noTaskPartial?taskType=small`);
+            const _NoTaskPartial = await response.text();
+            taskWrapperSmall.innerHTML = _NoTaskPartial;
+        } else if (taskWrapperMedium) {
+            var response = await fetch(`/noTaskPartial?taskType=medium`);
+            const _NoTaskPartial = await response.text();
+            taskWrapperMedium.innerHTML = _NoTaskPartial;
+        } else if (taskWrapperLarge) {
+            var response = await fetch(`/noTaskPartial?taskType=large`);
+            const _NoTaskPartial = await response.text();
+            taskWrapperLarge.innerHTML = _NoTaskPartial;
         }
     }
 

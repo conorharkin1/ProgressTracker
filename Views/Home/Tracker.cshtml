@@ -23,7 +23,7 @@
 
                     foreach (var task in leftSmallTasks)
                     {
-                        <div class="small-task">
+                        <div class="small-task" data-task-id="@task.Id">
                             @await Html.PartialAsync("_SmallTaskPartial", task)
                         </div>
                     }
@@ -41,7 +41,7 @@
             <div class="task-container-fluid">
                 @if (mediumTasks.Count > 0)
                 {
-                    <div class="medium-task">
+                    <div class="medium-task" data-task-id="@mediumTasks[0].Id">
                         @await Html.PartialAsync("_MediumTaskPartial", mediumTasks[0])
                     </div>
                 }
@@ -59,7 +59,7 @@
                 }
                 else
                 {
-                    <div class="large-task">
+                    <div class="large-task" data-task-id="@Model.LargeTask.Id">
                         @await Html.PartialAsync("_LargeTaskPartial", Model.LargeTask)
                     </div>
                 }
@@ -67,7 +67,7 @@
                 {
                     foreach (var task in mediumTasks.Skip(1))
                     {
-                        <div class="medium-task">
+                        <div class="medium-task" data-task-id="@task.Id">
                             @await Html.PartialAsync("_MediumTaskPartial", task)
                         </div>
                     }
@@ -88,7 +88,7 @@
 
                     foreach (var task in rightSmallTasks)
                     {
-                        <div class="small-task">
+                        <div class="small-task" data-task-id="@task.Id">
                             @await Html.PartialAsync("_SmallTaskPartial", task)
                         </div>
                     }

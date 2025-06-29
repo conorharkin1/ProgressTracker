@@ -56,7 +56,7 @@
                 {
                     <div class="objective-item">
                         <div class="objective-header">
-                            <input class="objective-item-checkbox" data-objective-id="@objective.Id" type="checkbox" @(objective.IsComplete ? "checked" : "") />
+                            <input class="objective-item-checkbox" data-task-id="@Model.Id" data-objective-id="@objective.Id" type="checkbox" @(objective.IsComplete ? "checked" : "") />
                             <h4 class="objective-name">@objective.Name</h4>
                         </div>
                         @* <div class="objective-details">

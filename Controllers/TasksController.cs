@@ -40,8 +40,8 @@ public class TasksController : ControllerBase
 
         try
         {
-            await _taskRepository.AddTask(task, userId);
-            return Ok(new { message = "Task saved successfully" });
+            var createdTask = await _taskRepository.AddTask(task, userId);
+            return Ok(new { createdTask } );
         }
         catch (Exception)
         {
