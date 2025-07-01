@@ -194,6 +194,7 @@ nav h5 {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    text-align: center;
 }
 
 .sm-task-body {
@@ -201,6 +202,7 @@ nav h5 {
     flex-grow: 1;
     font-size: 15px;
     overflow: auto;
+    text-align: center;
 }
 
 .sm-form-check {
@@ -289,6 +291,20 @@ nav h5 {
     justify-content: space-between;
     gap: 0.5rem;
     flex: 1;
+    text-align: center;
+}
+
+.no-medium-large-objectives {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.no-medium-large-objectives {
+    margin: 1rem 0 1rem 0;
 }
 
 .objective-right,

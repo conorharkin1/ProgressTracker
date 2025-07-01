@@ -89,27 +89,45 @@ namespace ProgressTracker.Repositories
             return task;
         }
 
-        public async Task<bool> UpdateTask(DbTask task)
+        public async Task<DbTask> UpdateTask(DbTask task)
         {
             var taskToUpdate = await _dbContext.Tasks.Include(t => t.Objectives).Where(t => t.Id == task.Id).FirstOrDefaultAsync();
             if (taskToUpdate == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(task), "Task cannot be null.");
             }
 
-            if (taskToUpdate.Objectives != null)
+            if (taskToUpdate.Objectives?.Count > 0)
             {
-                _dbContext.RemoveRange(taskToUpdate.Objectives);
-                await _dbContext.SaveChangesAsync();
+                _dbContext.Objectives.RemoveRange(taskToUpdate.Objectives);
             }
 
-            taskToUpdate.Id = task.Id;
             taskToUpdate.Name = task.Name;
             taskToUpdate.DueDate = task.DueDate;
             taskToUpdate.Objectives = task.Objectives;
 
-            await _dbContext.SaveChangesAsync();
-            return true;
+            if (task.Objectives != null)
+            {
+                taskToUpdate.Objectives = task.Objectives
+                    .Select(o => new Objective
+                    {
+                        Name = o.Name,
+                        Hours = o.Hours,
+                        IsComplete = o.IsComplete,
+                        TaskId = taskToUpdate.Id
+                    })
+                    .ToList();
+            }
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                return taskToUpdate;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while saving the task.", ex);
+            }
         }
 
         public async Task<bool> UpdateObjective(Objective objective)

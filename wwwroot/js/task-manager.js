@@ -231,30 +231,29 @@ class TaskManager {
     }
 
     updateTaskDom(updatedTaskData) {
-        const existingTask = document.querySelector(`[data-task-id="${updatedTaskData.id}"]`);
-        console.log(existingTask);
-        if (existingTask) {
-            // Update the Task Name
-            const taskHeader = Array.from(document.querySelectorAll('.task-header-centre')).find(th => th.dataset.taskId == updatedTaskData.id);
-            const taskNameElement = taskHeader.querySelector('h4');
-            taskNameElement.textContent = updatedTaskData.name;
+        console.log(updatedTaskData);
+        const rawDate = new Date(updatedTaskData.dueDate);
+        const formattedDate = rawDate.toLocaleString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        }).replace(',', '');
 
-            // Update the DueDate
-            var dueDiv = Array.from(document.querySelectorAll('.percentage')).find(th => th.dataset.taskId == updatedTaskData.id);
-            const dueElement = dueDiv.querySelectorAll('h5');
-            const h5ToUpdate = dueElement[1];
-            const rawDate = new Date(updatedTaskData.dueDate);
-            const formattedDate = rawDate.toLocaleString('en-GB', {
-                day: '2-digit',
-                month: 'short',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false
-            }).replace(',', '');
-            h5ToUpdate.innerText = formattedDate;
+        // Update the Task Name
+        const taskHeader = Array.from(document.querySelectorAll('.task-header-centre')).find(th => th.dataset.taskId == updatedTaskData.id);
+        const taskNameElement = taskHeader.querySelector('h4');
+        taskNameElement.textContent = updatedTaskData.name;
 
+        // Update the DueDate
+        if (updatedTaskData.objectives.length > 0) {
             // Update Objectives
             if (updatedTaskData.taskType === 'SMALL') {
+                var dueDiv = Array.from(document.querySelectorAll('.percentage')).find(th => th.dataset.taskId == updatedTaskData.id);
+                const dueElement = dueDiv.querySelectorAll('h5');
+                const h5ToUpdate = dueElement[1];
+                h5ToUpdate.innerText = formattedDate;
                 const smallObjectivesWrapper = Array.from(document.querySelectorAll('.objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.id);
                 smallObjectivesWrapper.innerHTML = '';
 
@@ -283,6 +282,7 @@ class TaskManager {
                     updatedTaskData.objectives.forEach(obj => {
                         const checkbox = document.querySelector(`input.objective-item-checkbox[data-objective-id="${obj.id}"]`);
                         if (checkbox) {
+                            console.log(formattedDate);
                             this.UpdateProgressCircle(checkbox);
                         }
                     });
@@ -290,12 +290,29 @@ class TaskManager {
 
             } else if (updatedTaskData.taskType === 'MEDIUM' || updatedTaskData.taskType === 'LARGE') {
                 const mediumObjectivesWrapper = Array.from(document.querySelectorAll('.medium-objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.id);
+                const noObjectivesDiv = mediumObjectivesWrapper.querySelector('.no-medium-large-objectives');
+                
+                if (noObjectivesDiv) {
+                    noObjectivesDiv.remove();
+                }
 
-                const leftContainer = mediumObjectivesWrapper.querySelector('.objective-left');
-                const rightContainer = mediumObjectivesWrapper.querySelector('.objective-right');
+                let leftContainer = mediumObjectivesWrapper.querySelector('.objective-left');
+                if (leftContainer) {
+                    leftContainer.innerHTML = '';
+                } else {
+                    leftContainer = document.createElement('div');
+                    leftContainer.classList.add('objective-left');
+                    mediumObjectivesWrapper.appendChild(leftContainer);
+                }
 
-                leftContainer.innerHTML = '';
-                rightContainer.innerHTML = '';
+                let rightContainer = mediumObjectivesWrapper.querySelector('.objective-right');
+                if (rightContainer) {
+                    rightContainer.innerHTML = '';
+                } else {
+                    rightContainer = document.createElement('div');
+                    rightContainer.classList.add('objective-right');
+                    mediumObjectivesWrapper.appendChild(rightContainer);
+                }
 
                 const objectives = updatedTaskData.objectives || [];
                 const leftObjectives = objectives.slice(0, 2);
@@ -339,13 +356,30 @@ class TaskManager {
                     updatedTaskData.objectives.forEach(obj => {
                         const checkbox = document.querySelector(`input.objective-item-checkbox[data-objective-id="${obj.id}"]`);
                         if (checkbox) {
-                            this.UpdateProgressCircle(checkbox);
+                            this.UpdateProgressCircle(checkbox, formattedDate, updatedTaskData.taskType);
                         }
                     });
                 }
             }
         } else {
-            window.location.reload();
+            // No Objectives 
+            if (updatedTaskData.taskType === 'SMALL') {
+                const smallObjectivesWrapper = Array.from(document.querySelectorAll('.objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.id);
+                smallObjectivesWrapper.innerHTML = '';
+                smallObjectivesWrapper.insertAdjacentHTML('beforeend', `
+                    <h4>Add some Objectives to track your progress!</h4>
+                `);
+            } else if (updatedTaskData.taskType === 'MEDIUM' || updatedTaskData.taskType === 'LARGE') {
+                const mediumObjectivesWrapper = Array.from(document.querySelectorAll('.medium-objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.id);
+                mediumObjectivesWrapper.innerHTML = '';
+                mediumObjectivesWrapper.insertAdjacentHTML('beforeend', `
+                    <div class="no-medium-large-objectives">
+                        <h4>Due:</h4>
+                        <h4>${formattedDate}</h4>
+                        <h5>Add some Objectives to track your progress!</h5>
+                    </div>
+                `);
+            }
         }
 
         this.modal.hide();
@@ -467,7 +501,8 @@ class TaskManager {
         }
     }
 
-    UpdateProgressCircle(updatedCheckbox) {
+    UpdateProgressCircle(updatedCheckbox, formattedDate, taskType) {
+        console.log(taskType);
         // Using the checkbox I get the objectives wrapper and the progress circle warpper of the task being updated
         const smallObjectivesWrapper = updatedCheckbox.closest('.sm-task-body');
         const mediumObjectivesWrapper = updatedCheckbox.closest('.medium-objectives-list');
@@ -475,29 +510,52 @@ class TaskManager {
         if (smallObjectivesWrapper) {
             var progressCircleWrapper = Array.from(document.querySelectorAll('.sm-task-stats')).find(sm => sm.dataset.taskId == smallObjectivesWrapper.dataset.taskId);
             var checkboxes = smallObjectivesWrapper.querySelectorAll('[data-objective-id]');
-        } else {
+
+        } else if (mediumObjectivesWrapper) {
             var progressCircleWrapper = Array.from(document.querySelectorAll('.medium-plus-progress-circle')).find(mp => mp.dataset.taskId == mediumObjectivesWrapper.dataset.taskId);
             var checkboxes = mediumObjectivesWrapper.querySelectorAll('[data-objective-id]');
+
+            // Get the other checkboxes related to the task and calculate the completeness 
+            const completed = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const total = checkboxes.length;
+            const percentComplete = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            if (!progressCircleWrapper) {
+                progressCircleWrapper = document.createElement('div');
+                progressCircleWrapper.classList.add('medium-plus-progress-circle');
+                progressCircleWrapper.dataset.taskId = mediumObjectivesWrapper.dataset.taskId;
+
+                progressCircleWrapper.innerHTML = `
+                    <div class="outer">
+                        <div class="inner">
+                            <div class="percentage percentage-${taskType.toLowerCase()}" data-percentage="${percentComplete}" data-task-id="${mediumObjectivesWrapper.dataset.taskId}">
+                                <h5>Due:</h5>
+                                <h5>${formattedDate}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">
+                        <circle cx="80" cy="80" r="70" stroke-linecap="round" stroke="#DDA853" />
+                    </svg>
+                `;
+                let rightContainer = mediumObjectivesWrapper.querySelector('.objective-right');
+                mediumObjectivesWrapper.insertBefore(progressCircleWrapper, rightContainer);
+            } else {
+                // Get the actual percentage wrapper and circle
+                const percentageElement = progressCircleWrapper.querySelector('.percentage');
+                const circle = progressCircleWrapper.querySelector('circle');
+                // Update the percentage complete
+                percentageElement.dataset.percentage = percentComplete;
+
+                // Update the circle based on new percentageComplete
+                const radius = circle.r.baseVal.value;
+                const circumference = 2 * Math.PI * radius;
+                circle.style.strokeDasharray = `${circumference}`;
+                circle.style.strokeDashoffset = `${circumference}`;
+                const offset = circumference - (percentComplete / 100) * circumference;
+                circle.style.strokeDashoffset = offset;
+            }
         }
-
-        // Get the other checkboxes related to the task and calculate the completeness 
-        const completed = Array.from(checkboxes).filter(cb => cb.checked).length;
-        const total = checkboxes.length;
-        const percentComplete = total > 0 ? Math.round((completed / total) * 100) : 0;
-
-        // Get the actual percentage wrapper and circle
-        const percentageElement = progressCircleWrapper.querySelector('.percentage');
-        const circle = progressCircleWrapper.querySelector('circle');
-        // Update the percentage complete
-        percentageElement.dataset.percentage = percentComplete;
-
-        // Update the circle based on new percentageComplete
-        const radius = circle.r.baseVal.value;
-        const circumference = 2 * Math.PI * radius;
-        circle.style.strokeDasharray = `${circumference}`;
-        circle.style.strokeDashoffset = `${circumference}`;
-        const offset = circumference - (percentComplete / 100) * circumference;
-        circle.style.strokeDashoffset = offset;
     }
 
     initProgressCircles() {

@@ -27,21 +27,13 @@ public class TasksController : ControllerBase
         {
             return Unauthorized();
         }
-        var userId = user.Id;
 
-        var task = new DbTask
-        {
-            Name = taskDto.Name,
-            DueDate = taskDto.DueDate,
-            Objectives = taskDto.Objectives,
-            TaskType = taskDto.TaskType,
-            UserId = userId
-        };
+        var task = MapToEntityForCreation(taskDto, user.Id);
 
         try
         {
-            var createdTask = await _taskRepository.AddTask(task, userId);
-            return Ok(new { createdTask } );
+            var createdTask = await _taskRepository.AddTask(task, user.Id);
+            return Ok(MapToDto(createdTask));
         }
         catch (Exception)
         {
@@ -75,24 +67,17 @@ public class TasksController : ControllerBase
         {
             return Unauthorized();
         }
-        var userId = user.Id;
+        var task = MapToEntityForUpdate(taskDto, user.Id);
 
-        var task = new DbTask
+        try
         {
-            Id = taskDto.Id,
-            Name = taskDto.Name,
-            DueDate = taskDto.DueDate,
-            Objectives = taskDto.Objectives,
-            TaskType = taskDto.TaskType,
-            UserId = userId
-        };
-
-        bool updated = await _taskRepository.UpdateTask(task);
-        if(!updated)
-        {
-            return NotFound();
+            var updatedTask = await _taskRepository.UpdateTask(task);
+            return Ok(MapToDto(updatedTask));
         }
-        return Ok(new { message = "Task updated successfully" });
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while updating the task.");
+        }
     }
 
     [Route("objective")]
@@ -100,7 +85,7 @@ public class TasksController : ControllerBase
     public async Task<IActionResult> UpdateObjective([FromBody] Objective objective)
     {
         bool updated = await _taskRepository.UpdateObjective(objective);
-        if(!updated)
+        if (!updated)
         {
             return NotFound();
         }
@@ -116,5 +101,66 @@ public class TasksController : ControllerBase
             return NotFound();
         }
         return Ok(new { message = "Task deleted successfully" });
+    }
+
+    private TaskDto MapToDto(DbTask task)
+    {
+        return new TaskDto
+        {
+            Id = task.Id,
+            Name = task.Name,
+            DueDate = task.DueDate,
+            TaskType = task.TaskType,
+            Objectives = task.Objectives?
+                .Select(o => new ObjectiveDto
+                {
+                    Id = o.Id,
+                    Name = o.Name,
+                    Hours = o.Hours,
+                    IsComplete = o.IsComplete
+                })
+                .ToList()
+        };
+    }
+
+    private DbTask MapToEntityForUpdate(TaskDto taskDto, string userId)
+    {
+        return new DbTask
+        {
+            Id = taskDto.Id,
+            Name = taskDto.Name,
+            DueDate = taskDto.DueDate,
+            TaskType = taskDto.TaskType,
+            UserId = userId,
+            Objectives = taskDto.Objectives?
+                .Select(dto => new Objective
+                {
+                    Id = dto.Id,
+                    Name = dto.Name,
+                    Hours = dto.Hours,
+                    IsComplete = dto.IsComplete
+                })
+                .ToList()
+        };
+    }
+    
+    private DbTask MapToEntityForCreation(TaskDto taskDto, string userId)
+    {
+        return new DbTask
+        {
+            Name = taskDto.Name,
+            DueDate = taskDto.DueDate,
+            TaskType = taskDto.TaskType,
+            UserId = userId,
+            Objectives = taskDto.Objectives?
+                .Select(dto => new Objective
+                {
+                    Id = dto.Id,
+                    Name = dto.Name,
+                    Hours = dto.Hours,
+                    IsComplete = dto.IsComplete
+                })
+                .ToList()
+        };
     }
 }
