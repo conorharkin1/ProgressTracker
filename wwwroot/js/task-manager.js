@@ -6,8 +6,8 @@ class TaskManager {
         this.isEditMode = false;
         this.taskModal = document.getElementById('taskModal');
 
+        this.setupDelegatedEventHandlers();
         this.initElements();
-        this.bindEvents();
         this.initProgressCircles();
     }
 
@@ -34,48 +34,65 @@ class TaskManager {
         this.objectiveCheckboxes = document.querySelectorAll('.objective-item-checkbox');
     }
 
-    bindEvents() {
+    setupDelegatedEventHandlers() {
         // Open Add Task Modal
-        this.addTaskButtons.forEach(button => {
-            button.addEventListener('click', () => this.openAddTaskModal(button));
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('#add-task-btn')) {
+                this.openAddTaskModal(e.target.closest('#add-task-btn'));
+            }
         });
 
         // Open Edit Task Modal
-        this.editButtons.forEach(button => {
-            button.addEventListener('click', () => this.openEditTaskModal(button));
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('#update-task-btn')) {
+                this.openEditTaskModal(e.target.closest('#update-task-btn'));
+            }
         });
 
         // Delete Task
-        this.deleteButtons.forEach(button => {
-            button.addEventListener('click', () => this.deleteTask(button));
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('#delete-task-btn')) {
+                this.deleteTask(e.target.closest('#delete-task-btn'));
+            }
+        });
+
+        // Add Objective
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('#addObjectiveBtn')) {
+                this.addObjective();
+            }
+        });
+
+        // Save Tasks
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('#saveBtn')) {
+                this.saveTasks(e);
+            }
         });
 
         // Sync with Canvas
-        if (this.syncBtn) {
-            this.syncBtn.addEventListener('click', () => this.sync());
+        const syncBtn = document.getElementById('sync');
+        if (syncBtn) {
+            syncBtn.addEventListener('click', () => this.sync());
         }
 
-        if (this.canvasApiKeyForm) {
-            this.canvasApiKeyForm.addEventListener('submit', (e) => this.setCanvasAPIKey(e)); 
-        }
-
-        // Add Objective
-        if (this.addObjectiveButton) {
-            this.addObjectiveButton.addEventListener('click', () => this.addObjective());
-        }
-
-        if (this.saveBtn) {
-            this.saveBtn.addEventListener('click', (e) => this.saveTasks(e));
+        // Canvas API key form
+        const apiForm = document.getElementById('CanvasApiKeyForm');
+        if (apiForm) {
+            apiForm.addEventListener('submit', (e) => this.setCanvasAPIKey(e));
         }
 
         // Reset form on modal close
-        if (this.taskModal) {
-            this.taskModal.addEventListener('hidden.bs.modal', () => this.resetForm());
+        const modalEl = document.getElementById('taskModal');
+        if (modalEl) {
+            modalEl.addEventListener('hidden.bs.modal', () => this.resetForm());
         }
 
-        // Objective cards
-        this.objectiveCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', () => this.updateIsComplete(checkbox));
+        // Delegate objective checkbox change
+        document.addEventListener('change', (e) => {
+            if (e.target.matches('.objective-item-checkbox')) {
+                this.updateIsComplete(e.target);
+            }
         });
     }
 
@@ -88,9 +105,10 @@ class TaskManager {
     }
 
     openAddTaskModal(button) {
+        console.log(button);
         this.taskModalTitle.textContent = 'Add a new Task';
         this.maxObjectives = parseInt(button.getAttribute('data-objective-count'));
-
+        console.log(this.maxObjectives);
         this.modal.show();
     }
 
@@ -220,6 +238,8 @@ class TaskManager {
 
         this.taskType = this.maxObjectives === 2 ? 'SMALL' :
                         this.maxObjectives === 4 ? 'MEDIUM' : 'LARGE';
+
+        console.log(this.taskType);
 
         return {
             Id: this.taskIdInput.value ? this.taskIdInput.value : 0,
@@ -370,12 +390,12 @@ class TaskManager {
                     <h4>Add some Objectives to track your progress!</h4>
                 `);
             } else if (updatedTaskData.taskType === 'MEDIUM' || updatedTaskData.taskType === 'LARGE') {
+                console.log('HERE');
                 const mediumObjectivesWrapper = Array.from(document.querySelectorAll('.medium-objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.id);
                 mediumObjectivesWrapper.innerHTML = '';
                 mediumObjectivesWrapper.insertAdjacentHTML('beforeend', `
                     <div class="no-medium-large-objectives">
-                        <h4>Due:</h4>
-                        <h4>${formattedDate}</h4>
+                        <h4>Due: ${formattedDate}</h4>
                         <h5>Add some Objectives to track your progress!</h5>
                     </div>
                 `);
@@ -410,8 +430,12 @@ class TaskManager {
                 timer: 1500
             });
 
-            const createdTask = await response.json();
-            this.updateTaskDom(createdTask);
+            if (this.isEditMode) {
+                const createdTask = await response.json();
+                this.updateTaskDom(createdTask);
+            } else {
+                window.location.reload();
+            }
 
         } catch (error) {
             Swal.fire({
@@ -479,6 +503,9 @@ class TaskManager {
             const _NoTaskPartial = await response.text();
             taskWrapperLarge.innerHTML = _NoTaskPartial;
         }
+
+        this.initElements();
+        this.initProgressCircles();
     }
 
     async updateIsComplete(changedCheckbox) {
@@ -502,14 +529,30 @@ class TaskManager {
     }
 
     UpdateProgressCircle(updatedCheckbox, formattedDate, taskType) {
-        console.log(taskType);
         // Using the checkbox I get the objectives wrapper and the progress circle warpper of the task being updated
         const smallObjectivesWrapper = updatedCheckbox.closest('.sm-task-body');
         const mediumObjectivesWrapper = updatedCheckbox.closest('.medium-objectives-list');
 
+        // In the case of a small objective I don't need to worry about progressCircleWrapper not existing it always does.
         if (smallObjectivesWrapper) {
             var progressCircleWrapper = Array.from(document.querySelectorAll('.sm-task-stats')).find(sm => sm.dataset.taskId == smallObjectivesWrapper.dataset.taskId);
             var checkboxes = smallObjectivesWrapper.querySelectorAll('[data-objective-id]');
+            const completed = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const total = checkboxes.length;
+            const percentComplete = total > 0 ? Math.round((completed / total) * 100) : 0;
+            // Get the actual percentage wrapper and circle
+            const percentageElement = progressCircleWrapper.querySelector('.percentage');
+            const circle = progressCircleWrapper.querySelector('circle');
+            // Update the percentage complete
+            percentageElement.dataset.percentage = percentComplete;
+
+            // Update the circle based on new percentageComplete
+            const radius = circle.r.baseVal.value;
+            const circumference = 2 * Math.PI * radius;
+            circle.style.strokeDasharray = `${circumference}`;
+            circle.style.strokeDashoffset = `${circumference}`;
+            const offset = circumference - (percentComplete / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
 
         } else if (mediumObjectivesWrapper) {
             var progressCircleWrapper = Array.from(document.querySelectorAll('.medium-plus-progress-circle')).find(mp => mp.dataset.taskId == mediumObjectivesWrapper.dataset.taskId);

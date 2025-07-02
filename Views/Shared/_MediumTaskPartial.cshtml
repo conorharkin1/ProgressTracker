@@ -10,7 +10,7 @@
     int completionPercentage = totalObjectives > 0 ? (int)((double)numCompleteObjectives / totalObjectives * 100) : 0;
 }
 
-<div class="container task-header">
+<div class="container task-header" data-task-id="@Model.Id">
     <div class="task-header-left">
         <button class="btn" id="delete-task-btn" task-id="@Model.Id"><i class="bi bi-trash icon-colour" ></i></button>
     </div>
@@ -103,9 +103,8 @@
     else
     {
         <div class="no-medium-large-objectives">
-            <h4>Due:</h4>
-            <h4>@Model.DueDate.ToString("dd MMM HH:mm")</h4>
-            <h5>Add some Objectives to track your progress!</h5>
+            <h4>Due: @Model.DueDate.ToString("dd MMM HH:mm")</h4>
+            <h6>Add some Objectives to track your progress!</h6>
         </div>
     }
 </div>
