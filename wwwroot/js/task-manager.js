@@ -6,7 +6,7 @@ class TaskManager {
         this.isEditMode = false;
         this.taskModal = document.getElementById('taskModal');
 
-        this.setupDelegatedEventHandlers();
+        this.setupEventHandlers();
         this.initElements();
         this.initProgressCircles();
     }
@@ -34,7 +34,7 @@ class TaskManager {
         this.objectiveCheckboxes = document.querySelectorAll('.objective-item-checkbox');
     }
 
-    setupDelegatedEventHandlers() {
+    setupEventHandlers() {
         // Open Add Task Modal
         document.addEventListener('click', (e) => {
             if (e.target.closest('#add-task-btn')) {
@@ -77,15 +77,15 @@ class TaskManager {
         }
 
         // Canvas API key form
-        const apiForm = document.getElementById('CanvasApiKeyForm');
-        if (apiForm) {
-            apiForm.addEventListener('submit', (e) => this.setCanvasAPIKey(e));
+        const apiKeyInput = document.getElementById('CanvasApiKeyForm');
+        if (apiKeyInput) {
+            apiKeyInput.addEventListener('submit', (e) => this.setCanvasAPIKey(e));
         }
 
         // Reset form on modal close
-        const modalEl = document.getElementById('taskModal');
-        if (modalEl) {
-            modalEl.addEventListener('hidden.bs.modal', () => this.resetForm());
+        const modal = document.getElementById('taskModal');
+        if (modal) {
+            modal.addEventListener('hidden.bs.modal', () => this.resetForm());
         }
 
         // Delegate objective checkbox change
@@ -105,10 +105,8 @@ class TaskManager {
     }
 
     openAddTaskModal(button) {
-        console.log(button);
         this.taskModalTitle.textContent = 'Add a new Task';
         this.maxObjectives = parseInt(button.getAttribute('data-objective-count'));
-        console.log(this.maxObjectives);
         this.modal.show();
     }
 
@@ -132,6 +130,7 @@ class TaskManager {
             this.maxObjectives = parseInt(button.getAttribute('data-objective-count'));
             this.addObjectiveButton.disabled = false;
 
+            // Manually create objective input groups for all existing objectives
             task.objectives.forEach((obj, index) => {
                 const div = document.createElement('div');
                 div.className = 'mb-2 objective-input-group';
@@ -178,6 +177,7 @@ class TaskManager {
             return;
         }
 
+        // Dynamically create a new objective group and append it to the dom
         const div = document.createElement('div');
         div.className = 'mb-2 objective-input-group';
         div.innerHTML = `
@@ -216,6 +216,7 @@ class TaskManager {
         }
     }
 
+    // Reset the form upon the modal closing
     resetForm() {
         this.taskForm.reset();
         this.objectivesContainer.innerHTML = '';
@@ -225,6 +226,7 @@ class TaskManager {
         this.isEditMode = false;
     }
 
+    // Called right before creating/updating a task. Fetches all of the required data and formats in a way the backend accepts.
     collectTaskData() {
         const objectives = [];
         const objectiveInputs = document.querySelectorAll('.objective-input-group');
@@ -236,10 +238,9 @@ class TaskManager {
             objectives.push({ Name: name, Hours: hours, IsComplete: iscomplete});
         });
 
+        // Figure out the tasktype by the amount of allowed objectives
         this.taskType = this.maxObjectives === 2 ? 'SMALL' :
                         this.maxObjectives === 4 ? 'MEDIUM' : 'LARGE';
-
-        console.log(this.taskType);
 
         return {
             Id: this.taskIdInput.value ? this.taskIdInput.value : 0,
@@ -250,8 +251,8 @@ class TaskManager {
         };
     }
 
+    // Dynamically update the DOM when updating a task. Very proud of this (was hell to write never forget)
     updateTaskDom(updatedTaskData) {
-        console.log(updatedTaskData);
         const rawDate = new Date(updatedTaskData.dueDate);
         const formattedDate = rawDate.toLocaleString('en-GB', {
             day: '2-digit',
@@ -266,10 +267,10 @@ class TaskManager {
         const taskNameElement = taskHeader.querySelector('h4');
         taskNameElement.textContent = updatedTaskData.name;
 
-        // Update the DueDate
         if (updatedTaskData.objectives.length > 0) {
             // Update Objectives
             if (updatedTaskData.taskType === 'SMALL') {
+                //Since taskType = small the .percentage div will always exist.
                 var dueDiv = Array.from(document.querySelectorAll('.percentage')).find(th => th.dataset.taskId == updatedTaskData.id);
                 const dueElement = dueDiv.querySelectorAll('h5');
                 const h5ToUpdate = dueElement[1];
@@ -302,7 +303,6 @@ class TaskManager {
                     updatedTaskData.objectives.forEach(obj => {
                         const checkbox = document.querySelector(`input.objective-item-checkbox[data-objective-id="${obj.id}"]`);
                         if (checkbox) {
-                            console.log(formattedDate);
                             this.UpdateProgressCircle(checkbox);
                         }
                     });
@@ -316,6 +316,7 @@ class TaskManager {
                     noObjectivesDiv.remove();
                 }
 
+                // Reset the left and right objective containers so I have a blank slate
                 let leftContainer = mediumObjectivesWrapper.querySelector('.objective-left');
                 if (leftContainer) {
                     leftContainer.innerHTML = '';
@@ -338,7 +339,8 @@ class TaskManager {
                 const leftObjectives = objectives.slice(0, 2);
                 const rightObjectives = objectives.slice(2, 4);
 
-                // Helper to render each column
+                // This is a helper method. It gets called twice, once for the left side and once for the right side. 
+                // Render the objectives firstly. If there is only 1 objective render the objective-item-placeholder for the second.
                 const renderObjectives = (container, list) => {
                     list.forEach(obj => {
                         const isChecked = obj.isComplete ? 'checked' : '';
@@ -365,10 +367,11 @@ class TaskManager {
                     }
                 };
 
+                // Calls to the above method.
                 renderObjectives(leftContainer, leftObjectives);
                 renderObjectives(rightContainer, rightObjectives);
 
-                // Rebind the checkboxes' event listeners
+                // Rebind the checkboxes' event listeners !!IMPORTANT
                 this.rebindObjectiveCheckboxes();
 
                 // Update the progress circles
@@ -390,7 +393,6 @@ class TaskManager {
                     <h4>Add some Objectives to track your progress!</h4>
                 `);
             } else if (updatedTaskData.taskType === 'MEDIUM' || updatedTaskData.taskType === 'LARGE') {
-                console.log('HERE');
                 const mediumObjectivesWrapper = Array.from(document.querySelectorAll('.medium-objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.id);
                 mediumObjectivesWrapper.innerHTML = '';
                 mediumObjectivesWrapper.insertAdjacentHTML('beforeend', `
@@ -410,6 +412,7 @@ class TaskManager {
         this.saveBtn.disabled = true;
 
         try {
+            // Collect the entered data and determine if creating or updating.
             const taskData = this.collectTaskData();
             const method = this.isEditMode ? 'PUT' : 'POST';
             const endpoint = this.isEditMode ? `/api/tasks/${taskData.Id}` : '/api/tasks';
@@ -430,10 +433,13 @@ class TaskManager {
                 timer: 1500
             });
 
+            // If the task is being updated I can dynamically update it.
             if (this.isEditMode) {
                 const createdTask = await response.json();
                 this.updateTaskDom(createdTask);
             } else {
+                // I have to refresh the window if a new task is being created. This is because there was no way to create
+                // the task-headers and place them in the correct spot as previously there was a _NoTaskPartial
                 window.location.reload();
             }
 
@@ -474,6 +480,7 @@ class TaskManager {
                         showConfirmButton: false,
                         timer: 1000
                     });
+                    // If task is deleted successfully, clear any form data and dynamically populate the _NoTaskPartial
                     this.resetForm();
                     this.setNoTaskPartial(taskId);
                 } else {
@@ -485,11 +492,14 @@ class TaskManager {
         }
     }
 
+    // Dynamically populates the _NoTaskPartial in place of a newly deleted task.
     async setNoTaskPartial(taskId) {
+        // Figure out where the task was deleted from firstly
         const taskWrapperSmall = document.querySelector(`.small-task[data-task-id="${taskId}"]`);
         const taskWrapperMedium = document.querySelector(`.medium-task[data-task-id="${taskId}"]`);
         const taskWrapperLarge = document.querySelector(`.large-task[data-task-id="${taskId}"]`);
         
+        // Then populate the correct container / wrapper with a _NoTaskPartial.
         if (taskWrapperSmall) {
             var response = await fetch(`/noTaskPartial?taskType=small`);
             const _NoTaskPartial = await response.text();
@@ -504,10 +514,11 @@ class TaskManager {
             taskWrapperLarge.innerHTML = _NoTaskPartial;
         }
 
+        // Remember to re-initialise elements.
         this.initElements();
-        this.initProgressCircles();
     }
 
+    // Clicking a checkbox on an objective calls this method.
     async updateIsComplete(changedCheckbox) {
         const objectiveId = changedCheckbox.dataset.objectiveId;
         const isChecked = changedCheckbox.checked;
@@ -522,12 +533,14 @@ class TaskManager {
             if (!response.ok) {
                 throw new Error('Failed to update completion status');
             }
+            // Dynamically update the progress circle.
             this.UpdateProgressCircle(changedCheckbox);
         } catch (error) {
             console.error('Error saving:', error);
         }
     }
 
+    // VERY PROUD OF THIS PILE OF SHIT - tooks years off my life 
     UpdateProgressCircle(updatedCheckbox, formattedDate, taskType) {
         // Using the checkbox I get the objectives wrapper and the progress circle warpper of the task being updated
         const smallObjectivesWrapper = updatedCheckbox.closest('.sm-task-body');
@@ -564,6 +577,7 @@ class TaskManager {
             const percentComplete = total > 0 ? Math.round((completed / total) * 100) : 0;
 
             if (!progressCircleWrapper) {
+                // If this is the first objective being added to a medium/large task I need to manually create the container to hold the progress circle.
                 progressCircleWrapper = document.createElement('div');
                 progressCircleWrapper.classList.add('medium-plus-progress-circle');
                 progressCircleWrapper.dataset.taskId = mediumObjectivesWrapper.dataset.taskId;
@@ -581,6 +595,7 @@ class TaskManager {
                         <circle cx="80" cy="80" r="70" stroke-linecap="round" stroke="#DDA853" />
                     </svg>
                 `;
+                // Inserts it before the right container meaning it's in between the right and left
                 let rightContainer = mediumObjectivesWrapper.querySelector('.objective-right');
                 mediumObjectivesWrapper.insertBefore(progressCircleWrapper, rightContainer);
             } else {
@@ -601,6 +616,7 @@ class TaskManager {
         }
     }
 
+    // Initialises the progress circles when the page is rendered.
     initProgressCircles() {
         document.querySelectorAll('.progress-circle').forEach(circleContainer => {
             const percentageElement = circleContainer.querySelector('.percentage');
@@ -637,6 +653,7 @@ class TaskManager {
         });
     }
 
+    // Sync with my canvas method
     async sync() {
         try {
             const result = await Swal.fire({
@@ -673,6 +690,7 @@ class TaskManager {
         }
     }
 
+    // Allows users without a Canvas API key to enter one and save it.
     async setCanvasAPIKey(e) {
         e.preventDefault();
         const key = document.getElementById('canvasApiKey').value;
