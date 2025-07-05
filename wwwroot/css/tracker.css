@@ -1,11 +1,12 @@
 :root {
     --navbar-height: 50px;
     --fullview-minus-navbar: calc(100vh - var(--navbar-height));
-    --background-colour: #27548A;
-    --task-colour: #183B4E;
+    --background-colour: #442d1c;
+    --task-colour: #84592b;
     --task-text-colour: #F3F3E0;
-    --objective-text-colour: #F3F3E0;
-    --task-border-colour: #DDA853;
+    --objective-colour: #6D6941;
+    --objective-text-colour: #E2C7A1;
+    --task-border-colour: #743014;
 }
 
 .profile-dropdown {
@@ -46,7 +47,7 @@ nav {
     background-color: var(--background-colour);
     justify-content: center;
     align-items: center;
-    color: var(--task-text-colour);
+    color: var(--objective-text-colour);
 }
 
 .navbar-section {
@@ -58,12 +59,24 @@ nav {
 .nav-btn {
     background-color: var(--task-colour);
     width: 100%;
-    color: white;
+    color: var(--objective-text-colour);
     border: 1px solid var(--task-border-colour);
     outline: none;
     border-radius: 0.75rem;
     cursor: pointer;
     margin-top: 5px;
+    padding: 5px;
+}
+
+.nav-item {
+    background-color: var(--task-colour);
+    width: 100%;
+    color: var(--objective-text-colour);
+    border: 1px solid var(--task-border-colour);
+    outline: none;
+    border-radius: 0.75rem;
+    margin-top: 5px;
+    padding: 5px;
 }
 
 .navbar-section.right,
@@ -125,8 +138,8 @@ nav h5 {
     padding: 10px;
     padding-top: 0;
     background-color: var(--task-colour);
-    color: var(--task-text-colour);
-    border: 1px solid var(--task-border-colour);
+    color: var(--objective-text-colour);
+    border: 2px solid var(--task-border-colour);
 }
 
 .small-task {
@@ -236,7 +249,7 @@ nav h5 {
 }
 
 .objective-item {
-    background: var(--background-colour);
+    background: var(--objective-colour);
     border-radius: 0.75rem;
     padding: 1rem;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
@@ -256,6 +269,11 @@ nav h5 {
 .objective-item:hover {
     transform: scale(1.02);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.objective-item-checkbox {
+    border: none;
+    accent-color: var(--task-border-colour);
 }
 
 .objective-header {
@@ -359,7 +377,7 @@ nav h5 {
 
 .percentage {
     font-weight: 600;
-    color: var(--task-text-colour);
+    color: var(--objective-text-colour);
     font-size: 1.2rem;
 }
 
@@ -408,17 +426,17 @@ circle {
 }
 
 #addObjectiveBtn {
-    background-color: var(--task-colour);
+    background-color: var(--task-border-colour);
     border: 1px solid var(--task-border-colour);
 }
 
 #saveBtn {
-    background-color: var(--task-colour);
+    background-color: var(--objective-colour);
     border: 1px solid var(--task-border-colour);
 }
 
 .objective-input-group {
-    background: var(--task-colour);
+    background: var(--objective-colour);
     border-radius: 0.75rem;
     padding: 1rem;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
@@ -447,7 +465,54 @@ circle {
     transform: scale(1.2);
 }
 
+.objective-table input:checked[type="checkbox"] {
+    background-color: var(--task-border-colour);
+    border: none;
+}
+
 #add-task-btn {
     font-size: 3rem;
     color: var(--task-text-colour);
+}
+
+.edit-modal-body {
+    color: var(--objective-text-colour);
+}
+.edit-modal-body input {
+    background-color: var(--task-colour);
+    color: var(--objective-text-colour);
+    padding: 3px;
+    border: 1px solid var(--task-border-colour);
+    border-radius: 5px;
+}
+
+.edit-modal-body form {
+    padding: 1rem;
+}
+
+.delete-objective {
+    background-color: var(--task-border-colour);
+    color: var(--objective-text-colour);
+    border: none;
+}
+
+#update-task-btn:focus {
+    box-shadow: none;
+}
+
+#delete-task-btn {
+    box-shadow: none;
+}
+
+.swal-popup {
+    background-color: var(--background-colour);
+    color: var(--objective-text-colour);
+}
+
+.swal-confirm-btn {
+    background-color: var(--objective-colour);
+}
+
+.swal-cancel-btn {
+    background-color: var(--task-border-colour);
 }

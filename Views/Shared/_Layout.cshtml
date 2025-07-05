@@ -18,7 +18,7 @@
         <header>
             <nav>
                 <div class="navbar-section left">
-                    <h5>Welcome @UserManager.GetUserName(User)</h5>
+                    <h5>Welcome</h5>
                 </div>
                 <div class="navbar-section center">
                     <h2>Progress Tracker</h2>
@@ -27,7 +27,7 @@
                     <button class="profile-dropdown" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-person-circle"></i>
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" data-bs-auto-close="outside">
                         <li>
                             @{var user = await UserManager.GetUserAsync(User);}
                             @if (user != null && string.IsNullOrEmpty(user.CanvasApiKey))
@@ -39,8 +39,16 @@
                             }
                             else
                             {
-                                <button class="nav-btn" id="sync">Sync with Canvas</button>
+                                <div id="sync-wrapper">
+                                    <button class="nav-btn" id="sync">Sync with Canvas</button>
+                                    <button class="nav-btn" id="edit-key">Edit Key <i class="bi bi-pencil icon-colour"></i></button>
+                                </div>
                             }
+                        </li>
+                        <li>
+                            <div class="nav-item">
+                                @UserManager.GetUserName(User)
+                            </div>
                         </li>
                         <li>
                             <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Account/Login", new { area = "Identity" })">

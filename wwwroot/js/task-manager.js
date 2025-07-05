@@ -35,6 +35,13 @@ class TaskManager {
     }
 
     setupEventHandlers() {
+        // Edit canvas key
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('#edit-key')) {
+                this.editCanvasKey(e);
+            }
+        });
+
         // Open Add Task Modal
         document.addEventListener('click', (e) => {
             if (e.target.closest('#add-task-btn')) {
@@ -173,7 +180,18 @@ class TaskManager {
 
     addObjective() {
         if (this.currentObjectiveIndex >= this.maxObjectives) {
-            alert('You have reached the maximum number of objectives.');
+            Swal.fire({
+                title: 'Error!',
+                text: 'Maximum number of objectives reached for this task',
+                icon: 'error',
+                timer: 1000,
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'swal-popup',
+                    confirmButton: 'swal-confirm-btn',
+                    cancelButton: 'swal-cancel-btn' 
+                },
+            });
             return;
         }
 
@@ -430,6 +448,11 @@ class TaskManager {
                 title: this.isEditMode ? 'Task Updated!' : 'Task Saved!',
                 text: 'Your task has been saved successfully.',
                 showConfirmButton: false,
+                customClass: {
+                    popup: 'swal-popup',
+                    confirmButton: 'swal-confirm-btn',
+                    cancelButton: 'swal-cancel-btn' 
+                },
                 timer: 1500
             });
 
@@ -462,9 +485,11 @@ class TaskManager {
                 text: 'This will permanently delete this task',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it'
+                customClass: {
+                    popup: 'swal-popup',
+                    confirmButton: 'swal-confirm-btn',
+                    cancelButton: 'swal-cancel-btn' 
+                },
             });
 
             if (result.isConfirmed) {
@@ -478,6 +503,11 @@ class TaskManager {
                         text: 'Your task has been successfully deleted.',
                         icon: 'success',
                         showConfirmButton: false,
+                        customClass: {
+                            popup: 'swal-popup',
+                            confirmButton: 'swal-confirm-btn',
+                            cancelButton: 'swal-cancel-btn' 
+                        },
                         timer: 1000
                     });
                     // If task is deleted successfully, clear any form data and dynamically populate the _NoTaskPartial
@@ -661,6 +691,11 @@ class TaskManager {
                 text: 'You are about to populate the system with assignments fetched from Canvas',
                 icon: 'warning',
                 showCancelButton: true,
+                customClass: {
+                    popup: 'swal-popup',
+                    confirmButton: 'swal-confirm-btn',
+                    cancelButton: 'swal-cancel-btn' 
+                },
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, sync'
@@ -677,12 +712,17 @@ class TaskManager {
                         text: 'You have successfully synced your Canvas assignments',
                         icon: 'success',
                         showConfirmButton: false,
-                        timer: 1000
+                        timer: 1000,
+                        customClass: {
+                            popup: 'swal-popup',
+                            confirmButton: 'swal-confirm-btn',
+                            cancelButton: 'swal-cancel-btn' 
+                        },
                     });
                     this.resetForm();
                     window.location.reload();
                 } else {
-                    throw new Error('Sync failed');
+                    Swal.fire('Error!', 'Your API key is likely invalid, please ensure you have entered it correctly', 'error');
                 }
             }
         } catch (error) {
@@ -705,17 +745,66 @@ class TaskManager {
             if (response.ok) {
                     await Swal.fire({
                         title: 'Success',
-                        text: 'API Key succesfully saved. You may now sync with canvas',
+                        text: 'API Key succesfully saved. Please refresh your page for changes to take effect',
                         icon: 'success',
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 3000,
+                        customClass: {
+                            popup: 'swal-popup',
+                            confirmButton: 'swal-confirm-btn',
+                            cancelButton: 'swal-cancel-btn' 
+                        },
                     });
-                    
+
                 } else {
                     throw new Error('Setting key failed');
                 }
         } catch (error) {
             Swal.fire('Error!', 'There was a problem setting your Canvas API key please get in touch with your local developer', 'error');
+        }
+    }
+
+    async editCanvasKey(e) {
+        const { value: key } = await Swal.fire({
+            title: "Enter your API key",
+            input: "text",
+            inputplaceholder: "API key",
+            showCancelButton: true,
+            customClass: {
+                popup: 'swal-popup',
+                confirmButton: 'swal-confirm-btn',
+                cancelButton: 'swal-cancel-btn' 
+            },
+        });
+        if (key) {
+            try {
+                const response = await fetch('/api/canvas/setKey', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ canvasApiKey: key })
+                });
+                if (response.ok) {
+                        await Swal.fire({
+                            title: 'Success',
+                            text: 'API Key succesfully saved.',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1500,
+                            customClass: {
+                                popup: 'swal-popup',
+                                confirmButton: 'swal-confirm-btn',
+                                cancelButton: 'swal-cancel-btn' 
+                            },
+                        });
+
+                    } else {
+                        throw new Error('Setting key failed');
+                    }
+            } catch (error) {
+                Swal.fire('Error!', 'There was a problem setting your Canvas API key please get in touch with your local developer', 'error');
+            }
         }
     }
 }
