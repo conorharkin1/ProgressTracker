@@ -1,5 +1,5 @@
 # Welcome to Progess Tracker 
-A web application I created to organise my university work all in one place while keeping track of deadlines and subtasks easily. Progress Tracker can 'sync' with Canvas and will automatically create Tasks and Objectives based on your current module enrolments and active assignments <br> <br>
+A web application I created to organise my university work all in one place in order to keep track of deadlines and tasks easily. Progress Tracker can 'sync' with Canvas and will automatically create Tasks and Objectives based on your current module enrolments and active assignments <br> <br>
 ## Skills improved
 ![My Skills](https://skillicons.dev/icons?i=dotnet,cpp,js,html,css)
 
@@ -26,8 +26,14 @@ A web application I created to organise my university work all in one place whil
   "DefaultConnection" : "Server=CONORSLAPTOP\\SQLEXPRESS; Initial Catalog=TrackerDB; Integrated Security=True; TrustServerCertificate=True"
 },`
 <br>
-Open the repository in your IDE and in the terminal run. `dotnet restore` follow any instructions in the terminal if there any and then run `dotnet run`. The application should start on http://localhost:5296
+3. Open the repository in your IDE and in the terminal run. `dotnet restore` follow any instructions in the terminal if there any and then run `dotnet run`. The application should start on http://localhost:5296
 <br>
+
+## Acquiring your Canvas API key (OPTIONAL)
+1. Log into Canvas account
+2. Navigate to Account > Settings
+3. Scroll to 'Approved Integrations' and click 'New Access Token' and that's it!
+4. Clicking the profile icon in Progress Tracker will allow you to input this key and from there you can sync the application with your Modules and Assignments.
 <br>
 <br>
 <details>
