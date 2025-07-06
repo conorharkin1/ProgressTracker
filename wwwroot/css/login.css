@@ -1,14 +1,17 @@
 :root {
-    --background-colour: #27548A;
-    --task-colour: #183B4E;
+    --background-colour: #442d1c;
+    --task-colour: #84592b;
     --task-text-colour: #F3F3E0;
-    --objective-text-colour: #F3F3E0;
-    --task-border-colour: #DDA853;
+    --objective-colour: #6D6941;
+    --objective-text-colour: #E2C7A1;
+    --task-border-colour: #743014;
 }
 
-.main {
+main {
+    flex: 1;
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 body {
@@ -16,22 +19,30 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: url('/progress-tracker-login-background.jpg') no-repeat;
-    background-size: cover;
-    background-position: center;
+    background: linear-gradient(
+        to bottom,
+        #442d1c 0%,
+        #442d1c 50%,
+        #84592b 75%,
+        #743014 100%
+    );
 }
 
 body h2 {
-    color: var(--task-border-colour);
+    padding-right: 2rem;
+    color: var(--objective-text-colour);
 }
 
 .wrapper {
     width: 420px;
-    background: transparent;
-    color: #fff;
+    background: linear-gradient(
+        to bottom,
+        #442d1c 0%,
+        #442d1c 50%,
+    );
+    color: var(--objective-text-colour);
     border-radius: 10px;
     padding: 30px 40px;
-    border: solid 2px var(--task-border-colour);
 }
 
 .wrapper h1 {

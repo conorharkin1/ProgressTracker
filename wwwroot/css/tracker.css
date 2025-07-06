@@ -111,6 +111,12 @@ nav h5 {
     max-height: var(--fullview-minus-navbar);
     background-color: var(--background-colour);
     flex-shrink: 0;
+    background: linear-gradient(
+        to bottom,
+        #442d1c 0%,
+        #442d1c 50%,
+        #84592b 75%,
+    );
 }
 
 .col-md-3 {
@@ -137,7 +143,7 @@ nav h5 {
     margin: 10px 0;
     padding: 10px;
     padding-top: 0;
-    background-color: var(--task-colour);
+    /* background-color: var(--task-colour); */
     color: var(--objective-text-colour);
     border: 2px solid var(--task-border-colour);
 }
@@ -259,7 +265,7 @@ nav h5 {
 }
 
 .objective-item-placeholder {
-    background: var(--task-colour);
+    background: transparent;
     flex: 1;
     display: flex;
     padding: 1rem;
