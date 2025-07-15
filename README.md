@@ -1,5 +1,5 @@
 # Welcome to Progess Tracker 
-A web application I created to organise my university work all in one place in order to keep track of deadlines and tasks easily. Progress Tracker can 'sync' with Canvas and will automatically create Tasks and Objectives based on your current module enrolments and active assignments <br> <br>
+A web application I created to organise my university work all in one place in order to keep track of deadlines for all of my assignments across all of my modules easily. Progress Tracker can 'sync' with Canvas and will automatically create Tasks and Objectives based on current module enrolments and active assignments <br> <br>
 ## Skills improved
 ![My Skills](https://skillicons.dev/icons?i=dotnet,cpp,js,html,css)
 
