@@ -1,4 +1,4 @@
-# Welcome to Progess Tracker 
+# Welcome to Progess Tracker
 A web application I created to organise my university work all in one place in order to keep track of deadlines for all of my assignments across all of my modules easily. Progress Tracker can 'sync' with Canvas and will automatically create Tasks and Objectives based on current module enrolments and active assignments <br> <br>
 ## Skills improved
 ![My Skills](https://skillicons.dev/icons?i=dotnet,cpp,js,html,css)
@@ -38,131 +38,196 @@ A web application I created to organise my university work all in one place in o
 <br>
 <details>
   <summary>Database creation schema</summary>
-  USE [TrackerDB];
-
-SET ANSI_NULLS ON;
-SET QUOTED_IDENTIFIER ON;
-
-CREATE TABLE [dbo].[__EFMigrationsHistory] (
-    [MigrationId] NVARCHAR(150) NOT NULL,
-    [ProductVersion] NVARCHAR(32) NOT NULL,
-    CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY CLUSTERED ([MigrationId] ASC)
-);
-
-CREATE TABLE [dbo].[AspNetRoles] (
-    [Id] NVARCHAR(450) NOT NULL,
-    [Name] NVARCHAR(256) NULL,
-    [NormalizedName] NVARCHAR(256) NULL,
-    [ConcurrencyStamp] NVARCHAR(MAX) NULL,
-    CONSTRAINT [PK_AspNetRoles] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-CREATE TABLE [dbo].[AspNetRoleClaims] (
-    [Id] INT IDENTITY(1,1) NOT NULL,
-    [RoleId] NVARCHAR(450) NOT NULL,
-    [ClaimType] NVARCHAR(MAX) NULL,
-    [ClaimValue] NVARCHAR(MAX) NULL,
-    CONSTRAINT [PK_AspNetRoleClaims] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-CREATE TABLE [dbo].[AspNetUsers] (
-    [Id] NVARCHAR(450) NOT NULL,
-    [UserName] NVARCHAR(256) NULL,
-    [NormalizedUserName] NVARCHAR(256) NULL,
-    [Email] NVARCHAR(256) NULL,
-    [NormalizedEmail] NVARCHAR(256) NULL,
-    [EmailConfirmed] BIT NOT NULL,
-    [PasswordHash] NVARCHAR(MAX) NULL,
-    [SecurityStamp] NVARCHAR(MAX) NULL,
-    [ConcurrencyStamp] NVARCHAR(MAX) NULL,
-    [PhoneNumber] NVARCHAR(MAX) NULL,
-    [PhoneNumberConfirmed] BIT NOT NULL,
-    [TwoFactorEnabled] BIT NOT NULL,
-    [LockoutEnd] DATETIMEOFFSET NULL,
-    [LockoutEnabled] BIT NOT NULL,
-    [AccessFailedCount] INT NOT NULL,
-    [CanvasApiKey] NVARCHAR(MAX) NULL,
-    CONSTRAINT [PK_AspNetUsers] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-CREATE TABLE [dbo].[AspNetUserClaims] (
-    [Id] INT IDENTITY(1,1) NOT NULL,
-    [UserId] NVARCHAR(450) NOT NULL,
-    [ClaimType] NVARCHAR(MAX) NULL,
-    [ClaimValue] NVARCHAR(MAX) NULL,
-    CONSTRAINT [PK_AspNetUserClaims] PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-
-CREATE TABLE [dbo].[AspNetUserLogins] (
-    [LoginProvider] NVARCHAR(450) NOT NULL,
-    [ProviderKey] NVARCHAR(450) NOT NULL,
-    [ProviderDisplayName] NVARCHAR(MAX) NULL,
-    [UserId] NVARCHAR(450) NOT NULL,
-    CONSTRAINT [PK_AspNetUserLogins] PRIMARY KEY CLUSTERED ([LoginProvider], [ProviderKey])
-);
-
-CREATE TABLE [dbo].[AspNetUserRoles] (
-    [UserId] NVARCHAR(450) NOT NULL,
-    [RoleId] NVARCHAR(450) NOT NULL,
-    CONSTRAINT [PK_AspNetUserRoles] PRIMARY KEY CLUSTERED ([UserId], [RoleId])
-);
-
-CREATE TABLE [dbo].[AspNetUserTokens] (
-    [UserId] NVARCHAR(450) NOT NULL,
-    [LoginProvider] NVARCHAR(450) NOT NULL,
-    [Name] NVARCHAR(450) NOT NULL,
-    [Value] NVARCHAR(MAX) NULL,
-    CONSTRAINT [PK_AspNetUserTokens] PRIMARY KEY CLUSTERED ([UserId], [LoginProvider], [Name])
-);
-
-CREATE TABLE [dbo].[Tasks] (
-    [Id] INT IDENTITY(1,1) NOT NULL,
-    [Name] NVARCHAR(MAX) NOT NULL CONSTRAINT DF_Tasks_Name DEFAULT (N''),
-    [DueDate] DATETIME2 NOT NULL CONSTRAINT DF_Tasks_DueDate DEFAULT ('0001-01-01T00:00:00'),
-    [UserId] NVARCHAR(450) NOT NULL CONSTRAINT DF_Tasks_UserId DEFAULT (N''),
-    CONSTRAINT [PK_Tasks] PRIMARY KEY CLUSTERED ([Id])
-);
-
-CREATE TABLE [dbo].[Objectives] (
-    [Id] INT IDENTITY(1,1) NOT NULL,
-    [Name] NVARCHAR(MAX) NOT NULL CONSTRAINT DF_Objectives_Name DEFAULT (N''),
-    [Hours] INT NOT NULL,
-    [IsComplete] BIT NOT NULL,
-    [TaskId] INT NOT NULL CONSTRAINT DF_Objectives_TaskId DEFAULT (0),
-    CONSTRAINT [PK_Objectives] PRIMARY KEY CLUSTERED ([Id])
-);
-
--- Foreign Keys
-ALTER TABLE [dbo].[AspNetRoleClaims]
-ADD CONSTRAINT [FK_AspNetRoleClaims_AspNetRoles_RoleId]
-FOREIGN KEY ([RoleId]) REFERENCES [dbo].[AspNetRoles] ([Id]) ON DELETE CASCADE;
-
-ALTER TABLE [dbo].[AspNetUserClaims]
-ADD CONSTRAINT [FK_AspNetUserClaims_AspNetUsers_UserId]
-FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id]) ON DELETE CASCADE;
-
-ALTER TABLE [dbo].[AspNetUserLogins]
-ADD CONSTRAINT [FK_AspNetUserLogins_AspNetUsers_UserId]
-FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id]) ON DELETE CASCADE;
-
-ALTER TABLE [dbo].[AspNetUserRoles]
-ADD CONSTRAINT [FK_AspNetUserRoles_AspNetRoles_RoleId]
-FOREIGN KEY ([RoleId]) REFERENCES [dbo].[AspNetRoles] ([Id]) ON DELETE CASCADE;
-
-ALTER TABLE [dbo].[AspNetUserRoles]
-ADD CONSTRAINT [FK_AspNetUserRoles_AspNetUsers_UserId]
-FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id]) ON DELETE CASCADE;
-
-ALTER TABLE [dbo].[AspNetUserTokens]
-ADD CONSTRAINT [FK_AspNetUserTokens_AspNetUsers_UserId]
-FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id]) ON DELETE CASCADE;
-
-ALTER TABLE [dbo].[Objectives]
-ADD CONSTRAINT [FK_Objectives_Tasks_TaskId]
-FOREIGN KEY ([TaskId]) REFERENCES [dbo].[Tasks] ([Id]) ON DELETE CASCADE;
-
-ALTER TABLE [dbo].[Tasks]
-ADD CONSTRAINT [FK_Tasks_AspNetUsers_UserId]
-FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id]) ON DELETE CASCADE;
+  USE [TrackerDB]
+  
+  SET ANSI_NULLS ON
+  SET QUOTED_IDENTIFIER ON
+  CREATE TABLE [dbo].[__EFMigrationsHistory](
+  	[MigrationId] [nvarchar](150) NOT NULL,
+  	[ProductVersion] [nvarchar](32) NOT NULL,
+   CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY CLUSTERED 
+  (
+  	[MigrationId] ASC
+  )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+  ) ON [PRIMARY]
+  
+  SET ANSI_NULLS ON
+  SET QUOTED_IDENTIFIER ON
+  CREATE TABLE [dbo].[AspNetRoleClaims](
+  	[Id] [int] IDENTITY(1,1) NOT NULL,
+  	[RoleId] [nvarchar](450) NOT NULL,
+  	[ClaimType] [nvarchar](max) NULL,
+  	[ClaimValue] [nvarchar](max) NULL,
+   CONSTRAINT [PK_AspNetRoleClaims] PRIMARY KEY CLUSTERED 
+  (
+  	[Id] ASC
+  )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+  ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+  
+  SET ANSI_NULLS ON
+  SET QUOTED_IDENTIFIER ON
+  CREATE TABLE [dbo].[AspNetRoles](
+  	[Id] [nvarchar](450) NOT NULL,
+  	[Name] [nvarchar](256) NULL,
+  	[NormalizedName] [nvarchar](256) NULL,
+  	[ConcurrencyStamp] [nvarchar](max) NULL,
+   CONSTRAINT [PK_AspNetRoles] PRIMARY KEY CLUSTERED 
+  (
+  	[Id] ASC
+  )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+  ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+  
+  SET ANSI_NULLS ON
+  SET QUOTED_IDENTIFIER ON
+  CREATE TABLE [dbo].[AspNetUserClaims](
+  	[Id] [int] IDENTITY(1,1) NOT NULL,
+  	[UserId] [nvarchar](450) NOT NULL,
+  	[ClaimType] [nvarchar](max) NULL,
+  	[ClaimValue] [nvarchar](max) NULL,
+   CONSTRAINT [PK_AspNetUserClaims] PRIMARY KEY CLUSTERED 
+  (
+  	[Id] ASC
+  )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+  ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+  
+  SET ANSI_NULLS ON
+  SET QUOTED_IDENTIFIER ON
+  CREATE TABLE [dbo].[AspNetUserLogins](
+  	[LoginProvider] [nvarchar](450) NOT NULL,
+  	[ProviderKey] [nvarchar](450) NOT NULL,
+  	[ProviderDisplayName] [nvarchar](max) NULL,
+  	[UserId] [nvarchar](450) NOT NULL,
+   CONSTRAINT [PK_AspNetUserLogins] PRIMARY KEY CLUSTERED 
+  (
+  	[LoginProvider] ASC,
+  	[ProviderKey] ASC
+  )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+  ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+  
+  SET ANSI_NULLS ON
+  SET QUOTED_IDENTIFIER ON
+  CREATE TABLE [dbo].[AspNetUserRoles](
+  	[UserId] [nvarchar](450) NOT NULL,
+  	[RoleId] [nvarchar](450) NOT NULL,
+   CONSTRAINT [PK_AspNetUserRoles] PRIMARY KEY CLUSTERED 
+  (
+  	[UserId] ASC,
+  	[RoleId] ASC
+  )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+  ) ON [PRIMARY]
+  
+  SET ANSI_NULLS ON
+  SET QUOTED_IDENTIFIER ON
+  CREATE TABLE [dbo].[AspNetUsers](
+  	[Id] [nvarchar](450) NOT NULL,
+  	[UserName] [nvarchar](256) NULL,
+  	[NormalizedUserName] [nvarchar](256) NULL,
+  	[Email] [nvarchar](256) NULL,
+  	[NormalizedEmail] [nvarchar](256) NULL,
+  	[EmailConfirmed] [bit] NOT NULL,
+  	[PasswordHash] [nvarchar](max) NULL,
+  	[SecurityStamp] [nvarchar](max) NULL,
+  	[ConcurrencyStamp] [nvarchar](max) NULL,
+  	[PhoneNumber] [nvarchar](max) NULL,
+  	[PhoneNumberConfirmed] [bit] NOT NULL,
+  	[TwoFactorEnabled] [bit] NOT NULL,
+  	[LockoutEnd] [datetimeoffset](7) NULL,
+  	[LockoutEnabled] [bit] NOT NULL,
+  	[AccessFailedCount] [int] NOT NULL,
+  	[CanvasApiKey] [nvarchar](max) NULL,
+   CONSTRAINT [PK_AspNetUsers] PRIMARY KEY CLUSTERED 
+  (
+  	[Id] ASC
+  )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+  ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+  
+  SET ANSI_NULLS ON
+  SET QUOTED_IDENTIFIER ON
+  CREATE TABLE [dbo].[AspNetUserTokens](
+  	[UserId] [nvarchar](450) NOT NULL,
+  	[LoginProvider] [nvarchar](450) NOT NULL,
+  	[Name] [nvarchar](450) NOT NULL,
+  	[Value] [nvarchar](max) NULL,
+   CONSTRAINT [PK_AspNetUserTokens] PRIMARY KEY CLUSTERED 
+  (
+  	[UserId] ASC,
+  	[LoginProvider] ASC,
+  	[Name] ASC
+  )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+  ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+  
+  SET ANSI_NULLS ON
+  SET QUOTED_IDENTIFIER ON
+  CREATE TABLE [dbo].[Objectives](
+  	[Id] [int] IDENTITY(1,1) NOT NULL,
+  	[Name] [nvarchar](max) NOT NULL,
+  	[Hours] [int] NOT NULL,
+  	[IsComplete] [bit] NOT NULL,
+  	[TaskId] [int] NOT NULL,
+   CONSTRAINT [PK_Objectives] PRIMARY KEY CLUSTERED 
+  (
+  	[Id] ASC
+  )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+  ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+  
+  SET ANSI_NULLS ON
+  SET QUOTED_IDENTIFIER ON
+  CREATE TABLE [dbo].[Tasks](
+  	[Id] [int] IDENTITY(1,1) NOT NULL,
+  	[Name] [nvarchar](max) NOT NULL,
+  	[TaskType] [nvarchar](20) NULL,
+  	[DueDate] [datetime2](7) NOT NULL,
+  	[UserId] [nvarchar](450) NOT NULL,
+   CONSTRAINT [PK_Tasks] PRIMARY KEY CLUSTERED 
+  (
+  	[Id] ASC
+  )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+  ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+  
+  ALTER TABLE [dbo].[Objectives] ADD  DEFAULT (N'') FOR [Name]
+  ALTER TABLE [dbo].[Objectives] ADD  DEFAULT ((0)) FOR [TaskId]
+  ALTER TABLE [dbo].[Tasks] ADD  DEFAULT (N'') FOR [Name]
+  ALTER TABLE [dbo].[Tasks] ADD  DEFAULT ('0001-01-01T00:00:00.0000000') FOR [DueDate]
+  ALTER TABLE [dbo].[Tasks] ADD  DEFAULT (N'') FOR [UserId]
+  
+  ALTER TABLE [dbo].[AspNetRoleClaims]  WITH CHECK ADD  CONSTRAINT [FK_AspNetRoleClaims_AspNetRoles_RoleId] FOREIGN KEY([RoleId])
+  REFERENCES [dbo].[AspNetRoles] ([Id])
+  ON DELETE CASCADE
+  ALTER TABLE [dbo].[AspNetRoleClaims] CHECK CONSTRAINT [FK_AspNetRoleClaims_AspNetRoles_RoleId]
+  
+  ALTER TABLE [dbo].[AspNetUserClaims]  WITH CHECK ADD  CONSTRAINT [FK_AspNetUserClaims_AspNetUsers_UserId] FOREIGN KEY([UserId])
+  REFERENCES [dbo].[AspNetUsers] ([Id])
+  ON DELETE CASCADE
+  ALTER TABLE [dbo].[AspNetUserClaims] CHECK CONSTRAINT [FK_AspNetUserClaims_AspNetUsers_UserId]
+  
+  ALTER TABLE [dbo].[AspNetUserLogins]  WITH CHECK ADD  CONSTRAINT [FK_AspNetUserLogins_AspNetUsers_UserId] FOREIGN KEY([UserId])
+  REFERENCES [dbo].[AspNetUsers] ([Id])
+  ON DELETE CASCADE
+  ALTER TABLE [dbo].[AspNetUserLogins] CHECK CONSTRAINT [FK_AspNetUserLogins_AspNetUsers_UserId]
+  
+  ALTER TABLE [dbo].[AspNetUserRoles]  WITH CHECK ADD  CONSTRAINT [FK_AspNetUserRoles_AspNetRoles_RoleId] FOREIGN KEY([RoleId])
+  REFERENCES [dbo].[AspNetRoles] ([Id])
+  ON DELETE CASCADE
+  ALTER TABLE [dbo].[AspNetUserRoles] CHECK CONSTRAINT [FK_AspNetUserRoles_AspNetRoles_RoleId]
+  
+  ALTER TABLE [dbo].[AspNetUserRoles]  WITH CHECK ADD  CONSTRAINT [FK_AspNetUserRoles_AspNetUsers_UserId] FOREIGN KEY([UserId])
+  REFERENCES [dbo].[AspNetUsers] ([Id])
+  ON DELETE CASCADE
+  ALTER TABLE [dbo].[AspNetUserRoles] CHECK CONSTRAINT [FK_AspNetUserRoles_AspNetUsers_UserId]
+  
+  ALTER TABLE [dbo].[AspNetUserTokens]  WITH CHECK ADD  CONSTRAINT [FK_AspNetUserTokens_AspNetUsers_UserId] FOREIGN KEY([UserId])
+  REFERENCES [dbo].[AspNetUsers] ([Id])
+  ON DELETE CASCADE
+  ALTER TABLE [dbo].[AspNetUserTokens] CHECK CONSTRAINT [FK_AspNetUserTokens_AspNetUsers_UserId]
+  
+  ALTER TABLE [dbo].[Objectives]  WITH CHECK ADD  CONSTRAINT [FK_Objectives_Tasks_TaskId] FOREIGN KEY([TaskId])
+  REFERENCES [dbo].[Tasks] ([Id])
+  ON DELETE CASCADE
+  ALTER TABLE [dbo].[Objectives] CHECK CONSTRAINT [FK_Objectives_Tasks_TaskId]
+  
+  ALTER TABLE [dbo].[Tasks]  WITH CHECK ADD  CONSTRAINT [FK_Tasks_AspNetUsers_UserId] FOREIGN KEY([UserId])
+  REFERENCES [dbo].[AspNetUsers] ([Id])
+  ON DELETE CASCADE
+  ALTER TABLE [dbo].[Tasks] CHECK CONSTRAINT [FK_Tasks_AspNetUsers_UserId]
 
 </details>
