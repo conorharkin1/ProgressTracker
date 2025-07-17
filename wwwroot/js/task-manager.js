@@ -130,7 +130,9 @@ class TaskManager {
 
             this.taskIdInput.value = task.id;
             this.taskNameInput.value = task.name;
-            this.taskDateInput.value = task.dueDate;
+            const date = new Date(task.dueDate);
+            const localDateTime = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+            this.taskDateInput.value = localDateTime;
             this.objectivesContainer.innerHTML = '';
 
             this.currentObjectiveIndex = task.objectives.length;
@@ -263,7 +265,7 @@ class TaskManager {
         return {
             Id: this.taskIdInput.value ? this.taskIdInput.value : 0,
             Name: this.taskNameInput.value,
-            DueDate: this.taskDateInput.value,
+            DueDate: new Date(this.taskDateInput.value).toISOString(),
             Objectives: objectives,
             TaskType: this.taskType
         };

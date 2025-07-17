@@ -103,7 +103,7 @@
     else
     {
         <div class="no-medium-large-objectives">
-            <h4>Due: @Model.DueDate.ToString("dd MMM HH:mm")</h4>
+            <h4>Due: @Model.DueDate.ToLocalTime().ToString("dd MMM HH:mm")</h4>
             <h6>Add some Objectives to track your progress!</h6>
         </div>
     }

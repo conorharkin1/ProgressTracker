@@ -149,7 +149,7 @@ public class TasksController : ControllerBase
         return new DbTask
         {
             Name = taskDto.Name,
-            DueDate = taskDto.DueDate,
+            DueDate = taskDto.DueDate.ToUniversalTime(),
             TaskType = taskDto.TaskType,
             UserId = userId,
             Objectives = taskDto.Objectives?
