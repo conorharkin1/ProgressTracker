@@ -91,10 +91,23 @@ namespace ProgressTracker.Repositories
 
         public async Task<DbTask> UpdateTask(DbTask task)
         {
-            var taskToUpdate = await _dbContext.Tasks.Include(t => t.Objectives).Where(t => t.Id == task.Id).FirstOrDefaultAsync();
+            var taskToUpdate = await _dbContext.Tasks
+                .Include(t => t.Objectives)
+                .FirstOrDefaultAsync(t => t.Id == task.Id);
+            
             if (taskToUpdate == null)
             {
                 throw new ArgumentNullException(nameof(task), "Task cannot be null.");
+            }
+
+            // Convert DueDate to UTC if it's not already
+            if (task.DueDate.Kind != DateTimeKind.Utc)
+            {
+                taskToUpdate.DueDate = DateTime.SpecifyKind(task.DueDate, DateTimeKind.Utc);
+            }
+            else
+            {
+                taskToUpdate.DueDate = task.DueDate;
             }
 
             if (taskToUpdate.Objectives?.Count > 0)
@@ -103,31 +116,18 @@ namespace ProgressTracker.Repositories
             }
 
             taskToUpdate.Name = task.Name;
-            taskToUpdate.DueDate = task.DueDate;
-            taskToUpdate.Objectives = task.Objectives;
+            taskToUpdate.Objectives = task.Objectives?
+                .Select(o => new Objective
+                {
+                    Name = o.Name,
+                    Hours = o.Hours,
+                    IsComplete = o.IsComplete,
+                    TaskId = taskToUpdate.Id
+                })
+                .ToList();
 
-            if (task.Objectives != null)
-            {
-                taskToUpdate.Objectives = task.Objectives
-                    .Select(o => new Objective
-                    {
-                        Name = o.Name,
-                        Hours = o.Hours,
-                        IsComplete = o.IsComplete,
-                        TaskId = taskToUpdate.Id
-                    })
-                    .ToList();
-            }
-
-            try
-            {
-                await _dbContext.SaveChangesAsync();
-                return taskToUpdate;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while saving the task.", ex);
-            }
+            await _dbContext.SaveChangesAsync();
+            return taskToUpdate;
         }
 
         public async Task<bool> UpdateObjective(Objective objective)

@@ -130,9 +130,17 @@ class TaskManager {
 
             this.taskIdInput.value = task.id;
             this.taskNameInput.value = task.name;
+            
+            // The date from backend is in UTC, but we want to show it in local time
+            // Create a date object and use toLocaleDateTimeString to format it for the datetime-local input
             const date = new Date(task.dueDate);
-            const localDateTime = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
-            this.taskDateInput.value = localDateTime;
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            this.taskDateInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+            
             this.objectivesContainer.innerHTML = '';
 
             this.currentObjectiveIndex = task.objectives.length;
@@ -262,10 +270,14 @@ class TaskManager {
         this.taskType = this.maxObjectives === 2 ? 'SMALL' :
                         this.maxObjectives === 4 ? 'MEDIUM' : 'LARGE';
 
+        // The datetime-local input gives us the date in local time
+        // When we create a new Date, it automatically handles the conversion to UTC
+        const date = new Date(this.taskDateInput.value);
+
         return {
             Id: this.taskIdInput.value ? this.taskIdInput.value : 0,
             Name: this.taskNameInput.value,
-            DueDate: new Date(this.taskDateInput.value).toISOString(),
+            DueDate: date.toISOString(),
             Objectives: objectives,
             TaskType: this.taskType
         };
@@ -273,8 +285,10 @@ class TaskManager {
 
     // Dynamically update the DOM when updating a task. Very proud of this (was hell to write never forget)
     updateTaskDom(updatedTaskData) {
-        const rawDate = new Date(updatedTaskData.dueDate);
-        const formattedDate = rawDate.toLocaleString('en-GB', {
+        // Create a date object from the UTC time and let the browser handle timezone conversion
+        const date = new Date(updatedTaskData.dueDate);
+        // Format it using toLocaleString which will automatically use the user's timezone
+        const formattedDate = date.toLocaleString('en-GB', {
             day: '2-digit',
             month: 'short',
             hour: '2-digit',
@@ -356,8 +370,15 @@ class TaskManager {
                 }
 
                 const objectives = updatedTaskData.objectives || [];
-                const leftObjectives = objectives.slice(0, 2);
-                const rightObjectives = objectives.slice(2, 4);
+                var leftObjectives = [];
+                var rightObjectives = [];
+                if (updatedTaskData.taskType === 'MEDIUM') {
+                    leftObjectives = objectives.slice(0, 2);
+                    rightObjectives = objectives.slice(2, 4);
+                } else if (updatedTaskData.taskType === 'LARGE') {
+                    leftObjectives = objectives.slice(0, 4);
+                    rightObjectives = objectives.slice(4, 8);
+                }
 
                 // This is a helper method. It gets called twice, once for the left side and once for the right side. 
                 // Render the objectives firstly. If there is only 1 objective render the objective-item-placeholder for the second.
@@ -407,6 +428,11 @@ class TaskManager {
         } else {
             // No Objectives 
             if (updatedTaskData.taskType === 'SMALL') {
+                //Since taskType = small the .percentage div will always exist.
+                var dueDiv = Array.from(document.querySelectorAll('.percentage')).find(th => th.dataset.taskId == updatedTaskData.id);
+                const dueElement = dueDiv.querySelectorAll('h5');
+                const h5ToUpdate = dueElement[1];
+                h5ToUpdate.innerText = formattedDate;
                 const smallObjectivesWrapper = Array.from(document.querySelectorAll('.objectives-list')).find(ol => ol.dataset.taskId == updatedTaskData.id);
                 smallObjectivesWrapper.innerHTML = '';
                 smallObjectivesWrapper.insertAdjacentHTML('beforeend', `
@@ -636,6 +662,7 @@ class TaskManager {
                 const circle = progressCircleWrapper.querySelector('circle');
                 // Update the percentage complete
                 percentageElement.dataset.percentage = percentComplete;
+                percentageElement.querySelector('h5:nth-child(2)').innerText = formattedDate;
 
                 // Update the circle based on new percentageComplete
                 const radius = circle.r.baseVal.value;
