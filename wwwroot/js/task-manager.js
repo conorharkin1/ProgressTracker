@@ -259,11 +259,19 @@ class TaskManager {
         const objectives = [];
         const objectiveInputs = document.querySelectorAll('.objective-input-group');
 
-        objectiveInputs.forEach((group, index) => {
-            const name = group.querySelector(`input[name="objectiveName${index}"]`).value;
-            const hours = parseInt(group.querySelector(`input[name="objectiveHours${index}"]`).value);
-            const iscomplete = group.querySelector(`input[name="objectiveIsComplete${index}"]`).checked;
-            objectives.push({ Name: name, Hours: hours, IsComplete: iscomplete});
+        objectiveInputs.forEach((group) => {
+            // Find inputs within the current group without relying on index
+            const nameInput = group.querySelector('input[type="text"]');
+            const hoursInput = group.querySelector('input[type="number"]');
+            const completeInput = group.querySelector('input[type="checkbox"]');
+            
+            if (nameInput && hoursInput && completeInput) {
+                objectives.push({
+                    Name: nameInput.value,
+                    Hours: parseInt(hoursInput.value),
+                    IsComplete: completeInput.checked
+                });
+            }
         });
 
         // Figure out the tasktype by the amount of allowed objectives
