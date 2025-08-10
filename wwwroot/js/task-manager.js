@@ -23,6 +23,9 @@ class TaskManager {
         this.objectivesContainer = document.getElementById('objectivesContainer');
         this.saveBtn = document.getElementById('saveBtn');
 
+        // Initialize all due dates to local time
+        this.initDueDates();
+
         // Buttons
         this.addTaskButtons = document.querySelectorAll('#add-task-btn');
         this.editButtons = document.querySelectorAll('#update-task-btn');
@@ -99,6 +102,23 @@ class TaskManager {
         document.addEventListener('change', (e) => {
             if (e.target.matches('.objective-item-checkbox')) {
                 this.updateIsComplete(e.target);
+            }
+        });
+    }
+
+    initDueDates() {
+        const dueDateElements = document.querySelectorAll('.due-date');
+        dueDateElements.forEach(element => {
+            const utcDate = element.getAttribute('data-due-date');
+            if (utcDate) {
+                const localDate = new Date(utcDate);
+                element.textContent = localDate.toLocaleString('en-GB', {
+                    day: '2-digit',
+                    month: 'short',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
             }
         });
     }
