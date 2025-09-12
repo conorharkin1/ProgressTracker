@@ -856,12 +856,11 @@ class TaskManager {
         this.flatpickr = flatpickr(this.taskDateInput, {
             enableTime: true,
             dateFormat: "Y-m-d H:i",
-            minDate: "today"
         });
         
         // Set fetchedDueDate date if it exists (for edit mode)
         if (this.fetchedDueDate) {
-            this.flatpickr.setDate(this.fetchedDueDate);
+            this.flatpickr.setDate(dayjs(this.fetchedDueDate).toDate());
             this.fetchedDueDate = null;
         }
     }
