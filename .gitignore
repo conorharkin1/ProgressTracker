@@ -19,6 +19,7 @@ node_modules/
 
 # Sensitive files
 appsettings.Development.json
+.vscode/settings.json
 
 # Build output
 *.dll
@@ -30,3 +31,6 @@ appsettings.Development.json
 
 # Frontend build files
 dist/
+
+# SQL Tools session files
+*.session.sql
