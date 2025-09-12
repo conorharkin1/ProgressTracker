@@ -3,6 +3,7 @@ using ProgressTracker.Data;
 using ProgressTracker.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,7 +34,9 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddRazorPages();
 
-builder.Services.AddDataProtection();
+builder.Services.AddDataProtection()
+    .PersistKeysToDbContext<DataContext>()
+    .SetApplicationName("ProgressTracker");
 
 var app = builder.Build();
 
