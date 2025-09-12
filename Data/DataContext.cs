@@ -2,11 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using ProgressTracker.Models;
 using Task = ProgressTracker.Models.Task;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 
 
 namespace ProgressTracker.Data;
 
-    public class DataContext : IdentityDbContext<ApplicationUser>
+    public class DataContext : IdentityDbContext<ApplicationUser>, IDataProtectionKeyContext
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -18,8 +19,9 @@ namespace ProgressTracker.Data;
         public DbSet<SmallTask> SmallTasks { get; set; }
         public DbSet<MediumTask> MediumTasks { get; set; }
         public DbSet<LargeTask> LargeTasks { get; set; }
+        public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = null!;
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
