@@ -5,10 +5,12 @@ class TaskManager {
         this.taskType = 'SMALL';
         this.isEditMode = false;
         this.taskModal = document.getElementById('taskModal');
+        this.flatpickr = null;
 
         this.setupEventHandlers();
         this.initElements();
         this.initProgressCircles();
+        this.localiseDisplayedDates();
     }
 
     initElements() {
@@ -92,6 +94,10 @@ class TaskManager {
         // Reset form on modal close
         const modal = document.getElementById('taskModal');
         if (modal) {
+            modal.addEventListener('shown.bs.modal', () => {
+                this.initflatpickr();
+            });
+
             modal.addEventListener('hidden.bs.modal', () => this.resetForm());
         }
 
@@ -130,17 +136,8 @@ class TaskManager {
 
             this.taskIdInput.value = task.id;
             this.taskNameInput.value = task.name;
-            
-            // The date from backend is in UTC, but we want to show it in local time
-            // Create a date object and use toLocaleDateTimeString to format it for the datetime-local input
-            const date = new Date(task.dueDate);
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            this.taskDateInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
-            
+            this.fetchedDueDate = task.dueDate;
+
             this.objectivesContainer.innerHTML = '';
 
             this.currentObjectiveIndex = task.objectives.length;
@@ -252,6 +249,12 @@ class TaskManager {
         this.maxObjectives = 0;
         this.addObjectiveButton.disabled = false;
         this.isEditMode = false;
+
+        // Destroy flatpickr instance
+        if (this.flatpickr) {
+            this.flatpickr.destroy();
+            this.flatpickr = null;
+        }
     }
 
     // Called right before creating/updating a task. Fetches all of the required data and formats in a way the backend accepts.
@@ -278,14 +281,13 @@ class TaskManager {
         this.taskType = this.maxObjectives === 2 ? 'SMALL' :
                         this.maxObjectives === 4 ? 'MEDIUM' : 'LARGE';
 
-        // The datetime-local input gives us the date in local time
-        // When we create a new Date, it automatically handles the conversion to UTC
-        const date = new Date(this.taskDateInput.value);
+        // Convert the selected date to ISO string in UTC
+        const inputtedDate = this.flatpickr.selectedDates[0];
 
         return {
             Id: this.taskIdInput.value ? this.taskIdInput.value : 0,
             Name: this.taskNameInput.value,
-            DueDate: date.toISOString(),
+            DueDate: inputtedDate.toISOString(),
             Objectives: objectives,
             TaskType: this.taskType
         };
@@ -843,6 +845,43 @@ class TaskManager {
                 Swal.fire('Error!', 'There was a problem setting your Canvas API key please get in touch with your local developer', 'error');
             }
         }
+    }
+
+    initflatpickr() {
+        // Destroy existing instance if it exists
+        if (this.flatpickr) {
+            this.flatpickr.destroy();
+        }
+        
+        this.flatpickr = flatpickr(this.taskDateInput, {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            minDate: "today"
+        });
+        
+        // Set fetchedDueDate date if it exists (for edit mode)
+        if (this.fetchedDueDate) {
+            this.flatpickr.setDate(this.fetchedDueDate);
+            this.fetchedDueDate = null;
+        }
+    }
+
+    localiseDisplayedDates() {
+        document.querySelectorAll('[data-due-date-utc]').forEach(element => {
+            const utcDateString = element.getAttribute('data-due-date-utc');
+            const displayElement = element.querySelector('.due-date-display');
+            
+            if (displayElement && utcDateString) {
+                try {
+                    // Day.js automatically converts UTC to browser's local time
+                    const localDate = dayjs(utcDateString);
+                    displayElement.textContent = localDate.format('DD MMM HH:mm');
+                } catch (error) {
+                    // Keep server fallback if conversion fails
+                    console.warn('Date conversion failed:', error);
+                }
+            }
+        });
     }
 }
 

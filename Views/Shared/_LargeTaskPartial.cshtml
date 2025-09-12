@@ -61,9 +61,9 @@
         <div class="medium-plus-progress-circle" data-task-id="@Model.Id">
             <div class="outer">
                 <div class="inner">
-                    <div class="percentage percentage-large" data-percentage="@completionPercentage" data-task-id="@Model.Id">
+                    <div class="percentage percentage-medium" data-percentage="@completionPercentage" data-task-id="@Model.Id" data-due-date-utc="@Model.DueDate.ToString("O")">
                         <h5>Due:</h5>
-                        <h5>@Model.DueDate.ToLocalTime().ToString("dd MMM HH:mm")</h5>
+                        <h5 class="due-date-display">@Model.DueDate.ToString("dd MMM HH:mm") </h5>
                     </div>
                 </div>
             </div>
