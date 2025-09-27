@@ -31,6 +31,7 @@ builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<IUserEncryptionService, UserEncryptionService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICanvasRepository, CanvasRepository>();
 
 builder.Services.AddRazorPages();
 

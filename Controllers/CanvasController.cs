@@ -17,13 +17,15 @@ public class CanvasController : ControllerBase
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IUserRepository _userRepository;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ICanvasRepository _canvasRepository;
 
-    public CanvasController(ITaskRepository taskRepository, IHttpClientFactory httpClientFactory, IUserRepository userRepository, UserManager<ApplicationUser> userManager)
+    public CanvasController(ITaskRepository taskRepository, IHttpClientFactory httpClientFactory, IUserRepository userRepository, UserManager<ApplicationUser> userManager, ICanvasRepository canvasRepository)
     {
         _taskRepository = taskRepository;
         _httpClientFactory = httpClientFactory;
         _userRepository = userRepository;
         _userManager = userManager;
+        _canvasRepository = canvasRepository;
     }
 
     [HttpPost("setKey")]
@@ -49,90 +51,60 @@ public class CanvasController : ControllerBase
         }
         var userId = user.Id;
 
-        // If there is a large task in the system firstly delete it as I currently only have 1 enrolment which I am creating a Large Task for
-        var existingLargeTask = await _taskRepository.GetLargeTask(userId);
-        if (existingLargeTask != null)
-        {
-            await _taskRepository.DeleteTask(existingLargeTask.Id);
-        }
+        await _canvasRepository.Sync(userId);
 
-        var decryptedCanvasApiKey = await _userRepository.GetCanvasApiKey();
-
-        if (string.IsNullOrEmpty(decryptedCanvasApiKey))
-        {
-            return NotFound("Could not retrieve API key");
-        }
-
-        var httpClient = _httpClientFactory.CreateClient();
-        httpClient.BaseAddress = new Uri("https://canvas.qub.ac.uk/");
-        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", decryptedCanvasApiKey);
-
-        try
-        {
-            // Attempt a call to profile endpoint to check if key works
-            var profileResponse = await httpClient.GetAsync("/api/v1/users/self/profile");
-
-            if (!profileResponse.IsSuccessStatusCode)
-            {
-                if (profileResponse.StatusCode == HttpStatusCode.Unauthorized || profileResponse.StatusCode == HttpStatusCode.Forbidden)
-                {
-                    return Unauthorized("Canvas API key is invalid or expired.");
-                }
-
-                return StatusCode((int)profileResponse.StatusCode, "Invalid API Key provided");
-            }
-
-            //Gets all my previous courses
-            var allCourses = await httpClient.GetFromJsonAsync<List<Course>>("/api/v1/users/self/courses");
-            //Gets my current enrolments
-            var enrolments = await httpClient.GetFromJsonAsync<List<Enrolment>>("/api/v1/users/self/enrollments");
-
-            var currentCourses = new List<Course>();
-            currentCourses.AddRange(allCourses.Where(c => enrolments.Any(e => e.course_id == c.id)));
-
-            if (currentCourses.Any())
-            {
-                foreach (var course in currentCourses)
-                {
-                    var assignments = await httpClient.GetFromJsonAsync<List<Assignment>>($"/api/v1/courses/{course.id}/assignments");
-                    var modules = await httpClient.GetFromJsonAsync<List<Module>>($"/api/v1/courses/{course.id}/modules?include[]=items");
-
-                    var objectives = new List<Objective>();
-                    if (assignments != null && assignments.Count > 0)
-                    {
-                        foreach (var assignment in assignments)
-                        {
-                            objectives.Add(new Objective
-                            {
-                                Name = assignment.name,
-                                Hours = assignment.due_at.HasValue ? (int)(assignment.due_at - DateTime.Now).Value.TotalHours : 5,
-                                IsComplete = assignment.has_submitted_submissions
-                            });
-                        }
-
-                        await _taskRepository.AddTask(new DbTask
-                        {
-                            Name = course.name,
-                            DueDate = assignments.Where(a => a.due_at.HasValue).Min(a => a.due_at.Value),
-                            Objectives = objectives,
-                            TaskType = "LARGE",
-                            UserId = userId
-                        }, userId);
-                    }
-                }
-            }
-
-            return Ok(new { message = "Successfully Synced" });
-        }
-        catch (HttpRequestException ex)
-        {
-            // For network errors, timeouts, DNS issues, etc.
-            return StatusCode(503, $"Network error while contacting Canvas: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            // For unexpected bugs or JSON deserialization issues
-            return StatusCode(500, $"Unexpected error: {ex.Message}");
-        }
+        return Ok(new { message = "Successfully Synced" });
     }
+
+    // If there is a large task in the system firstly delete it as I currently only have 1 enrolment which I am creating a Large Task for
+    // var existingLargeTask = await _taskRepository.GetLargeTask(userId);
+    // if (existingLargeTask != null)
+    // {
+    //     await _taskRepository.DeleteTask(existingLargeTask.Id);
+    // }
+
+    // try
+    // {
+    //     //Gets all my previous courses
+    //     var allCourses = await httpClient.GetFromJsonAsync<List<Course>>("/api/v1/users/self/courses");
+    //     //Gets my current enrolments
+    //     var enrolments = await httpClient.GetFromJsonAsync<List<Enrolment>>("/api/v1/users/self/enrollments");
+
+    //     var currentCourses = new List<Course>();
+    //     currentCourses.AddRange(allCourses.Where(c => enrolments.Any(e => e.course_id == c.id)));
+
+    //     if (currentCourses.Any())
+    //     {
+    //         foreach (var course in currentCourses)
+    //         {
+    //             var assignments = await httpClient.GetFromJsonAsync<List<Assignment>>($"/api/v1/courses/{course.id}/assignments");
+    //             var modules = await httpClient.GetFromJsonAsync<List<Module>>($"/api/v1/courses/{course.id}/modules?include[]=items");
+
+    //             var objectives = new List<Objective>();
+    //             if (assignments != null && assignments.Count > 0)
+    //             {
+    //                 foreach (var assignment in assignments)
+    //                 {
+    //                     objectives.Add(new Objective
+    //                     {
+    //                         Name = assignment.name,
+    //                         Hours = assignment.due_at.HasValue ? (int)(assignment.due_at - DateTime.Now).Value.TotalHours : 5,
+    //                         IsComplete = assignment.has_submitted_submissions
+    //                     });
+    //                 }
+
+    //                 await _taskRepository.AddTask(new DbTask
+    //                 {
+    //                     Name = course.name,
+    //                     DueDate = assignments.Where(a => a.due_at.HasValue).Min(a => a.due_at.Value),
+    //                     Objectives = objectives,
+    //                     TaskType = "LARGE",
+    //                     UserId = userId
+    //                 }, userId);
+    //             }
+    //         }
+    //     }
+
+    //     return Ok(new { message = "Successfully Synced" });
+    // }
 }
