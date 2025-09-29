@@ -19,6 +19,7 @@ node_modules/
 
 # Sensitive files
 appsettings.Development.json
+appsettings.json
 .vscode/settings.json
 
 # Build output
