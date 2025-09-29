@@ -52,6 +52,11 @@ namespace ProgressTracker.Repositories
                                 });
                             }
                         }
+
+                        //TODO: Redo this for loop; A course has multiple assignments (Tasks) and Assignments have multiple objectives (Objectives).
+                        // Assignments can be mapped to Tasks and Objectives are objectives.
+                        // I want to integrate with HuggingFace to categorise the assignments and objectives but include Module objects as they are something assignment like.
+                        // The LLM can then further categorise and decide what is a small medium and large task.
                     }
                 }
                 catch (HttpRequestException ex)

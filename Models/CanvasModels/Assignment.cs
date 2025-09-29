@@ -9,5 +9,7 @@ namespace ProgressTracker.Models.CanvasModels
         public int course_id { get; set; }
         public string? html_url { get; set; }
         public bool has_submitted_submissions { get; set; }
+        public List<Objective> Objectives { get; set; }
+        public string UserId { get; set; }
     }
 }
