@@ -22,6 +22,11 @@ namespace ProgressTracker.Repositories
                 throw new ArgumentNullException(nameof(task), "Task cannot be null.");
             }
 
+            if (task.DueDate.Kind != DateTimeKind.Utc)
+            {
+                task.DueDate = DateTime.SpecifyKind(task.DueDate, DateTimeKind.Utc);
+            }
+
             try
             {
                 task.UserId = userId;

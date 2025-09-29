@@ -741,9 +741,23 @@ class TaskManager {
             });
 
             if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Syncing...',
+                    text: 'This may take a few moments as your Canvas assignments are being converted into tasks',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                await new Promise(resolve => setTimeout(resolve, 50));
+
                 const response = await fetch(`/api/canvas/sync`, {
                     method: 'GET'
                 });
+
+                Swal.close();
 
                 if (response.ok) {
                     await Swal.fire({
@@ -765,6 +779,7 @@ class TaskManager {
                 }
             }
         } catch (error) {
+            Swal.close();
             Swal.fire('Error!', 'There was a problem syncing with canvas please get in touch with your local developer', 'error');
         }
     }
